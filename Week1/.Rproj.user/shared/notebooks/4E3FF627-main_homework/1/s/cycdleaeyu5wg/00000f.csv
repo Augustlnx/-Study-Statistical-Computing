@@ -1,0 +1,77 @@
+"0","#加载包"
+"0","library(readr)  #读取数据"
+"0","library(dplyr)  #数据处理"
+"2","
+载入程辑包：‘dplyr’
+
+"
+"2","The following objects are masked from ‘package:stats’:
+
+    filter, lag
+
+"
+"2","The following objects are masked from ‘package:base’:
+
+    intersect, setdiff, setequal, union
+
+"
+"0","library(tidyr)"
+"0","library(ggplot2)  #数据可视化"
+"0","library(stringr) "
+"0","library(VIM)  #缺失值处理"
+"2","载入需要的程辑包：colorspace
+"
+"2","载入需要的程辑包：grid
+"
+"2","Registered S3 method overwritten by 'data.table':
+  method           from
+  print.data.table     
+"
+"2","VIM is ready to use.
+
+"
+"2","Suggestions and bug-reports can be submitted at: https://github.com/statistikat/VIM/issues
+"
+"2","
+载入程辑包：‘VIM’
+
+"
+"2","The following object is masked from ‘package:datasets’:
+
+    sleep
+
+"
+"0","library(lubridate)"
+"2","
+载入程辑包：‘lubridate’
+
+"
+"2","The following objects are masked from ‘package:base’:
+
+    date, intersect, setdiff, union
+
+"
+"0","library(kableExtra)"
+"2","Registered S3 methods overwritten by 'htmltools':
+  method               from         
+  print.html           tools:rstudio
+  print.shiny.tag      tools:rstudio
+  print.shiny.tag.list tools:rstudio
+"
+"2","
+载入程辑包：‘kableExtra’
+
+"
+"2","The following object is masked from ‘package:dplyr’:
+
+    group_rows
+
+"
+"0","library(moments)    # 计算偏度和峰度"
+"0","library(knitr)      # 生成表格"
+"0","library(ggrain)"
+"2","Registered S3 methods overwritten by 'ggpp':
+  method                  from   
+  heightDetails.titleGrob ggplot2
+  widthDetails.titleGrob  ggplot2
+"

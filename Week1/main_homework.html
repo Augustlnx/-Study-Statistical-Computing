@@ -1,0 +1,2328 @@
+<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml" lang="en" xml:lang="en"><head>
+
+<meta charset="utf-8">
+<meta name="generator" content="quarto-1.5.57">
+
+<meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=yes">
+
+<meta name="author" content="何啻">
+
+<title>main_homework</title>
+<style>
+code{white-space: pre-wrap;}
+span.smallcaps{font-variant: small-caps;}
+div.columns{display: flex; gap: min(4vw, 1.5em);}
+div.column{flex: auto; overflow-x: auto;}
+div.hanging-indent{margin-left: 1.5em; text-indent: -1.5em;}
+ul.task-list{list-style: none;}
+ul.task-list li input[type="checkbox"] {
+  width: 0.8em;
+  margin: 0 0.8em 0.2em -1em; /* quarto-specific, see https://github.com/quarto-dev/quarto-cli/issues/4556 */ 
+  vertical-align: middle;
+}
+/* CSS for syntax highlighting */
+pre > code.sourceCode { white-space: pre; position: relative; }
+pre > code.sourceCode > span { line-height: 1.25; }
+pre > code.sourceCode > span:empty { height: 1.2em; }
+.sourceCode { overflow: visible; }
+code.sourceCode > span { color: inherit; text-decoration: inherit; }
+div.sourceCode { margin: 1em 0; }
+pre.sourceCode { margin: 0; }
+@media screen {
+div.sourceCode { overflow: auto; }
+}
+@media print {
+pre > code.sourceCode { white-space: pre-wrap; }
+pre > code.sourceCode > span { display: inline-block; text-indent: -5em; padding-left: 5em; }
+}
+pre.numberSource code
+  { counter-reset: source-line 0; }
+pre.numberSource code > span
+  { position: relative; left: -4em; counter-increment: source-line; }
+pre.numberSource code > span > a:first-child::before
+  { content: counter(source-line);
+    position: relative; left: -1em; text-align: right; vertical-align: baseline;
+    border: none; display: inline-block;
+    -webkit-touch-callout: none; -webkit-user-select: none;
+    -khtml-user-select: none; -moz-user-select: none;
+    -ms-user-select: none; user-select: none;
+    padding: 0 4px; width: 4em;
+  }
+pre.numberSource { margin-left: 3em;  padding-left: 4px; }
+div.sourceCode
+  {   }
+@media screen {
+pre > code.sourceCode > span > a:first-child::before { text-decoration: underline; }
+}
+</style>
+
+
+<script src="main_homework_files/libs/clipboard/clipboard.min.js"></script>
+<script src="main_homework_files/libs/quarto-html/quarto.js"></script>
+<script src="main_homework_files/libs/quarto-html/popper.min.js"></script>
+<script src="main_homework_files/libs/quarto-html/tippy.umd.min.js"></script>
+<script src="main_homework_files/libs/quarto-html/anchor.min.js"></script>
+<link href="main_homework_files/libs/quarto-html/tippy.css" rel="stylesheet">
+<link href="main_homework_files/libs/quarto-html/quarto-syntax-highlighting.css" rel="stylesheet" id="quarto-text-highlighting-styles">
+<script src="main_homework_files/libs/bootstrap/bootstrap.min.js"></script>
+<link href="main_homework_files/libs/bootstrap/bootstrap-icons.css" rel="stylesheet">
+<link href="main_homework_files/libs/bootstrap/bootstrap.min.css" rel="stylesheet" id="quarto-bootstrap" data-mode="light">
+
+
+</head>
+
+<body>
+
+<div id="quarto-content" class="page-columns page-rows-contents page-layout-article">
+<div id="quarto-margin-sidebar" class="sidebar margin-sidebar">
+  <nav id="TOC" role="doc-toc" class="toc-active">
+    <h2 id="toc-title">目录</h2>
+   
+  <ul class="collapse">
+  <li><a href="#零作业详情预览" id="toc-零作业详情预览" class="nav-link active" data-scroll-target="#零作业详情预览">零、作业详情预览</a></li>
+  <li><a href="#一自定义不同数据结构并进行函数运算" id="toc-一自定义不同数据结构并进行函数运算" class="nav-link" data-scroll-target="#一自定义不同数据结构并进行函数运算">一、自定义不同数据结构并进行函数运算</a></li>
+  <li><a href="#二电视剧网播量数据集" id="toc-二电视剧网播量数据集" class="nav-link" data-scroll-target="#二电视剧网播量数据集">二、电视剧网播量数据集</a>
+  <ul class="collapse">
+  <li><a href="#作业题目解答指路" id="toc-作业题目解答指路" class="nav-link" data-scroll-target="#作业题目解答指路"><strong>作业题目解答指路：</strong></a></li>
+  <li><a href="#库准备与数据导入" id="toc-库准备与数据导入" class="nav-link" data-scroll-target="#库准备与数据导入">2.1 库准备与数据导入</a></li>
+  <li><a href="#探索性数据分析eda" id="toc-探索性数据分析eda" class="nav-link" data-scroll-target="#探索性数据分析eda">2.2 探索性数据分析（EDA）</a></li>
+  </ul></li>
+  <li><a href="#三手机游戏数据集" id="toc-三手机游戏数据集" class="nav-link" data-scroll-target="#三手机游戏数据集">三、手机游戏数据集</a>
+  <ul class="collapse">
+  <li><a href="#作业题目解答指路-1" id="toc-作业题目解答指路-1" class="nav-link" data-scroll-target="#作业题目解答指路-1"><strong>作业题目解答指路：</strong></a></li>
+  <li><a href="#库准备与数据导入-1" id="toc-库准备与数据导入-1" class="nav-link" data-scroll-target="#库准备与数据导入-1">3.1 库准备与数据导入</a></li>
+  <li><a href="#探索性数据分析eda-1" id="toc-探索性数据分析eda-1" class="nav-link" data-scroll-target="#探索性数据分析eda-1">3.2 探索性数据分析（EDA）</a></li>
+  <li><a href="#特征工程" id="toc-特征工程" class="nav-link" data-scroll-target="#特征工程">3.3 特征工程</a></li>
+  <li><a href="#数据挖掘" id="toc-数据挖掘" class="nav-link" data-scroll-target="#数据挖掘">3.4 数据挖掘</a></li>
+  <li><a href="#机器学习预测分析方法" id="toc-机器学习预测分析方法" class="nav-link" data-scroll-target="#机器学习预测分析方法"><strong>3.5 机器学习预测分析方法</strong></a></li>
+  </ul></li>
+  </ul>
+</nav>
+</div>
+<main class="content" id="quarto-document-content">
+
+<header id="title-block-header" class="quarto-title-block default">
+<div class="quarto-title">
+<h1 class="title">main_homework</h1>
+</div>
+
+
+
+<div class="quarto-title-meta">
+
+    <div>
+    <div class="quarto-title-meta-heading">Author</div>
+    <div class="quarto-title-meta-contents">
+             <p>何啻 </p>
+          </div>
+  </div>
+    
+  
+    
+  </div>
+  
+
+
+</header>
+
+
+<section id="零作业详情预览" class="level1">
+<h1>零、作业详情预览</h1>
+<div class="quarto-figure quarto-figure-center">
+<figure class="figure">
+<p><img src="9月4日作业/9月4日作业要求.png" class="img-fluid quarto-figure quarto-figure-center figure-img" width="499"></p>
+</figure>
+</div>
+</section>
+<section id="一自定义不同数据结构并进行函数运算" class="level1">
+<h1>一、自定义不同数据结构并进行函数运算</h1>
+<p>这一部分较杂乱，详情见附录下<strong><em>附录：学习笔记.pdf</em></strong>文件的R语言学习笔记，其中涵盖了大部分的数据结构。</p>
+</section>
+<section id="二电视剧网播量数据集" class="level1">
+<h1>二、电视剧网播量数据集</h1>
+<section id="作业题目解答指路" class="level2">
+<h2 class="anchored" data-anchor-id="作业题目解答指路"><strong>作业题目解答指路：</strong></h2>
+<p>a. 见<strong><em>2.2探索性数据分析</em></strong></p>
+<p>b. 见<strong><em>2.2.2数据预处理-缺失值检查</em></strong>部分</p>
+<p>c. 见<strong><em>2.2.3描述性统计</em></strong> 表格部分</p>
+<p>数据清洗最后得到的数据集效果预览：</p>
+<p><img src="images/clipboard-3318414189.png" class="img-fluid"></p>
+</section>
+<section id="库准备与数据导入" class="level2">
+<h2 class="anchored" data-anchor-id="库准备与数据导入">2.1 库准备与数据导入</h2>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb1"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb1-1"><a href="#cb1-1" aria-hidden="true" tabindex="-1"></a><span class="co">#加载包</span></span>
+<span id="cb1-2"><a href="#cb1-2" aria-hidden="true" tabindex="-1"></a><span class="fu">library</span>(readr)  <span class="co">#读取数据</span></span>
+<span id="cb1-3"><a href="#cb1-3" aria-hidden="true" tabindex="-1"></a><span class="fu">library</span>(dplyr)  <span class="co">#数据处理</span></span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-stderr">
+<pre><code>
+Attaching package: 'dplyr'</code></pre>
+</div>
+<div class="cell-output cell-output-stderr">
+<pre><code>The following objects are masked from 'package:stats':
+
+    filter, lag</code></pre>
+</div>
+<div class="cell-output cell-output-stderr">
+<pre><code>The following objects are masked from 'package:base':
+
+    intersect, setdiff, setequal, union</code></pre>
+</div>
+<div class="sourceCode cell-code" id="cb5"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb5-1"><a href="#cb5-1" aria-hidden="true" tabindex="-1"></a><span class="fu">library</span>(tidyr)</span>
+<span id="cb5-2"><a href="#cb5-2" aria-hidden="true" tabindex="-1"></a><span class="fu">library</span>(ggplot2)  <span class="co">#数据可视化</span></span>
+<span id="cb5-3"><a href="#cb5-3" aria-hidden="true" tabindex="-1"></a><span class="fu">library</span>(stringr) </span>
+<span id="cb5-4"><a href="#cb5-4" aria-hidden="true" tabindex="-1"></a><span class="fu">library</span>(VIM)  <span class="co">#缺失值处理</span></span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-stderr">
+<pre><code>Loading required package: colorspace</code></pre>
+</div>
+<div class="cell-output cell-output-stderr">
+<pre><code>Loading required package: grid</code></pre>
+</div>
+<div class="cell-output cell-output-stderr">
+<pre><code>VIM is ready to use.</code></pre>
+</div>
+<div class="cell-output cell-output-stderr">
+<pre><code>Suggestions and bug-reports can be submitted at: https://github.com/statistikat/VIM/issues</code></pre>
+</div>
+<div class="cell-output cell-output-stderr">
+<pre><code>
+Attaching package: 'VIM'</code></pre>
+</div>
+<div class="cell-output cell-output-stderr">
+<pre><code>The following object is masked from 'package:datasets':
+
+    sleep</code></pre>
+</div>
+<div class="sourceCode cell-code" id="cb12"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb12-1"><a href="#cb12-1" aria-hidden="true" tabindex="-1"></a><span class="fu">library</span>(lubridate)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-stderr">
+<pre><code>
+Attaching package: 'lubridate'</code></pre>
+</div>
+<div class="cell-output cell-output-stderr">
+<pre><code>The following objects are masked from 'package:base':
+
+    date, intersect, setdiff, union</code></pre>
+</div>
+<div class="sourceCode cell-code" id="cb15"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb15-1"><a href="#cb15-1" aria-hidden="true" tabindex="-1"></a><span class="fu">library</span>(kableExtra)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-stderr">
+<pre><code>
+Attaching package: 'kableExtra'</code></pre>
+</div>
+<div class="cell-output cell-output-stderr">
+<pre><code>The following object is masked from 'package:dplyr':
+
+    group_rows</code></pre>
+</div>
+<div class="sourceCode cell-code" id="cb18"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb18-1"><a href="#cb18-1" aria-hidden="true" tabindex="-1"></a><span class="fu">library</span>(moments)    <span class="co"># 计算偏度和峰度</span></span>
+<span id="cb18-2"><a href="#cb18-2" aria-hidden="true" tabindex="-1"></a><span class="fu">library</span>(knitr)      <span class="co"># 生成表格</span></span>
+<span id="cb18-3"><a href="#cb18-3" aria-hidden="true" tabindex="-1"></a><span class="fu">library</span>(ggrain)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-stderr">
+<pre><code>Registered S3 methods overwritten by 'ggpp':
+  method                  from   
+  heightDetails.titleGrob ggplot2
+  widthDetails.titleGrob  ggplot2</code></pre>
+</div>
+</div>
+<p>数据导入</p>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb20"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb20-1"><a href="#cb20-1" aria-hidden="true" tabindex="-1"></a><span class="co">#导入电视剧数据</span></span>
+<span id="cb20-2"><a href="#cb20-2" aria-hidden="true" tabindex="-1"></a>data_tv <span class="ot">&lt;-</span> <span class="fu">read_csv</span>(<span class="st">"9月4日作业/CH2_TV.csv"</span>, <span class="at">locale =</span> <span class="fu">locale</span>(<span class="at">encoding =</span> <span class="st">"GBK"</span>))  </span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-stderr">
+<pre><code>Rows: 4266 Columns: 7
+── Column specification ────────────────────────────────────────────────────────
+Delimiter: ","
+chr (7): 剧名, 类型, 播放量, 点赞, 差评, 得分, 采集日期
+
+ℹ Use `spec()` to retrieve the full column specification for this data.
+ℹ Specify the column types or set `show_col_types = FALSE` to quiet this message.</code></pre>
+</div>
+</div>
+</section>
+<section id="探索性数据分析eda" class="level2">
+<h2 class="anchored" data-anchor-id="探索性数据分析eda">2.2 探索性数据分析（EDA）</h2>
+<section id="数据预览" class="level3">
+<h3 class="anchored" data-anchor-id="数据预览">2.2.1 数据预览</h3>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb22"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb22-1"><a href="#cb22-1" aria-hidden="true" tabindex="-1"></a><span class="fu">print</span>(data_tv)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-stdout">
+<pre><code># A tibble: 4,266 × 7
+   剧名           类型                         播放量 点赞  差评  得分  采集日期
+   &lt;chr&gt;          &lt;chr&gt;                        &lt;chr&gt;  &lt;chr&gt; &lt;chr&gt; &lt;chr&gt; &lt;chr&gt;   
+ 1 花千骨2015     "言情剧\n/\n穿越剧\n/\n网络… 3.07亿 992,… 357,… 7.3   2015-9-…
+ 2 还珠格格2015   "古装剧\n\n/\n喜剧\n\n/\n网… 73.3万 2,352 7,240 2.5   2015-9-…
+ 3 天局           "武侠剧\n/\n古装剧\n/\n悬疑… 3454万 38,7… 3,593 9.2   2015-9-…
+ 4 明若晓溪       "青春剧\n/\n言情剧\n/\n偶像… 1.57亿 518,… 72,5… 8.8   2015-9-…
+ 5 多情江山       "言情剧\n/\n古装剧\n/\n宫廷… 1126万 22,5… 6,955 7.6   2015-9-…
+ 6 我是机器人     "偶像剧\n\n/\n喜剧"          1660万 37,9… 3,605 9.1   2015-9-…
+ 7 琅琊榜         "历史剧\n/\n古装剧\n/\n偶像… 1.29亿 401,… 15,8… 9.6   2015/9/…
+ 8 伪装者         "谍战剧\n/\n悬疑剧"          7.36亿 996,… 102,… 9.1   2015-9-…
+ 9 花千骨未删减版 "言情剧\n/\n古装剧\n/\n偶像… 3.91亿 256,… 84,7… 7.5   2015-9-…
+10 刺蝶           "军旅剧\n\n/\n谍战剧\n\n/\n… 8298万 43,7… 17,3… 7.2   2015-9-…
+# ℹ 4,256 more rows</code></pre>
+</div>
+</div>
+</section>
+<section id="数据预处理" class="level3">
+<h3 class="anchored" data-anchor-id="数据预处理">2.2.2 数据预处理</h3>
+<ul>
+<li>缺失值检查</li>
+</ul>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb24"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb24-1"><a href="#cb24-1" aria-hidden="true" tabindex="-1"></a><span class="co">#先将所有空值、null、0转变为缺失值，便于查看</span></span>
+<span id="cb24-2"><a href="#cb24-2" aria-hidden="true" tabindex="-1"></a>data_tv[data_tv[<span class="dv">1</span><span class="sc">:</span><span class="fu">nrow</span>(data_tv), ] <span class="sc">==</span> <span class="st">""</span>] <span class="ot">&lt;-</span> <span class="cn">NA</span></span>
+<span id="cb24-3"><a href="#cb24-3" aria-hidden="true" tabindex="-1"></a>data_tv[<span class="fu">is.null</span>(data_tv)] <span class="ot">&lt;-</span> <span class="cn">NA</span></span>
+<span id="cb24-4"><a href="#cb24-4" aria-hidden="true" tabindex="-1"></a>data_tv[data_tv[<span class="dv">1</span><span class="sc">:</span><span class="fu">nrow</span>(data_tv), ] <span class="sc">==</span> <span class="dv">0</span>] <span class="ot">&lt;-</span> <span class="cn">NA</span></span>
+<span id="cb24-5"><a href="#cb24-5" aria-hidden="true" tabindex="-1"></a>data_tv[data_tv[<span class="dv">1</span><span class="sc">:</span><span class="fu">nrow</span>(data_tv), ] <span class="sc">==</span> <span class="st">"null"</span>] <span class="ot">&lt;-</span> <span class="cn">NA</span></span>
+<span id="cb24-6"><a href="#cb24-6" aria-hidden="true" tabindex="-1"></a>data_tv[data_tv[<span class="dv">1</span><span class="sc">:</span><span class="fu">nrow</span>(data_tv), ] <span class="sc">==</span> <span class="st">'.'</span>] <span class="ot">&lt;-</span> <span class="cn">NA</span></span>
+<span id="cb24-7"><a href="#cb24-7" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb24-8"><a href="#cb24-8" aria-hidden="true" tabindex="-1"></a><span class="co">#查看哪些变量存在缺失值</span></span>
+<span id="cb24-9"><a href="#cb24-9" aria-hidden="true" tabindex="-1"></a><span class="fu">aggr</span>(data_tv,<span class="at">plot=</span><span class="cn">FALSE</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-stdout">
+<pre><code>
+ Missings in variables:
+ Variable Count
+     剧名    47
+     类型   220
+   播放量    47
+     点赞    88
+     差评    90
+     得分    88</code></pre>
+</div>
+<div class="sourceCode cell-code" id="cb26"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb26-1"><a href="#cb26-1" aria-hidden="true" tabindex="-1"></a><span class="fu">aggr</span>(data_tv,<span class="at">combined=</span>T)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output-display">
+<div>
+<figure class="figure">
+<p><img src="main_homework_files/figure-html/unnamed-chunk-4-1.png" class="img-fluid figure-img" width="672"></p>
+</figure>
+</div>
+</div>
+</div>
+<p>将<strong>’剧名’缺失</strong>或者<strong>’点赞‘、’差评‘、’得分‘缺失</strong>的部分删去</p>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb27"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb27-1"><a href="#cb27-1" aria-hidden="true" tabindex="-1"></a>data_tv_clean <span class="ot">&lt;-</span> data_tv <span class="sc">%&gt;%</span></span>
+<span id="cb27-2"><a href="#cb27-2" aria-hidden="true" tabindex="-1"></a>  <span class="fu">filter</span>(<span class="sc">!</span><span class="fu">is.na</span>(剧名) <span class="sc">&amp;</span> (<span class="sc">!</span>(<span class="fu">is.na</span>(点赞) <span class="sc">&amp;</span> <span class="fu">is.na</span>(差评) <span class="sc">&amp;</span> <span class="fu">is.na</span>(得分))))</span>
+<span id="cb27-3"><a href="#cb27-3" aria-hidden="true" tabindex="-1"></a><span class="fu">aggr</span>(data_tv_clean,<span class="at">combined=</span>T)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output-display">
+<div>
+<figure class="figure">
+<p><img src="main_homework_files/figure-html/unnamed-chunk-5-1.png" class="img-fluid figure-img" width="672"></p>
+</figure>
+</div>
+</div>
+</div>
+<ul>
+<li>将’类型‘转化为<strong>独热编码（One-Hot）格式</strong></li>
+</ul>
+<p>提取所有类型</p>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb28"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb28-1"><a href="#cb28-1" aria-hidden="true" tabindex="-1"></a><span class="co"># 创建新数据，保留列名</span></span>
+<span id="cb28-2"><a href="#cb28-2" aria-hidden="true" tabindex="-1"></a>data_tv1 <span class="ot">&lt;-</span> data_tv_clean <span class="sc">%&gt;%</span> </span>
+<span id="cb28-3"><a href="#cb28-3" aria-hidden="true" tabindex="-1"></a>  <span class="fu">select</span>(剧名,播放量)</span>
+<span id="cb28-4"><a href="#cb28-4" aria-hidden="true" tabindex="-1"></a><span class="co"># 转换点赞、差评、得分为数值</span></span>
+<span id="cb28-5"><a href="#cb28-5" aria-hidden="true" tabindex="-1"></a>data_tv1<span class="sc">$</span>点赞 <span class="ot">&lt;-</span> <span class="fu">as.numeric</span>(<span class="fu">gsub</span>(<span class="st">","</span>, <span class="st">""</span>, data_tv_clean<span class="sc">$</span>点赞))</span>
+<span id="cb28-6"><a href="#cb28-6" aria-hidden="true" tabindex="-1"></a>data_tv1<span class="sc">$</span>差评 <span class="ot">&lt;-</span> <span class="fu">as.numeric</span>(<span class="fu">gsub</span>(<span class="st">","</span>, <span class="st">""</span>, data_tv_clean<span class="sc">$</span>差评))</span>
+<span id="cb28-7"><a href="#cb28-7" aria-hidden="true" tabindex="-1"></a>data_tv1<span class="sc">$</span>得分 <span class="ot">&lt;-</span> <span class="fu">as.numeric</span>(data_tv_clean<span class="sc">$</span>得分)</span>
+<span id="cb28-8"><a href="#cb28-8" aria-hidden="true" tabindex="-1"></a><span class="co"># 转换采集日期为日期格式</span></span>
+<span id="cb28-9"><a href="#cb28-9" aria-hidden="true" tabindex="-1"></a>data_tv1<span class="sc">$</span>采集日期 <span class="ot">&lt;-</span> <span class="fu">ymd_hms</span>(data_tv_clean<span class="sc">$</span>采集日期)</span>
+<span id="cb28-10"><a href="#cb28-10" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb28-11"><a href="#cb28-11" aria-hidden="true" tabindex="-1"></a><span class="co"># 提取所有类型并去重</span></span>
+<span id="cb28-12"><a href="#cb28-12" aria-hidden="true" tabindex="-1"></a>(all_types <span class="ot">&lt;-</span> <span class="fu">str_extract_all</span>(data_tv_clean<span class="sc">$</span>类型, <span class="st">"[^</span><span class="sc">\\</span><span class="st">n/]+"</span>) <span class="sc">%&gt;%</span> </span>
+<span id="cb28-13"><a href="#cb28-13" aria-hidden="true" tabindex="-1"></a>  <span class="fu">unlist</span>() <span class="sc">%&gt;%</span> </span>
+<span id="cb28-14"><a href="#cb28-14" aria-hidden="true" tabindex="-1"></a>  <span class="fu">trimws</span>() <span class="sc">%&gt;%</span> </span>
+<span id="cb28-15"><a href="#cb28-15" aria-hidden="true" tabindex="-1"></a>  <span class="fu">unique</span>())</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-stdout">
+<pre><code> [1] "言情剧"     "穿越剧"     "网络剧"     "古装剧"     "喜剧"      
+ [6] "武侠剧"     "悬疑剧"     "青春剧"     "偶像剧"     "宫廷剧"    
+[11] "历史剧"     "谍战剧"     "军旅剧"     "年代剧"     "家庭剧"    
+[16] "粤语电视剧" "科幻剧"     "罪案剧"     "神话剧"     NA          
+[21] "农村剧"    </code></pre>
+</div>
+</div>
+<p>编码</p>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb30"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb30-1"><a href="#cb30-1" aria-hidden="true" tabindex="-1"></a><span class="co"># 根据提取的类型创建新列</span></span>
+<span id="cb30-2"><a href="#cb30-2" aria-hidden="true" tabindex="-1"></a><span class="cf">for</span> (type <span class="cf">in</span> all_types) {</span>
+<span id="cb30-3"><a href="#cb30-3" aria-hidden="true" tabindex="-1"></a>  <span class="cf">if</span> (<span class="sc">!</span><span class="fu">is.na</span>(type)) {</span>
+<span id="cb30-4"><a href="#cb30-4" aria-hidden="true" tabindex="-1"></a>  data_tv1[[type]] <span class="ot">&lt;-</span> <span class="fu">ifelse</span>(</span>
+<span id="cb30-5"><a href="#cb30-5" aria-hidden="true" tabindex="-1"></a>                        <span class="sc">!</span><span class="fu">is.na</span>(data_tv_clean<span class="sc">$</span>类型) <span class="sc">&amp;</span> <span class="fu">grepl</span>(type, data_tv_clean<span class="sc">$</span>类型),</span>
+<span id="cb30-6"><a href="#cb30-6" aria-hidden="true" tabindex="-1"></a>                        <span class="dv">1</span>, </span>
+<span id="cb30-7"><a href="#cb30-7" aria-hidden="true" tabindex="-1"></a>                        <span class="fu">ifelse</span>(<span class="fu">is.na</span>(data_tv_clean<span class="sc">$</span>类型), <span class="cn">NA</span>, <span class="dv">0</span>)</span>
+<span id="cb30-8"><a href="#cb30-8" aria-hidden="true" tabindex="-1"></a>                        )</span>
+<span id="cb30-9"><a href="#cb30-9" aria-hidden="true" tabindex="-1"></a>}}</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</div>
+</section>
+<section id="描述性统计" class="level3">
+<h3 class="anchored" data-anchor-id="描述性统计">2.2.3 描述性统计</h3>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb31"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb31-1"><a href="#cb31-1" aria-hidden="true" tabindex="-1"></a><span class="fu">summary</span>(data_tv1[,<span class="dv">3</span><span class="sc">:</span><span class="dv">5</span>])</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-stdout">
+<pre><code>      点赞              差评              得分       
+ Min.   :     13   Min.   :      2   Min.   : 2.400  
+ 1st Qu.:  10500   1st Qu.:   3640   1st Qu.: 6.900  
+ Median :  31501   Median :   8167   Median : 7.700  
+ Mean   : 228066   Mean   :  43377   Mean   : 7.593  
+ 3rd Qu.: 122064   3rd Qu.:  28562   3rd Qu.: 8.400  
+ Max.   :8613347   Max.   :1773345   Max.   :10.000  
+                   NA's   :2                         </code></pre>
+</div>
+</div>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb33"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb33-1"><a href="#cb33-1" aria-hidden="true" tabindex="-1"></a>tab_01 <span class="ot">=</span> <span class="fu">data.frame</span>(</span>
+<span id="cb33-2"><a href="#cb33-2" aria-hidden="true" tabindex="-1"></a>  <span class="at">Mean  =</span> <span class="fu">c</span>(<span class="fu">colMeans</span>(data_tv1[,<span class="dv">3</span><span class="sc">:</span><span class="dv">5</span>])),</span>
+<span id="cb33-3"><a href="#cb33-3" aria-hidden="true" tabindex="-1"></a>  <span class="at">SD =</span> <span class="fu">c</span>(<span class="fu">sapply</span>(data_tv1[,<span class="dv">3</span><span class="sc">:</span><span class="dv">5</span>], sd)),</span>
+<span id="cb33-4"><a href="#cb33-4" aria-hidden="true" tabindex="-1"></a>  <span class="at">Median =</span> <span class="fu">c</span>(<span class="fu">sapply</span>(data_tv1[,<span class="dv">3</span><span class="sc">:</span><span class="dv">5</span>], median)),</span>
+<span id="cb33-5"><a href="#cb33-5" aria-hidden="true" tabindex="-1"></a>  <span class="at">Min =</span> <span class="fu">c</span>(<span class="fu">sapply</span>(data_tv1[,<span class="dv">3</span><span class="sc">:</span><span class="dv">5</span>], min)),</span>
+<span id="cb33-6"><a href="#cb33-6" aria-hidden="true" tabindex="-1"></a>  <span class="co"># 计算数据的偏度</span></span>
+<span id="cb33-7"><a href="#cb33-7" aria-hidden="true" tabindex="-1"></a>  <span class="at">skew =</span> <span class="fu">c</span>(<span class="fu">sapply</span>(data_tv1[,<span class="dv">3</span><span class="sc">:</span><span class="dv">5</span>], skewness)),</span>
+<span id="cb33-8"><a href="#cb33-8" aria-hidden="true" tabindex="-1"></a>  <span class="co"># 计算数据的峰度</span></span>
+<span id="cb33-9"><a href="#cb33-9" aria-hidden="true" tabindex="-1"></a>  <span class="at">kurt =</span> <span class="fu">c</span>(<span class="fu">sapply</span>(data_tv1[,<span class="dv">3</span><span class="sc">:</span><span class="dv">5</span>], kurtosis)),</span>
+<span id="cb33-10"><a href="#cb33-10" aria-hidden="true" tabindex="-1"></a>  <span class="at">Max =</span> <span class="fu">c</span>(<span class="fu">sapply</span>(data_tv1[,<span class="dv">3</span><span class="sc">:</span><span class="dv">5</span>], max))</span>
+<span id="cb33-11"><a href="#cb33-11" aria-hidden="true" tabindex="-1"></a>) </span>
+<span id="cb33-12"><a href="#cb33-12" aria-hidden="true" tabindex="-1"></a><span class="do">## table for descriptive statistics</span></span>
+<span id="cb33-13"><a href="#cb33-13" aria-hidden="true" tabindex="-1"></a><span class="fu">kable</span>(</span>
+<span id="cb33-14"><a href="#cb33-14" aria-hidden="true" tabindex="-1"></a>  tab_01,</span>
+<span id="cb33-15"><a href="#cb33-15" aria-hidden="true" tabindex="-1"></a>  <span class="at">col.names =</span> <span class="fu">c</span>(<span class="st">"均值"</span>, <span class="st">"标准差"</span>, <span class="st">"中位数"</span>,<span class="st">"偏度"</span>,<span class="st">"峰度"</span>, <span class="st">"最小"</span>, <span class="st">"最大"</span>),</span>
+<span id="cb33-16"><a href="#cb33-16" aria-hidden="true" tabindex="-1"></a>  <span class="at">digits =</span> <span class="dv">2</span>,</span>
+<span id="cb33-17"><a href="#cb33-17" aria-hidden="true" tabindex="-1"></a>  <span class="at">caption =</span> <span class="st">"</span><span class="sc">\\</span><span class="st">label{tab2}Summary Statistics"</span>,</span>
+<span id="cb33-18"><a href="#cb33-18" aria-hidden="true" tabindex="-1"></a>  <span class="at">booktabs =</span> T</span>
+<span id="cb33-19"><a href="#cb33-19" aria-hidden="true" tabindex="-1"></a>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output-display">
+<table class="caption-top table table-sm table-striped small">
+<caption>Summary Statistics</caption>
+<thead>
+<tr class="header">
+<th style="text-align: left;"></th>
+<th style="text-align: right;">均值</th>
+<th style="text-align: right;">标准差</th>
+<th style="text-align: right;">中位数</th>
+<th style="text-align: right;">偏度</th>
+<th style="text-align: right;">峰度</th>
+<th style="text-align: right;">最小</th>
+<th style="text-align: right;">最大</th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<td style="text-align: left;">点赞</td>
+<td style="text-align: right;">228065.88</td>
+<td style="text-align: right;">743059.82</td>
+<td style="text-align: right;">31501.0</td>
+<td style="text-align: right;">13.0</td>
+<td style="text-align: right;">7.65</td>
+<td style="text-align: right;">74.80</td>
+<td style="text-align: right;">8613347</td>
+</tr>
+<tr class="even">
+<td style="text-align: left;">差评</td>
+<td style="text-align: right;">NA</td>
+<td style="text-align: right;">NA</td>
+<td style="text-align: right;">NA</td>
+<td style="text-align: right;">NA</td>
+<td style="text-align: right;">NA</td>
+<td style="text-align: right;">NA</td>
+<td style="text-align: right;">NA</td>
+</tr>
+<tr class="odd">
+<td style="text-align: left;">得分</td>
+<td style="text-align: right;">7.59</td>
+<td style="text-align: right;">1.12</td>
+<td style="text-align: right;">7.7</td>
+<td style="text-align: right;">2.4</td>
+<td style="text-align: right;">-0.98</td>
+<td style="text-align: right;">5.08</td>
+<td style="text-align: right;">10</td>
+</tr>
+</tbody>
+</table>
+</div>
+</div>
+</section>
+<section id="剧类型分析" class="level3">
+<h3 class="anchored" data-anchor-id="剧类型分析">2.2.4 剧类型分析</h3>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb34"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb34-1"><a href="#cb34-1" aria-hidden="true" tabindex="-1"></a><span class="co"># 选择all_types对应的列名</span></span>
+<span id="cb34-2"><a href="#cb34-2" aria-hidden="true" tabindex="-1"></a>selected_columns <span class="ot">&lt;-</span> all_types[<span class="sc">!</span><span class="fu">is.na</span>(all_types)]</span>
+<span id="cb34-3"><a href="#cb34-3" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb34-4"><a href="#cb34-4" aria-hidden="true" tabindex="-1"></a><span class="co"># 删除所有这些列均为NA的行</span></span>
+<span id="cb34-5"><a href="#cb34-5" aria-hidden="true" tabindex="-1"></a>data_tv2 <span class="ot">&lt;-</span> data_tv1 <span class="sc">%&gt;%</span> </span>
+<span id="cb34-6"><a href="#cb34-6" aria-hidden="true" tabindex="-1"></a>  <span class="fu">filter</span>(<span class="fu">rowSums</span>(<span class="fu">is.na</span>(<span class="fu">select</span>(., <span class="fu">all_of</span>(selected_columns)))) <span class="sc">!=</span> <span class="fu">length</span>(selected_columns))</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</div>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb35"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb35-1"><a href="#cb35-1" aria-hidden="true" tabindex="-1"></a><span class="co"># 统计各剧类型的数量</span></span>
+<span id="cb35-2"><a href="#cb35-2" aria-hidden="true" tabindex="-1"></a>type_counts <span class="ot">&lt;-</span> <span class="fu">colSums</span>(data_tv2[selected_columns], <span class="at">na.rm =</span> <span class="cn">TRUE</span>) <span class="co"># 计算各列的和</span></span>
+<span id="cb35-3"><a href="#cb35-3" aria-hidden="true" tabindex="-1"></a>type_counts <span class="ot">&lt;-</span> <span class="fu">data.frame</span>(类型 <span class="ot">=</span> <span class="fu">names</span>(type_counts), 数量 <span class="ot">=</span> type_counts)</span>
+<span id="cb35-4"><a href="#cb35-4" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb35-5"><a href="#cb35-5" aria-hidden="true" tabindex="-1"></a><span class="co"># 绘制柱状图</span></span>
+<span id="cb35-6"><a href="#cb35-6" aria-hidden="true" tabindex="-1"></a><span class="fu">ggplot</span>(type_counts, <span class="fu">aes</span>(<span class="at">x =</span> <span class="fu">reorder</span>(类型, 数量), <span class="at">y =</span> 数量)) <span class="sc">+</span></span>
+<span id="cb35-7"><a href="#cb35-7" aria-hidden="true" tabindex="-1"></a>  <span class="fu">geom_bar</span>(<span class="at">stat =</span> <span class="st">"identity"</span>, <span class="at">fill =</span> <span class="st">"skyblue"</span>) <span class="sc">+</span></span>
+<span id="cb35-8"><a href="#cb35-8" aria-hidden="true" tabindex="-1"></a>  <span class="fu">coord_flip</span>() <span class="sc">+</span> </span>
+<span id="cb35-9"><a href="#cb35-9" aria-hidden="true" tabindex="-1"></a>  <span class="fu">labs</span>(<span class="at">title =</span> <span class="st">"各剧类型数量统计"</span>, <span class="at">x =</span> <span class="st">"剧类型"</span>, <span class="at">y =</span> <span class="st">"数量"</span>) <span class="sc">+</span></span>
+<span id="cb35-10"><a href="#cb35-10" aria-hidden="true" tabindex="-1"></a>  <span class="fu">theme_minimal</span>()</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output-display">
+<div>
+<figure class="figure">
+<p><img src="main_homework_files/figure-html/unnamed-chunk-11-1.png" class="img-fluid figure-img" width="672"></p>
+</figure>
+</div>
+</div>
+</div>
+</section>
+</section>
+</section>
+<section id="三手机游戏数据集" class="level1">
+<h1>三、手机游戏数据集</h1>
+<section id="作业题目解答指路-1" class="level2">
+<h2 class="anchored" data-anchor-id="作业题目解答指路-1"><strong>作业题目解答指路：</strong></h2>
+<p>a. 见<strong>3.2 探索性数据分析</strong>与<strong>3.4 数据挖掘</strong></p>
+<p>b. 计算游戏平均热度，见 <strong>3.4.1对’热度‘和’类别‘的分组探索</strong></p>
+<p>c. 计算游戏评分相关统计量与分析，详情见<strong>3.4.2对’评分‘和’类别‘的分组探索</strong>和<strong>3.4.3 数据分析：</strong></p>
+<p>d. 见<strong>3.2 探索性数据分析</strong>其余部分与 <strong>3.5机器学习预测分析方法</strong></p>
+<p>数据清洗和特征工程最后得到的效果预览：</p>
+<p><img src="images/clipboard-1174423774.png" class="img-fluid"></p>
+</section>
+<section id="库准备与数据导入-1" class="level2">
+<h2 class="anchored" data-anchor-id="库准备与数据导入-1">3.1 库准备与数据导入</h2>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb36"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb36-1"><a href="#cb36-1" aria-hidden="true" tabindex="-1"></a><span class="co">#加载包</span></span>
+<span id="cb36-2"><a href="#cb36-2" aria-hidden="true" tabindex="-1"></a><span class="fu">library</span>(readr)  <span class="co">#读取数据</span></span>
+<span id="cb36-3"><a href="#cb36-3" aria-hidden="true" tabindex="-1"></a><span class="fu">library</span>(dplyr)  <span class="co">#数据处理</span></span>
+<span id="cb36-4"><a href="#cb36-4" aria-hidden="true" tabindex="-1"></a><span class="fu">library</span>(tidyr)</span>
+<span id="cb36-5"><a href="#cb36-5" aria-hidden="true" tabindex="-1"></a><span class="fu">library</span>(ggplot2)  <span class="co">#数据可视化</span></span>
+<span id="cb36-6"><a href="#cb36-6" aria-hidden="true" tabindex="-1"></a><span class="fu">library</span>(stringr) </span>
+<span id="cb36-7"><a href="#cb36-7" aria-hidden="true" tabindex="-1"></a><span class="fu">library</span>(VIM)  <span class="co">#缺失值处理</span></span>
+<span id="cb36-8"><a href="#cb36-8" aria-hidden="true" tabindex="-1"></a><span class="fu">library</span>(lubridate)</span>
+<span id="cb36-9"><a href="#cb36-9" aria-hidden="true" tabindex="-1"></a><span class="fu">library</span>(kableExtra)</span>
+<span id="cb36-10"><a href="#cb36-10" aria-hidden="true" tabindex="-1"></a><span class="fu">library</span>(moments)    <span class="co"># 计算偏度和峰度</span></span>
+<span id="cb36-11"><a href="#cb36-11" aria-hidden="true" tabindex="-1"></a><span class="fu">library</span>(knitr)      <span class="co"># 生成表格</span></span>
+<span id="cb36-12"><a href="#cb36-12" aria-hidden="true" tabindex="-1"></a><span class="fu">library</span>(ggrain)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</div>
+<p>导入数据</p>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb37"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb37-1"><a href="#cb37-1" aria-hidden="true" tabindex="-1"></a><span class="co">#导入手机游戏数据</span></span>
+<span id="cb37-2"><a href="#cb37-2" aria-hidden="true" tabindex="-1"></a>data_game <span class="ot">&lt;-</span> <span class="fu">read_csv</span>(<span class="st">"9月4日作业/CH2_game.csv"</span>, <span class="at">locale =</span> <span class="fu">locale</span>(<span class="at">encoding =</span> <span class="st">"GBK"</span>))  </span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-stderr">
+<pre><code>Rows: 1141 Columns: 12
+── Column specification ────────────────────────────────────────────────────────
+Delimiter: ","
+chr  (8): 游戏名称, 类别, 语言, 热度, 游戏版本, 资费, 开发商, 支持系统
+dbl  (3): 评分, 评论数, 喜欢数
+date (1): 最后更新时间
+
+ℹ Use `spec()` to retrieve the full column specification for this data.
+ℹ Specify the column types or set `show_col_types = FALSE` to quiet this message.</code></pre>
+</div>
+</div>
+</section>
+<section id="探索性数据分析eda-1" class="level2">
+<h2 class="anchored" data-anchor-id="探索性数据分析eda-1">3.2 探索性数据分析（EDA）</h2>
+<section id="数据预览-1" class="level3">
+<h3 class="anchored" data-anchor-id="数据预览-1">3.2.1 数据预览</h3>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb39"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb39-1"><a href="#cb39-1" aria-hidden="true" tabindex="-1"></a><span class="fu">print</span>(data_game)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-stdout">
+<pre><code># A tibble: 1,141 × 12
+   游戏名称   评分 类别  语言  热度  最后更新时间 游戏版本 资费  开发商 支持系统
+   &lt;chr&gt;     &lt;dbl&gt; &lt;chr&gt; &lt;chr&gt; &lt;chr&gt; &lt;date&gt;       &lt;chr&gt;    &lt;chr&gt; &lt;chr&gt;  &lt;chr&gt;   
+ 1 捕鱼达人    7.6 益智… 中文  95℃   2015-07-29   1.9.0    道具… 触控…  2.3以上 
+ 2 NBA2K14     7.5 体育… 中文  94℃   2014-05-27   1.3      完全… 2K Ga… 4.0以上 
+ 3 愤怒的小…   5.9 益智… 中文  93℃   2016-09-29   6.0.3    道具… 拓维…  2.3以上 
+ 4 三国志无…   5.1 动作… 中文  90℃   2012-07-31   1.3      完全… PlayB… 2.2以上 
+ 5 地铁跑酷…   8.4 益智… 中文  89℃   2016-09-23   2.54.0   道具… 乐逗   4.0以上 
+ 6 火箭飞人    8.2 动作… 英文  89℃   2016-08-30   1.9.10   完全… Halfb… 4.0.3以…
+ 7 暴力摩托…   5.1 动作… 英文  89℃   2015-02-17   1.11     完全… Adren… 2.0.1以…
+ 8 愤怒的小…   9.5 益智… 英文  87℃   2015-07-06   2.2.1    完全… Rovio  2.3以上 
+ 9 NBA 2K17…   8   体育… 英文  85℃   2016-09-30   0.0.21   完全… 2K Ga… 4.3以上 
+10 天天酷跑    6.9 益智… 中文  84℃   2016-07-22   1.0.35.0 完全… 腾讯   2.2以上 
+# ℹ 1,131 more rows
+# ℹ 2 more variables: 评论数 &lt;dbl&gt;, 喜欢数 &lt;dbl&gt;</code></pre>
+</div>
+</div>
+</section>
+<section id="数据预处理-1" class="level3">
+<h3 class="anchored" data-anchor-id="数据预处理-1">3.2.2 数据预处理</h3>
+<ul>
+<li>缺失值检查</li>
+</ul>
+<p>为什么这里’评论数‘和’喜欢数‘列中将0视为缺失？</p>
+<p>当某游戏该列（如评论数）的值为0时，比较表中另一列具有大致相同数值的（喜欢数）其他游戏，可以发现其他游戏的该列（评论数）一般都显著多于0，故而具有几乎相同评论数的该游戏不太可能该列值为0（喜欢数），猜测应该是搜集数据时遇到的搜集失败默认的赋值，为了数据的准确性和真实性，这里需要转化为NA来处理。</p>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb41"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb41-1"><a href="#cb41-1" aria-hidden="true" tabindex="-1"></a><span class="co">#先将所有空值、null、0转变为缺失值，便于查看</span></span>
+<span id="cb41-2"><a href="#cb41-2" aria-hidden="true" tabindex="-1"></a>data_game[data_game[<span class="dv">1</span><span class="sc">:</span><span class="fu">nrow</span>(data_game), ] <span class="sc">==</span> <span class="st">""</span>] <span class="ot">&lt;-</span> <span class="cn">NA</span></span>
+<span id="cb41-3"><a href="#cb41-3" aria-hidden="true" tabindex="-1"></a>data_game[<span class="fu">is.null</span>(data_game)] <span class="ot">&lt;-</span> <span class="cn">NA</span></span>
+<span id="cb41-4"><a href="#cb41-4" aria-hidden="true" tabindex="-1"></a>data_game[data_game[<span class="dv">1</span><span class="sc">:</span><span class="fu">nrow</span>(data_game), ] <span class="sc">==</span> <span class="dv">0</span>] <span class="ot">&lt;-</span> <span class="cn">NA</span></span>
+<span id="cb41-5"><a href="#cb41-5" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb41-6"><a href="#cb41-6" aria-hidden="true" tabindex="-1"></a><span class="co">#查看哪些变量存在缺失值</span></span>
+<span id="cb41-7"><a href="#cb41-7" aria-hidden="true" tabindex="-1"></a><span class="fu">aggr</span>(data_game,<span class="at">plot=</span><span class="cn">FALSE</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-stdout">
+<pre><code>
+ Missings in variables:
+     Variable Count
+     游戏名称     1
+         评分   203
+         类别     1
+         语言     1
+         热度     1
+ 最后更新时间     1
+     游戏版本     1
+         资费     1
+       开发商    86
+     支持系统     1
+       评论数    22
+       喜欢数     7</code></pre>
+</div>
+<div class="sourceCode cell-code" id="cb43"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb43-1"><a href="#cb43-1" aria-hidden="true" tabindex="-1"></a><span class="fu">aggr</span>(data_game,<span class="at">combined=</span>T)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output-display">
+<div>
+<figure class="figure">
+<p><img src="main_homework_files/figure-html/unnamed-chunk-15-1.png" class="img-fluid figure-img" width="672"></p>
+</figure>
+</div>
+</div>
+</div>
+<p>将<strong>全部缺失</strong>的部分删去</p>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb44"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb44-1"><a href="#cb44-1" aria-hidden="true" tabindex="-1"></a>data_game_clean <span class="ot">&lt;-</span> data_game <span class="sc">%&gt;%</span></span>
+<span id="cb44-2"><a href="#cb44-2" aria-hidden="true" tabindex="-1"></a>  <span class="fu">filter</span>(<span class="fu">rowSums</span>(<span class="fu">is.na</span>(.)) <span class="sc">!=</span> <span class="fu">ncol</span>(.))</span>
+<span id="cb44-3"><a href="#cb44-3" aria-hidden="true" tabindex="-1"></a><span class="fu">print</span>(<span class="fu">paste</span>(<span class="st">'删去的行数为：'</span>,<span class="fu">nrow</span>(data_game)<span class="sc">-</span><span class="fu">nrow</span>(data_game_clean)))</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-stdout">
+<pre><code>[1] "删去的行数为： 1"</code></pre>
+</div>
+<div class="sourceCode cell-code" id="cb46"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb46-1"><a href="#cb46-1" aria-hidden="true" tabindex="-1"></a><span class="fu">aggr</span>(data_game_clean,<span class="at">combined=</span>T)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output-display">
+<div>
+<figure class="figure">
+<p><img src="main_homework_files/figure-html/unnamed-chunk-16-1.png" class="img-fluid figure-img" width="672"></p>
+</figure>
+</div>
+</div>
+</div>
+<ul>
+<li>将’语言‘转化为<strong>独热编码（One-Hot）格式</strong></li>
+</ul>
+<p>提取所有语言</p>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb47"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb47-1"><a href="#cb47-1" aria-hidden="true" tabindex="-1"></a><span class="co"># 创建新数据，排除“语言”列</span></span>
+<span id="cb47-2"><a href="#cb47-2" aria-hidden="true" tabindex="-1"></a>data_game1 <span class="ot">&lt;-</span> data_game_clean <span class="sc">%&gt;%</span> </span>
+<span id="cb47-3"><a href="#cb47-3" aria-hidden="true" tabindex="-1"></a>                              <span class="fu">select</span>(<span class="sc">-</span>语言)</span>
+<span id="cb47-4"><a href="#cb47-4" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb47-5"><a href="#cb47-5" aria-hidden="true" tabindex="-1"></a><span class="co"># 提取所有类型并去重</span></span>
+<span id="cb47-6"><a href="#cb47-6" aria-hidden="true" tabindex="-1"></a>(all_types <span class="ot">&lt;-</span> <span class="fu">str_extract_all</span>(data_game_clean<span class="sc">$</span>语言, <span class="st">"[^, ]+"</span>) <span class="sc">%&gt;%</span> </span>
+<span id="cb47-7"><a href="#cb47-7" aria-hidden="true" tabindex="-1"></a>  <span class="fu">unlist</span>() <span class="sc">%&gt;%</span> </span>
+<span id="cb47-8"><a href="#cb47-8" aria-hidden="true" tabindex="-1"></a>  <span class="fu">trimws</span>() <span class="sc">%&gt;%</span> </span>
+<span id="cb47-9"><a href="#cb47-9" aria-hidden="true" tabindex="-1"></a>  <span class="fu">unique</span>())</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-stdout">
+<pre><code>[1] "中文" "英文" "韩文" "日文" "其他"</code></pre>
+</div>
+</div>
+<p>编码</p>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb49"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb49-1"><a href="#cb49-1" aria-hidden="true" tabindex="-1"></a><span class="co"># 根据提取的类型创建新列</span></span>
+<span id="cb49-2"><a href="#cb49-2" aria-hidden="true" tabindex="-1"></a><span class="cf">for</span> (type <span class="cf">in</span> all_types) {</span>
+<span id="cb49-3"><a href="#cb49-3" aria-hidden="true" tabindex="-1"></a>  <span class="cf">if</span> (<span class="sc">!</span><span class="fu">is.na</span>(type)) {</span>
+<span id="cb49-4"><a href="#cb49-4" aria-hidden="true" tabindex="-1"></a>  data_game1[[type]] <span class="ot">&lt;-</span> <span class="fu">ifelse</span>(</span>
+<span id="cb49-5"><a href="#cb49-5" aria-hidden="true" tabindex="-1"></a>                  <span class="sc">!</span><span class="fu">is.na</span>(data_game_clean<span class="sc">$</span>语言) <span class="sc">&amp;</span> <span class="fu">grepl</span>(type, data_game_clean<span class="sc">$</span>语言),</span>
+<span id="cb49-6"><a href="#cb49-6" aria-hidden="true" tabindex="-1"></a>                  <span class="dv">1</span>, </span>
+<span id="cb49-7"><a href="#cb49-7" aria-hidden="true" tabindex="-1"></a>                  <span class="fu">ifelse</span>(<span class="fu">is.na</span>(data_game_clean<span class="sc">$</span>语言), <span class="cn">NA</span>, <span class="dv">0</span>)</span>
+<span id="cb49-8"><a href="#cb49-8" aria-hidden="true" tabindex="-1"></a>                  )</span>
+<span id="cb49-9"><a href="#cb49-9" aria-hidden="true" tabindex="-1"></a>}}</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</div>
+</section>
+</section>
+<section id="特征工程" class="level2">
+<h2 class="anchored" data-anchor-id="特征工程">3.3 特征工程</h2>
+<p>查看当前数据格式</p>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb50"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb50-1"><a href="#cb50-1" aria-hidden="true" tabindex="-1"></a><span class="fu">print</span>(data_game1)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-stdout">
+<pre><code># A tibble: 1,140 × 16
+   游戏名称  评分 类别  热度  最后更新时间 游戏版本 资费  开发商 支持系统 评论数
+   &lt;chr&gt;    &lt;dbl&gt; &lt;chr&gt; &lt;chr&gt; &lt;date&gt;       &lt;chr&gt;    &lt;chr&gt; &lt;chr&gt;  &lt;chr&gt;     &lt;dbl&gt;
+ 1 捕鱼达人   7.6 益智… 95℃   2015-07-29   1.9.0    道具… 触控…  2.3以上    6654
+ 2 NBA2K14    7.5 体育… 94℃   2014-05-27   1.3      完全… 2K Ga… 4.0以上   16190
+ 3 愤怒的…    5.9 益智… 93℃   2016-09-29   6.0.3    道具… 拓维…  2.3以上    7187
+ 4 三国志…    5.1 动作… 90℃   2012-07-31   1.3      完全… PlayB… 2.2以上    9372
+ 5 地铁跑…    8.4 益智… 89℃   2016-09-23   2.54.0   道具… 乐逗   4.0以上    8804
+ 6 火箭飞人   8.2 动作… 89℃   2016-08-30   1.9.10   完全… Halfb… 4.0.3以…   7371
+ 7 暴力摩…    5.1 动作… 89℃   2015-02-17   1.11     完全… Adren… 2.0.1以…   4461
+ 8 愤怒的…    9.5 益智… 87℃   2015-07-06   2.2.1    完全… Rovio  2.3以上    5238
+ 9 NBA 2K1…   8   体育… 85℃   2016-09-30   0.0.21   完全… 2K Ga… 4.3以上    2411
+10 天天酷跑   6.9 益智… 84℃   2016-07-22   1.0.35.0 完全… 腾讯   2.2以上    8245
+# ℹ 1,130 more rows
+# ℹ 6 more variables: 喜欢数 &lt;dbl&gt;, 中文 &lt;dbl&gt;, 英文 &lt;dbl&gt;, 韩文 &lt;dbl&gt;,
+#   日文 &lt;dbl&gt;, 其他 &lt;dbl&gt;</code></pre>
+</div>
+</div>
+<section id="将热度提取为数值" class="level3">
+<h3 class="anchored" data-anchor-id="将热度提取为数值">3.3.1 将热度提取为数值</h3>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb52"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb52-1"><a href="#cb52-1" aria-hidden="true" tabindex="-1"></a>convert_t_count <span class="ot">&lt;-</span> <span class="cf">function</span>(t) {</span>
+<span id="cb52-2"><a href="#cb52-2" aria-hidden="true" tabindex="-1"></a>    <span class="fu">as.numeric</span>(<span class="fu">gsub</span>(<span class="st">"℃"</span>, <span class="st">""</span>, t)) </span>
+<span id="cb52-3"><a href="#cb52-3" aria-hidden="true" tabindex="-1"></a>}</span>
+<span id="cb52-4"><a href="#cb52-4" aria-hidden="true" tabindex="-1"></a>data_game1<span class="sc">$</span>热度 <span class="ot">&lt;-</span> <span class="fu">sapply</span>(data_game1<span class="sc">$</span>热度, convert_t_count)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</div>
+</section>
+<section id="将最后更新时间游戏版本分别分割提取成新列" class="level3">
+<h3 class="anchored" data-anchor-id="将最后更新时间游戏版本分别分割提取成新列">3.3.2 将‘最后更新时间’，’游戏版本’分别分割提取成新列</h3>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb53"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb53-1"><a href="#cb53-1" aria-hidden="true" tabindex="-1"></a><span class="co"># 1. 将所有数据（除了‘最后更新时间’，‘游戏版本’）保存至data_game2</span></span>
+<span id="cb53-2"><a href="#cb53-2" aria-hidden="true" tabindex="-1"></a>data_game2 <span class="ot">&lt;-</span> data_game1 <span class="sc">%&gt;%</span></span>
+<span id="cb53-3"><a href="#cb53-3" aria-hidden="true" tabindex="-1"></a>  <span class="fu">select</span>(<span class="sc">-</span><span class="st">`</span><span class="at">最后更新时间</span><span class="st">`</span>, <span class="sc">-</span><span class="st">`</span><span class="at">游戏版本</span><span class="st">`</span>)</span>
+<span id="cb53-4"><a href="#cb53-4" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb53-5"><a href="#cb53-5" aria-hidden="true" tabindex="-1"></a><span class="co"># 2. 将‘最后更新时间’提取为新列‘最后更新年’，‘最后更新月’，‘最后更新日’并加入到data_game2</span></span>
+<span id="cb53-6"><a href="#cb53-6" aria-hidden="true" tabindex="-1"></a>data_game2 <span class="ot">&lt;-</span> data_game1 <span class="sc">%&gt;%</span></span>
+<span id="cb53-7"><a href="#cb53-7" aria-hidden="true" tabindex="-1"></a>  <span class="fu">mutate</span>(</span>
+<span id="cb53-8"><a href="#cb53-8" aria-hidden="true" tabindex="-1"></a>    最后更新年 <span class="ot">=</span> <span class="fu">as.integer</span>(<span class="fu">format</span>(<span class="st">`</span><span class="at">最后更新时间</span><span class="st">`</span>, <span class="st">"%Y"</span>)),</span>
+<span id="cb53-9"><a href="#cb53-9" aria-hidden="true" tabindex="-1"></a>    最后更新月 <span class="ot">=</span> <span class="fu">as.integer</span>(<span class="fu">format</span>(<span class="st">`</span><span class="at">最后更新时间</span><span class="st">`</span>, <span class="st">"%m"</span>)),</span>
+<span id="cb53-10"><a href="#cb53-10" aria-hidden="true" tabindex="-1"></a>    最后更新日 <span class="ot">=</span> <span class="fu">as.integer</span>(<span class="fu">format</span>(<span class="st">`</span><span class="at">最后更新时间</span><span class="st">`</span>, <span class="st">"%d"</span>))</span>
+<span id="cb53-11"><a href="#cb53-11" aria-hidden="true" tabindex="-1"></a>  ) <span class="sc">%&gt;%</span></span>
+<span id="cb53-12"><a href="#cb53-12" aria-hidden="true" tabindex="-1"></a>  <span class="fu">select</span>(<span class="sc">-</span><span class="fu">colnames</span>(data_game1)) <span class="sc">%&gt;%</span></span>
+<span id="cb53-13"><a href="#cb53-13" aria-hidden="true" tabindex="-1"></a>  <span class="fu">bind_cols</span>(data_game2)</span>
+<span id="cb53-14"><a href="#cb53-14" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb53-15"><a href="#cb53-15" aria-hidden="true" tabindex="-1"></a><span class="co"># 3. 提取游戏版本中的第一个“.”前的数值</span></span>
+<span id="cb53-16"><a href="#cb53-16" aria-hidden="true" tabindex="-1"></a>data_game2 <span class="ot">&lt;-</span> data_game1 <span class="sc">%&gt;%</span></span>
+<span id="cb53-17"><a href="#cb53-17" aria-hidden="true" tabindex="-1"></a>  <span class="fu">mutate</span>(</span>
+<span id="cb53-18"><a href="#cb53-18" aria-hidden="true" tabindex="-1"></a>    游戏版本1 <span class="ot">=</span> <span class="fu">as.integer</span>(<span class="fu">ifelse</span>(<span class="fu">grepl</span>(<span class="st">"^[0-9]+"</span>, <span class="st">`</span><span class="at">游戏版本</span><span class="st">`</span>), </span>
+<span id="cb53-19"><a href="#cb53-19" aria-hidden="true" tabindex="-1"></a>                                   <span class="fu">str_extract</span>(<span class="st">`</span><span class="at">游戏版本</span><span class="st">`</span>, <span class="st">"^[0-9]+"</span>), </span>
+<span id="cb53-20"><a href="#cb53-20" aria-hidden="true" tabindex="-1"></a>                                   <span class="cn">NA</span>))</span>
+<span id="cb53-21"><a href="#cb53-21" aria-hidden="true" tabindex="-1"></a>  )<span class="sc">%&gt;%</span></span>
+<span id="cb53-22"><a href="#cb53-22" aria-hidden="true" tabindex="-1"></a>  <span class="fu">select</span>(<span class="sc">-</span><span class="fu">colnames</span>(data_game1)) <span class="sc">%&gt;%</span></span>
+<span id="cb53-23"><a href="#cb53-23" aria-hidden="true" tabindex="-1"></a>  <span class="fu">bind_cols</span>(data_game2)</span>
+<span id="cb53-24"><a href="#cb53-24" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb53-25"><a href="#cb53-25" aria-hidden="true" tabindex="-1"></a><span class="co"># 4. 将特定列转化为因子类型</span></span>
+<span id="cb53-26"><a href="#cb53-26" aria-hidden="true" tabindex="-1"></a>factor_columns <span class="ot">&lt;-</span> <span class="fu">c</span>(<span class="st">'中文'</span>, <span class="st">'英文'</span>, <span class="st">'韩文'</span>, <span class="st">'日文'</span>, <span class="st">'其他'</span>, <span class="st">'支持系统'</span>, <span class="st">'开发商'</span>, <span class="st">'资费'</span>, <span class="st">'类别'</span>)</span>
+<span id="cb53-27"><a href="#cb53-27" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb53-28"><a href="#cb53-28" aria-hidden="true" tabindex="-1"></a>data_game2 <span class="ot">&lt;-</span> data_game2 <span class="sc">%&gt;%</span></span>
+<span id="cb53-29"><a href="#cb53-29" aria-hidden="true" tabindex="-1"></a>  <span class="fu">mutate</span>(<span class="fu">across</span>(<span class="fu">all_of</span>(factor_columns), as.factor))</span>
+<span id="cb53-30"><a href="#cb53-30" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb53-31"><a href="#cb53-31" aria-hidden="true" tabindex="-1"></a><span class="co"># 查看结果</span></span>
+<span id="cb53-32"><a href="#cb53-32" aria-hidden="true" tabindex="-1"></a><span class="fu">print</span>(data_game2)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-stdout">
+<pre><code># A tibble: 1,140 × 18
+   游戏版本1 最后更新年 最后更新月 最后更新日 游戏名称    评分 类别   热度 资费 
+       &lt;int&gt;      &lt;int&gt;      &lt;int&gt;      &lt;int&gt; &lt;chr&gt;      &lt;dbl&gt; &lt;fct&gt; &lt;dbl&gt; &lt;fct&gt;
+ 1         1       2015          7         29 捕鱼达人     7.6 益智…    95 道具…
+ 2         1       2014          5         27 NBA2K14      7.5 体育…    94 完全…
+ 3         6       2016          9         29 愤怒的小…    5.9 益智…    93 道具…
+ 4         1       2012          7         31 三国志无…    5.1 动作…    90 完全…
+ 5         2       2016          9         23 地铁跑酷-…   8.4 益智…    89 道具…
+ 6         1       2016          8         30 火箭飞人     8.2 动作…    89 完全…
+ 7         1       2015          2         17 暴力摩托…    5.1 动作…    89 完全…
+ 8         2       2015          7          6 愤怒的小…    9.5 益智…    87 完全…
+ 9         0       2016          9         30 NBA 2K17…    8   体育…    85 完全…
+10         1       2016          7         22 天天酷跑     6.9 益智…    84 完全…
+# ℹ 1,130 more rows
+# ℹ 9 more variables: 开发商 &lt;fct&gt;, 支持系统 &lt;fct&gt;, 评论数 &lt;dbl&gt;, 喜欢数 &lt;dbl&gt;,
+#   中文 &lt;fct&gt;, 英文 &lt;fct&gt;, 韩文 &lt;fct&gt;, 日文 &lt;fct&gt;, 其他 &lt;fct&gt;</code></pre>
+</div>
+</div>
+</section>
+<section id="描述性统计-1" class="level3">
+<h3 class="anchored" data-anchor-id="描述性统计-1">3.3.3 描述性统计</h3>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb55"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb55-1"><a href="#cb55-1" aria-hidden="true" tabindex="-1"></a>select_colnames <span class="ot">&lt;-</span> <span class="fu">c</span>(<span class="st">'游戏版本1'</span>,<span class="st">'评分'</span>,<span class="st">'热度'</span>,<span class="st">'评论数'</span>,<span class="st">'喜欢数'</span>)</span>
+<span id="cb55-2"><a href="#cb55-2" aria-hidden="true" tabindex="-1"></a>numerical_data_game2 <span class="ot">&lt;-</span> data_game2[select_colnames]</span>
+<span id="cb55-3"><a href="#cb55-3" aria-hidden="true" tabindex="-1"></a><span class="fu">summary</span>(numerical_data_game2)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-stdout">
+<pre><code>   游戏版本1             评分            热度          评论数     
+ Min.   :       0   Min.   :1.000   Min.   :28.0   Min.   :   22  
+ 1st Qu.:       1   1st Qu.:5.200   1st Qu.:33.0   1st Qu.:  494  
+ Median :       1   Median :6.600   Median :39.0   Median :  880  
+ Mean   :   18354   Mean   :6.611   Mean   :41.7   Mean   : 2365  
+ 3rd Qu.:       2   3rd Qu.:7.900   3rd Qu.:48.0   3rd Qu.: 2558  
+ Max.   :20150513   Max.   :9.600   Max.   :95.0   Max.   :96354  
+ NA's   :3          NA's   :202                    NA's   :21     
+     喜欢数        
+ Min.   :    1.00  
+ 1st Qu.:   68.25  
+ Median :  235.00  
+ Mean   :  790.45  
+ 3rd Qu.:  860.75  
+ Max.   :13323.00  
+ NA's   :6         </code></pre>
+</div>
+</div>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb57"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb57-1"><a href="#cb57-1" aria-hidden="true" tabindex="-1"></a>tab_01 <span class="ot">=</span> <span class="fu">data.frame</span>(</span>
+<span id="cb57-2"><a href="#cb57-2" aria-hidden="true" tabindex="-1"></a>  <span class="at">Mean  =</span> <span class="fu">c</span>(<span class="fu">colMeans</span>(numerical_data_game2, <span class="at">na.rm =</span> <span class="cn">TRUE</span>)),</span>
+<span id="cb57-3"><a href="#cb57-3" aria-hidden="true" tabindex="-1"></a>  <span class="at">SD =</span> <span class="fu">c</span>(<span class="fu">sapply</span>(numerical_data_game2, sd, <span class="at">na.rm =</span> <span class="cn">TRUE</span>)),</span>
+<span id="cb57-4"><a href="#cb57-4" aria-hidden="true" tabindex="-1"></a>  <span class="at">Median =</span> <span class="fu">c</span>(<span class="fu">sapply</span>(numerical_data_game2, median, <span class="at">na.rm =</span> <span class="cn">TRUE</span>)),</span>
+<span id="cb57-5"><a href="#cb57-5" aria-hidden="true" tabindex="-1"></a>  <span class="at">Min =</span> <span class="fu">c</span>(<span class="fu">sapply</span>(numerical_data_game2, min, <span class="at">na.rm =</span> <span class="cn">TRUE</span>)),</span>
+<span id="cb57-6"><a href="#cb57-6" aria-hidden="true" tabindex="-1"></a>  <span class="co"># 计算数据的偏度</span></span>
+<span id="cb57-7"><a href="#cb57-7" aria-hidden="true" tabindex="-1"></a>  <span class="at">skew =</span> <span class="fu">c</span>(<span class="fu">sapply</span>(numerical_data_game2, skewness, <span class="at">na.rm =</span> <span class="cn">TRUE</span>)),</span>
+<span id="cb57-8"><a href="#cb57-8" aria-hidden="true" tabindex="-1"></a>  <span class="co"># 计算数据的峰度</span></span>
+<span id="cb57-9"><a href="#cb57-9" aria-hidden="true" tabindex="-1"></a>  <span class="at">kurt =</span> <span class="fu">c</span>(<span class="fu">sapply</span>(numerical_data_game2, kurtosis, <span class="at">na.rm =</span> <span class="cn">TRUE</span>)),</span>
+<span id="cb57-10"><a href="#cb57-10" aria-hidden="true" tabindex="-1"></a>  <span class="at">Max =</span> <span class="fu">c</span>(<span class="fu">sapply</span>(numerical_data_game2, max, <span class="at">na.rm =</span> <span class="cn">TRUE</span>))</span>
+<span id="cb57-11"><a href="#cb57-11" aria-hidden="true" tabindex="-1"></a>) </span>
+<span id="cb57-12"><a href="#cb57-12" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb57-13"><a href="#cb57-13" aria-hidden="true" tabindex="-1"></a><span class="co"># 生成描述性统计表格</span></span>
+<span id="cb57-14"><a href="#cb57-14" aria-hidden="true" tabindex="-1"></a><span class="fu">kable</span>(</span>
+<span id="cb57-15"><a href="#cb57-15" aria-hidden="true" tabindex="-1"></a>  tab_01,</span>
+<span id="cb57-16"><a href="#cb57-16" aria-hidden="true" tabindex="-1"></a>  <span class="at">col.names =</span> <span class="fu">c</span>(<span class="st">"均值"</span>, <span class="st">"标准差"</span>, <span class="st">"中位数"</span>,<span class="st">"偏度"</span>,<span class="st">"峰度"</span>, <span class="st">"最小"</span>, <span class="st">"最大"</span>),</span>
+<span id="cb57-17"><a href="#cb57-17" aria-hidden="true" tabindex="-1"></a>  <span class="at">digits =</span> <span class="dv">2</span>,</span>
+<span id="cb57-18"><a href="#cb57-18" aria-hidden="true" tabindex="-1"></a>  <span class="at">caption =</span> <span class="st">"</span><span class="sc">\\</span><span class="st">label{tab2}Summary Statistics"</span>,</span>
+<span id="cb57-19"><a href="#cb57-19" aria-hidden="true" tabindex="-1"></a>  <span class="at">booktabs =</span> <span class="cn">TRUE</span></span>
+<span id="cb57-20"><a href="#cb57-20" aria-hidden="true" tabindex="-1"></a>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output-display">
+<table class="caption-top table table-sm table-striped small">
+<caption>Summary Statistics</caption>
+<colgroup>
+<col style="width: 15%">
+<col style="width: 13%">
+<col style="width: 15%">
+<col style="width: 10%">
+<col style="width: 7%">
+<col style="width: 9%">
+<col style="width: 12%">
+<col style="width: 16%">
+</colgroup>
+<thead>
+<tr class="header">
+<th style="text-align: left;"></th>
+<th style="text-align: right;">均值</th>
+<th style="text-align: right;">标准差</th>
+<th style="text-align: right;">中位数</th>
+<th style="text-align: right;">偏度</th>
+<th style="text-align: right;">峰度</th>
+<th style="text-align: right;">最小</th>
+<th style="text-align: right;">最大</th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<td style="text-align: left;">游戏版本1</td>
+<td style="text-align: right;">18353.73</td>
+<td style="text-align: right;">597810.75</td>
+<td style="text-align: right;">1.0</td>
+<td style="text-align: right;">0</td>
+<td style="text-align: right;">33.64</td>
+<td style="text-align: right;">1133.21</td>
+<td style="text-align: right;">20150513.0</td>
+</tr>
+<tr class="even">
+<td style="text-align: left;">评分</td>
+<td style="text-align: right;">6.61</td>
+<td style="text-align: right;">1.35</td>
+<td style="text-align: right;">6.6</td>
+<td style="text-align: right;">1</td>
+<td style="text-align: right;">-0.04</td>
+<td style="text-align: right;">2.04</td>
+<td style="text-align: right;">9.6</td>
+</tr>
+<tr class="odd">
+<td style="text-align: left;">热度</td>
+<td style="text-align: right;">41.70</td>
+<td style="text-align: right;">11.61</td>
+<td style="text-align: right;">39.0</td>
+<td style="text-align: right;">28</td>
+<td style="text-align: right;">1.32</td>
+<td style="text-align: right;">5.27</td>
+<td style="text-align: right;">95.0</td>
+</tr>
+<tr class="even">
+<td style="text-align: left;">评论数</td>
+<td style="text-align: right;">2365.30</td>
+<td style="text-align: right;">4902.85</td>
+<td style="text-align: right;">880.0</td>
+<td style="text-align: right;">22</td>
+<td style="text-align: right;">9.82</td>
+<td style="text-align: right;">155.01</td>
+<td style="text-align: right;">96354.0</td>
+</tr>
+<tr class="odd">
+<td style="text-align: left;">喜欢数</td>
+<td style="text-align: right;">790.45</td>
+<td style="text-align: right;">1395.16</td>
+<td style="text-align: right;">235.0</td>
+<td style="text-align: right;">1</td>
+<td style="text-align: right;">3.65</td>
+<td style="text-align: right;">20.90</td>
+<td style="text-align: right;">13323.0</td>
+</tr>
+</tbody>
+</table>
+</div>
+</div>
+<p>绘制云雨图</p>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb58"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb58-1"><a href="#cb58-1" aria-hidden="true" tabindex="-1"></a><span class="co"># 自定义云雨图函数</span></span>
+<span id="cb58-2"><a href="#cb58-2" aria-hidden="true" tabindex="-1"></a><span class="st">"%||%"</span> <span class="ot">&lt;-</span> <span class="cf">function</span>(a, b) {</span>
+<span id="cb58-3"><a href="#cb58-3" aria-hidden="true" tabindex="-1"></a>  <span class="cf">if</span> (<span class="sc">!</span><span class="fu">is.null</span>(a)) a <span class="cf">else</span> b</span>
+<span id="cb58-4"><a href="#cb58-4" aria-hidden="true" tabindex="-1"></a>}</span>
+<span id="cb58-5"><a href="#cb58-5" aria-hidden="true" tabindex="-1"></a> </span>
+<span id="cb58-6"><a href="#cb58-6" aria-hidden="true" tabindex="-1"></a> </span>
+<span id="cb58-7"><a href="#cb58-7" aria-hidden="true" tabindex="-1"></a>geom_flat_violin <span class="ot">&lt;-</span> <span class="cf">function</span>(<span class="at">mapping =</span> <span class="cn">NULL</span>, <span class="at">data =</span> <span class="cn">NULL</span>, <span class="at">stat =</span> <span class="st">"ydensity"</span>,</span>
+<span id="cb58-8"><a href="#cb58-8" aria-hidden="true" tabindex="-1"></a>                             <span class="at">position =</span> <span class="st">"dodge"</span>, <span class="at">trim =</span> <span class="cn">TRUE</span>, <span class="at">scale =</span> <span class="st">"area"</span>,</span>
+<span id="cb58-9"><a href="#cb58-9" aria-hidden="true" tabindex="-1"></a>                             <span class="at">show.legend =</span> <span class="cn">NA</span>, <span class="at">inherit.aes =</span> <span class="cn">TRUE</span>, ...) {</span>
+<span id="cb58-10"><a href="#cb58-10" aria-hidden="true" tabindex="-1"></a>  <span class="fu">layer</span>(</span>
+<span id="cb58-11"><a href="#cb58-11" aria-hidden="true" tabindex="-1"></a>    <span class="at">data =</span> data,</span>
+<span id="cb58-12"><a href="#cb58-12" aria-hidden="true" tabindex="-1"></a>    <span class="at">mapping =</span> mapping,</span>
+<span id="cb58-13"><a href="#cb58-13" aria-hidden="true" tabindex="-1"></a>    <span class="at">stat =</span> stat,</span>
+<span id="cb58-14"><a href="#cb58-14" aria-hidden="true" tabindex="-1"></a>    <span class="at">geom =</span> GeomFlatViolin,</span>
+<span id="cb58-15"><a href="#cb58-15" aria-hidden="true" tabindex="-1"></a>    <span class="at">position =</span> position,</span>
+<span id="cb58-16"><a href="#cb58-16" aria-hidden="true" tabindex="-1"></a>    <span class="at">show.legend =</span> show.legend,</span>
+<span id="cb58-17"><a href="#cb58-17" aria-hidden="true" tabindex="-1"></a>    <span class="at">inherit.aes =</span> inherit.aes,</span>
+<span id="cb58-18"><a href="#cb58-18" aria-hidden="true" tabindex="-1"></a>    <span class="at">params =</span> <span class="fu">list</span>(</span>
+<span id="cb58-19"><a href="#cb58-19" aria-hidden="true" tabindex="-1"></a>      <span class="at">trim =</span> trim,</span>
+<span id="cb58-20"><a href="#cb58-20" aria-hidden="true" tabindex="-1"></a>      <span class="at">scale =</span> scale,</span>
+<span id="cb58-21"><a href="#cb58-21" aria-hidden="true" tabindex="-1"></a>      ...</span>
+<span id="cb58-22"><a href="#cb58-22" aria-hidden="true" tabindex="-1"></a>    )</span>
+<span id="cb58-23"><a href="#cb58-23" aria-hidden="true" tabindex="-1"></a>  )</span>
+<span id="cb58-24"><a href="#cb58-24" aria-hidden="true" tabindex="-1"></a>}</span>
+<span id="cb58-25"><a href="#cb58-25" aria-hidden="true" tabindex="-1"></a>GeomFlatViolin <span class="ot">&lt;-</span></span>
+<span id="cb58-26"><a href="#cb58-26" aria-hidden="true" tabindex="-1"></a>  <span class="fu">ggproto</span>(<span class="st">"GeomFlatViolin"</span>, Geom,</span>
+<span id="cb58-27"><a href="#cb58-27" aria-hidden="true" tabindex="-1"></a>          <span class="at">setup_data =</span> <span class="cf">function</span>(data, params) {</span>
+<span id="cb58-28"><a href="#cb58-28" aria-hidden="true" tabindex="-1"></a>            data<span class="sc">$</span>width <span class="ot">&lt;-</span> data<span class="sc">$</span>width <span class="sc">%||%</span></span>
+<span id="cb58-29"><a href="#cb58-29" aria-hidden="true" tabindex="-1"></a>              params<span class="sc">$</span>width <span class="sc">%||%</span> (<span class="fu">resolution</span>(data<span class="sc">$</span>x, <span class="cn">FALSE</span>) <span class="sc">*</span> <span class="fl">0.9</span>)</span>
+<span id="cb58-30"><a href="#cb58-30" aria-hidden="true" tabindex="-1"></a> </span>
+<span id="cb58-31"><a href="#cb58-31" aria-hidden="true" tabindex="-1"></a> </span>
+<span id="cb58-32"><a href="#cb58-32" aria-hidden="true" tabindex="-1"></a>            <span class="co"># ymin, ymax, xmin, and xmax define the bounding rectangle for each group</span></span>
+<span id="cb58-33"><a href="#cb58-33" aria-hidden="true" tabindex="-1"></a>            data <span class="sc">%&gt;%</span></span>
+<span id="cb58-34"><a href="#cb58-34" aria-hidden="true" tabindex="-1"></a>              <span class="fu">group_by</span>(group) <span class="sc">%&gt;%</span></span>
+<span id="cb58-35"><a href="#cb58-35" aria-hidden="true" tabindex="-1"></a>              <span class="fu">mutate</span>(<span class="at">ymin =</span> <span class="fu">min</span>(y),</span>
+<span id="cb58-36"><a href="#cb58-36" aria-hidden="true" tabindex="-1"></a>                     <span class="at">ymax =</span> <span class="fu">max</span>(y),</span>
+<span id="cb58-37"><a href="#cb58-37" aria-hidden="true" tabindex="-1"></a>                     <span class="at">xmin =</span> x,</span>
+<span id="cb58-38"><a href="#cb58-38" aria-hidden="true" tabindex="-1"></a>                     <span class="at">xmax =</span> x <span class="sc">+</span> width <span class="sc">/</span> <span class="dv">2</span>)</span>
+<span id="cb58-39"><a href="#cb58-39" aria-hidden="true" tabindex="-1"></a> </span>
+<span id="cb58-40"><a href="#cb58-40" aria-hidden="true" tabindex="-1"></a> </span>
+<span id="cb58-41"><a href="#cb58-41" aria-hidden="true" tabindex="-1"></a>          },</span>
+<span id="cb58-42"><a href="#cb58-42" aria-hidden="true" tabindex="-1"></a> </span>
+<span id="cb58-43"><a href="#cb58-43" aria-hidden="true" tabindex="-1"></a> </span>
+<span id="cb58-44"><a href="#cb58-44" aria-hidden="true" tabindex="-1"></a>          <span class="at">draw_group =</span> <span class="cf">function</span>(data, panel_scales, coord) {</span>
+<span id="cb58-45"><a href="#cb58-45" aria-hidden="true" tabindex="-1"></a>            <span class="co"># Find the points for the line to go all the way around</span></span>
+<span id="cb58-46"><a href="#cb58-46" aria-hidden="true" tabindex="-1"></a>            data <span class="ot">&lt;-</span> <span class="fu">transform</span>(data, <span class="at">xminv =</span> x,</span>
+<span id="cb58-47"><a href="#cb58-47" aria-hidden="true" tabindex="-1"></a>                              <span class="at">xmaxv =</span> x <span class="sc">+</span> violinwidth <span class="sc">*</span> (xmax <span class="sc">-</span> x)) <span class="co">#利用transform函数为数据框mydata增加数据</span></span>
+<span id="cb58-48"><a href="#cb58-48" aria-hidden="true" tabindex="-1"></a> </span>
+<span id="cb58-49"><a href="#cb58-49" aria-hidden="true" tabindex="-1"></a> </span>
+<span id="cb58-50"><a href="#cb58-50" aria-hidden="true" tabindex="-1"></a>            newdata <span class="ot">&lt;-</span> <span class="fu">rbind</span>(plyr<span class="sc">::</span><span class="fu">arrange</span>(<span class="fu">transform</span>(data, <span class="at">x =</span> xmaxv), <span class="sc">-</span>y),plyr<span class="sc">::</span><span class="fu">arrange</span>(<span class="fu">transform</span>(data, <span class="at">x =</span> xminv), y))</span>
+<span id="cb58-51"><a href="#cb58-51" aria-hidden="true" tabindex="-1"></a>            newdata_Polygon <span class="ot">&lt;-</span> <span class="fu">rbind</span>(newdata, newdata[<span class="dv">1</span>,])</span>
+<span id="cb58-52"><a href="#cb58-52" aria-hidden="true" tabindex="-1"></a>            newdata_Polygon<span class="sc">$</span>colour<span class="ot">&lt;-</span><span class="cn">NA</span></span>
+<span id="cb58-53"><a href="#cb58-53" aria-hidden="true" tabindex="-1"></a> </span>
+<span id="cb58-54"><a href="#cb58-54" aria-hidden="true" tabindex="-1"></a> </span>
+<span id="cb58-55"><a href="#cb58-55" aria-hidden="true" tabindex="-1"></a>            newdata_Path <span class="ot">&lt;-</span> plyr<span class="sc">::</span><span class="fu">arrange</span>(<span class="fu">transform</span>(data, <span class="at">x =</span> xmaxv), <span class="sc">-</span>y)</span>
+<span id="cb58-56"><a href="#cb58-56" aria-hidden="true" tabindex="-1"></a> </span>
+<span id="cb58-57"><a href="#cb58-57" aria-hidden="true" tabindex="-1"></a> </span>
+<span id="cb58-58"><a href="#cb58-58" aria-hidden="true" tabindex="-1"></a>            ggplot2<span class="sc">:::</span><span class="fu">ggname</span>(<span class="st">"geom_flat_violin"</span>, <span class="fu">grobTree</span>(</span>
+<span id="cb58-59"><a href="#cb58-59" aria-hidden="true" tabindex="-1"></a>              GeomPolygon<span class="sc">$</span><span class="fu">draw_panel</span>(newdata_Polygon, panel_scales, coord),</span>
+<span id="cb58-60"><a href="#cb58-60" aria-hidden="true" tabindex="-1"></a>              GeomPath<span class="sc">$</span><span class="fu">draw_panel</span>(newdata_Path, panel_scales, coord))</span>
+<span id="cb58-61"><a href="#cb58-61" aria-hidden="true" tabindex="-1"></a>            )</span>
+<span id="cb58-62"><a href="#cb58-62" aria-hidden="true" tabindex="-1"></a>          },</span>
+<span id="cb58-63"><a href="#cb58-63" aria-hidden="true" tabindex="-1"></a> </span>
+<span id="cb58-64"><a href="#cb58-64" aria-hidden="true" tabindex="-1"></a> </span>
+<span id="cb58-65"><a href="#cb58-65" aria-hidden="true" tabindex="-1"></a>          <span class="at">draw_key =</span> draw_key_polygon,</span>
+<span id="cb58-66"><a href="#cb58-66" aria-hidden="true" tabindex="-1"></a> </span>
+<span id="cb58-67"><a href="#cb58-67" aria-hidden="true" tabindex="-1"></a> </span>
+<span id="cb58-68"><a href="#cb58-68" aria-hidden="true" tabindex="-1"></a>          <span class="at">default_aes =</span> <span class="fu">aes</span>(<span class="at">weight =</span> <span class="dv">1</span>, <span class="at">colour =</span> <span class="st">"grey20"</span>, <span class="at">fill =</span> <span class="st">"white"</span>, <span class="at">size =</span> <span class="fl">0.5</span>,</span>
+<span id="cb58-69"><a href="#cb58-69" aria-hidden="true" tabindex="-1"></a>                            <span class="at">alpha =</span> <span class="cn">NA</span>, <span class="at">linetype =</span> <span class="st">"solid"</span>),</span>
+<span id="cb58-70"><a href="#cb58-70" aria-hidden="true" tabindex="-1"></a> </span>
+<span id="cb58-71"><a href="#cb58-71" aria-hidden="true" tabindex="-1"></a> </span>
+<span id="cb58-72"><a href="#cb58-72" aria-hidden="true" tabindex="-1"></a>          <span class="at">required_aes =</span> <span class="fu">c</span>(<span class="st">"x"</span>, <span class="st">"y"</span>)</span>
+<span id="cb58-73"><a href="#cb58-73" aria-hidden="true" tabindex="-1"></a>  )</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</div>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb59"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb59-1"><a href="#cb59-1" aria-hidden="true" tabindex="-1"></a><span class="fu">library</span>(grid)</span>
+<span id="cb59-2"><a href="#cb59-2" aria-hidden="true" tabindex="-1"></a><span class="fu">library</span>(RColorBrewer)</span>
+<span id="cb59-3"><a href="#cb59-3" aria-hidden="true" tabindex="-1"></a><span class="fu">library</span>(SuppDists) <span class="co">#提供rJohnson()函数</span></span>
+<span id="cb59-4"><a href="#cb59-4" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb59-5"><a href="#cb59-5" aria-hidden="true" tabindex="-1"></a><span class="co">#为了画图方便，舍弃评分列缺少的行</span></span>
+<span id="cb59-6"><a href="#cb59-6" aria-hidden="true" tabindex="-1"></a>data_game3 <span class="ot">&lt;-</span> <span class="fu">filter</span>(data_game2, <span class="sc">!</span><span class="fu">is.na</span>(<span class="st">`</span><span class="at">评分</span><span class="st">`</span>))</span>
+<span id="cb59-7"><a href="#cb59-7" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb59-8"><a href="#cb59-8" aria-hidden="true" tabindex="-1"></a>f2.data <span class="ot">&lt;-</span> data_game3[<span class="fu">c</span>(<span class="st">'类别'</span>,<span class="st">'评分'</span>)]</span>
+<span id="cb59-9"><a href="#cb59-9" aria-hidden="true" tabindex="-1"></a><span class="fu">colnames</span>(f2.data) <span class="ot">&lt;-</span> <span class="fu">c</span>(<span class="st">"类别"</span>,<span class="st">"评分"</span>)</span>
+<span id="cb59-10"><a href="#cb59-10" aria-hidden="true" tabindex="-1"></a><span class="fu">table</span>(f2.data<span class="sc">$</span>类别)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-stdout">
+<pre><code>
+策略塔防 动作游戏 飞行游戏 格斗游戏 角色扮演 竞速游戏 冒险解谜 模拟经营 
+      71      118       25       25      103       69       84       49 
+棋牌游戏 射击游戏 体育运动 养成游戏 益智休闲 音乐游戏 游戏工具 
+      14       96       39       11      210       15        9 </code></pre>
+</div>
+</div>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb61"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb61-1"><a href="#cb61-1" aria-hidden="true" tabindex="-1"></a><span class="co"># 定义颜色</span></span>
+<span id="cb61-2"><a href="#cb61-2" aria-hidden="true" tabindex="-1"></a>mycol22 <span class="ot">&lt;-</span> <span class="fu">c</span>(<span class="st">"#eb998b"</span>, <span class="st">"#fddbc8"</span>, <span class="st">"#42465c"</span>, <span class="st">"#356d67"</span>, <span class="st">"#4c9568"</span>,</span>
+<span id="cb61-3"><a href="#cb61-3" aria-hidden="true" tabindex="-1"></a>             <span class="st">"#7fb961"</span>, <span class="st">"#b0d45d"</span>, <span class="st">"#ffe788"</span>, <span class="st">"#b20000"</span>, <span class="st">"#f06152"</span>,</span>
+<span id="cb61-4"><a href="#cb61-4" aria-hidden="true" tabindex="-1"></a>             <span class="st">"#7d4444"</span>, <span class="st">"#9e6c69"</span>, <span class="st">"#cca69c"</span>, <span class="st">"#5066a1"</span>, <span class="st">"#76afda"</span>,</span>
+<span id="cb61-5"><a href="#cb61-5" aria-hidden="true" tabindex="-1"></a>             <span class="st">"#abddff"</span>, <span class="st">"#dcf2ff"</span>, <span class="st">"#e8743c"</span>, <span class="st">"#ffc556"</span>)</span>
+<span id="cb61-6"><a href="#cb61-6" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb61-7"><a href="#cb61-7" aria-hidden="true" tabindex="-1"></a><span class="co"># 计算每个类别的均值和标准差</span></span>
+<span id="cb61-8"><a href="#cb61-8" aria-hidden="true" tabindex="-1"></a>d <span class="ot">&lt;-</span> <span class="fu">group_by</span>(f2.data, 类别) <span class="sc">%&gt;%</span></span>
+<span id="cb61-9"><a href="#cb61-9" aria-hidden="true" tabindex="-1"></a>  <span class="fu">summarize</span>(<span class="at">mean =</span> <span class="fu">mean</span>(评分),</span>
+<span id="cb61-10"><a href="#cb61-10" aria-hidden="true" tabindex="-1"></a>            <span class="at">sd =</span> <span class="fu">sd</span>(评分))</span>
+<span id="cb61-11"><a href="#cb61-11" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb61-12"><a href="#cb61-12" aria-hidden="true" tabindex="-1"></a><span class="co"># 创建图形</span></span>
+<span id="cb61-13"><a href="#cb61-13" aria-hidden="true" tabindex="-1"></a><span class="fu">ggplot</span>(f2.data, <span class="fu">aes</span>(类别, 评分, <span class="at">fill =</span> 类别, <span class="at">color =</span> 类别)) <span class="sc">+</span></span>
+<span id="cb61-14"><a href="#cb61-14" aria-hidden="true" tabindex="-1"></a>  <span class="fu">geom_flat_violin</span>(<span class="at">position =</span> <span class="fu">position_nudge</span>(<span class="at">x =</span> .<span class="dv">2</span>)) <span class="sc">+</span></span>
+<span id="cb61-15"><a href="#cb61-15" aria-hidden="true" tabindex="-1"></a>  <span class="fu">geom_jitter</span>(<span class="at">width =</span> .<span class="dv">1</span>) <span class="sc">+</span></span>
+<span id="cb61-16"><a href="#cb61-16" aria-hidden="true" tabindex="-1"></a>  <span class="fu">geom_pointrange</span>(<span class="fu">aes</span>(<span class="at">y =</span> mean, <span class="at">ymin =</span> mean <span class="sc">-</span> sd, <span class="at">ymax =</span> mean <span class="sc">+</span> sd),</span>
+<span id="cb61-17"><a href="#cb61-17" aria-hidden="true" tabindex="-1"></a>                  <span class="at">data =</span> d, <span class="at">size =</span> <span class="fl">0.5</span>, <span class="at">position =</span> <span class="fu">position_nudge</span>(<span class="at">x =</span> .<span class="dv">2</span>),<span class="at">color =</span> <span class="st">'red'</span>) <span class="sc">+</span></span>
+<span id="cb61-18"><a href="#cb61-18" aria-hidden="true" tabindex="-1"></a>  <span class="fu">scale_fill_manual</span>(<span class="at">values =</span> mycol22) <span class="sc">+</span>  <span class="co"># 设置填充颜色</span></span>
+<span id="cb61-19"><a href="#cb61-19" aria-hidden="true" tabindex="-1"></a>  <span class="fu">scale_color_manual</span>(<span class="at">values =</span> mycol22) <span class="sc">+</span>  <span class="co"># 设置点的颜色</span></span>
+<span id="cb61-20"><a href="#cb61-20" aria-hidden="true" tabindex="-1"></a>  <span class="fu">theme_bw</span>() <span class="sc">+</span></span>
+<span id="cb61-21"><a href="#cb61-21" aria-hidden="true" tabindex="-1"></a>  <span class="fu">theme</span>(<span class="at">axis.text.x =</span> <span class="fu">element_text</span>(<span class="at">size =</span> <span class="dv">13</span>, <span class="at">angle =</span> <span class="dv">90</span>, <span class="at">hjust =</span> <span class="dv">1</span>),  <span class="co"># 设置x轴标签垂直</span></span>
+<span id="cb61-22"><a href="#cb61-22" aria-hidden="true" tabindex="-1"></a>        <span class="at">axis.text.y =</span> <span class="fu">element_text</span>(<span class="at">size =</span> <span class="dv">13</span>),</span>
+<span id="cb61-23"><a href="#cb61-23" aria-hidden="true" tabindex="-1"></a>        <span class="at">axis.title =</span> <span class="fu">element_text</span>(<span class="at">size =</span> <span class="dv">15</span>),</span>
+<span id="cb61-24"><a href="#cb61-24" aria-hidden="true" tabindex="-1"></a>        <span class="at">legend.position =</span> <span class="st">"none"</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-stderr">
+<pre><code>Warning: Using the `size` aesthetic with geom_polygon was deprecated in ggplot2 3.4.0.
+ℹ Please use the `linewidth` aesthetic instead.</code></pre>
+</div>
+<div class="cell-output cell-output-stderr">
+<pre><code>Warning: Using the `size` aesthetic with geom_path was deprecated in ggplot2 3.4.0.
+ℹ Please use the `linewidth` aesthetic instead.</code></pre>
+</div>
+<div class="cell-output-display">
+<div>
+<figure class="figure">
+<p><img src="main_homework_files/figure-html/unnamed-chunk-26-1.png" class="img-fluid figure-img" width="672"></p>
+</figure>
+</div>
+</div>
+</div>
+</section>
+</section>
+<section id="数据挖掘" class="level2">
+<h2 class="anchored" data-anchor-id="数据挖掘">3.4 数据挖掘</h2>
+<section id="对热度和类别的分组探索" class="level3">
+<h3 class="anchored" data-anchor-id="对热度和类别的分组探索">3.4.1 对’热度‘和’类别‘的分组探索</h3>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb64"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb64-1"><a href="#cb64-1" aria-hidden="true" tabindex="-1"></a><span class="co"># 对‘热度’进行分组统计</span></span>
+<span id="cb64-2"><a href="#cb64-2" aria-hidden="true" tabindex="-1"></a>tab_01 <span class="ot">&lt;-</span> data_game2 <span class="sc">%&gt;%</span></span>
+<span id="cb64-3"><a href="#cb64-3" aria-hidden="true" tabindex="-1"></a>  <span class="fu">group_by</span>(类别) <span class="sc">%&gt;%</span></span>
+<span id="cb64-4"><a href="#cb64-4" aria-hidden="true" tabindex="-1"></a>  <span class="fu">summarise</span>(</span>
+<span id="cb64-5"><a href="#cb64-5" aria-hidden="true" tabindex="-1"></a>    <span class="at">Mean =</span> <span class="fu">mean</span>(热度, <span class="at">na.rm =</span> <span class="cn">TRUE</span>),</span>
+<span id="cb64-6"><a href="#cb64-6" aria-hidden="true" tabindex="-1"></a>    <span class="at">SD =</span> <span class="fu">sd</span>(热度, <span class="at">na.rm =</span> <span class="cn">TRUE</span>),</span>
+<span id="cb64-7"><a href="#cb64-7" aria-hidden="true" tabindex="-1"></a>    <span class="at">Median =</span> <span class="fu">median</span>(热度, <span class="at">na.rm =</span> <span class="cn">TRUE</span>),</span>
+<span id="cb64-8"><a href="#cb64-8" aria-hidden="true" tabindex="-1"></a>    <span class="at">Min =</span> <span class="fu">min</span>(热度, <span class="at">na.rm =</span> <span class="cn">TRUE</span>),</span>
+<span id="cb64-9"><a href="#cb64-9" aria-hidden="true" tabindex="-1"></a>    <span class="at">skew =</span> <span class="fu">skewness</span>(热度, <span class="at">na.rm =</span> <span class="cn">TRUE</span>),</span>
+<span id="cb64-10"><a href="#cb64-10" aria-hidden="true" tabindex="-1"></a>    <span class="at">kurt =</span> <span class="fu">kurtosis</span>(热度, <span class="at">na.rm =</span> <span class="cn">TRUE</span>),</span>
+<span id="cb64-11"><a href="#cb64-11" aria-hidden="true" tabindex="-1"></a>    <span class="at">Max =</span> <span class="fu">max</span>(热度, <span class="at">na.rm =</span> <span class="cn">TRUE</span>)</span>
+<span id="cb64-12"><a href="#cb64-12" aria-hidden="true" tabindex="-1"></a>  )</span>
+<span id="cb64-13"><a href="#cb64-13" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb64-14"><a href="#cb64-14" aria-hidden="true" tabindex="-1"></a><span class="co"># 生成描述性统计表格</span></span>
+<span id="cb64-15"><a href="#cb64-15" aria-hidden="true" tabindex="-1"></a><span class="fu">kable</span>(</span>
+<span id="cb64-16"><a href="#cb64-16" aria-hidden="true" tabindex="-1"></a>  tab_01,</span>
+<span id="cb64-17"><a href="#cb64-17" aria-hidden="true" tabindex="-1"></a>  <span class="at">col.names =</span> <span class="fu">c</span>(<span class="st">"类别"</span>, <span class="st">"均值"</span>, <span class="st">"标准差"</span>, <span class="st">"中位数"</span>, <span class="st">"最小"</span>, <span class="st">"偏度"</span>, <span class="st">"峰度"</span>, <span class="st">"最大"</span>),</span>
+<span id="cb64-18"><a href="#cb64-18" aria-hidden="true" tabindex="-1"></a>  <span class="at">digits =</span> <span class="dv">2</span>,</span>
+<span id="cb64-19"><a href="#cb64-19" aria-hidden="true" tabindex="-1"></a>  <span class="at">caption =</span> <span class="st">"</span><span class="sc">\\</span><span class="st">label{tab2}Summary Statistics by Category"</span>,</span>
+<span id="cb64-20"><a href="#cb64-20" aria-hidden="true" tabindex="-1"></a>  <span class="at">booktabs =</span> <span class="cn">TRUE</span></span>
+<span id="cb64-21"><a href="#cb64-21" aria-hidden="true" tabindex="-1"></a>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output-display">
+<table class="caption-top table table-sm table-striped small">
+<caption>Summary Statistics by Category</caption>
+<thead>
+<tr class="header">
+<th style="text-align: left;">类别</th>
+<th style="text-align: right;">均值</th>
+<th style="text-align: right;">标准差</th>
+<th style="text-align: right;">中位数</th>
+<th style="text-align: right;">最小</th>
+<th style="text-align: right;">偏度</th>
+<th style="text-align: right;">峰度</th>
+<th style="text-align: right;">最大</th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<td style="text-align: left;">策略塔防</td>
+<td style="text-align: right;">40.89</td>
+<td style="text-align: right;">10.28</td>
+<td style="text-align: right;">39.0</td>
+<td style="text-align: right;">28</td>
+<td style="text-align: right;">0.83</td>
+<td style="text-align: right;">2.97</td>
+<td style="text-align: right;">70</td>
+</tr>
+<tr class="even">
+<td style="text-align: left;">动作游戏</td>
+<td style="text-align: right;">42.60</td>
+<td style="text-align: right;">12.85</td>
+<td style="text-align: right;">40.0</td>
+<td style="text-align: right;">28</td>
+<td style="text-align: right;">1.54</td>
+<td style="text-align: right;">5.79</td>
+<td style="text-align: right;">90</td>
+</tr>
+<tr class="odd">
+<td style="text-align: left;">飞行游戏</td>
+<td style="text-align: right;">41.65</td>
+<td style="text-align: right;">10.06</td>
+<td style="text-align: right;">41.0</td>
+<td style="text-align: right;">29</td>
+<td style="text-align: right;">1.63</td>
+<td style="text-align: right;">6.69</td>
+<td style="text-align: right;">79</td>
+</tr>
+<tr class="even">
+<td style="text-align: left;">格斗游戏</td>
+<td style="text-align: right;">40.57</td>
+<td style="text-align: right;">9.85</td>
+<td style="text-align: right;">40.0</td>
+<td style="text-align: right;">28</td>
+<td style="text-align: right;">0.60</td>
+<td style="text-align: right;">2.61</td>
+<td style="text-align: right;">63</td>
+</tr>
+<tr class="odd">
+<td style="text-align: left;">角色扮演</td>
+<td style="text-align: right;">42.19</td>
+<td style="text-align: right;">10.21</td>
+<td style="text-align: right;">39.0</td>
+<td style="text-align: right;">28</td>
+<td style="text-align: right;">0.56</td>
+<td style="text-align: right;">2.19</td>
+<td style="text-align: right;">68</td>
+</tr>
+<tr class="even">
+<td style="text-align: left;">竞速游戏</td>
+<td style="text-align: right;">45.61</td>
+<td style="text-align: right;">12.56</td>
+<td style="text-align: right;">44.0</td>
+<td style="text-align: right;">28</td>
+<td style="text-align: right;">0.78</td>
+<td style="text-align: right;">3.03</td>
+<td style="text-align: right;">79</td>
+</tr>
+<tr class="odd">
+<td style="text-align: left;">冒险解谜</td>
+<td style="text-align: right;">39.52</td>
+<td style="text-align: right;">10.09</td>
+<td style="text-align: right;">37.0</td>
+<td style="text-align: right;">28</td>
+<td style="text-align: right;">0.77</td>
+<td style="text-align: right;">2.58</td>
+<td style="text-align: right;">64</td>
+</tr>
+<tr class="even">
+<td style="text-align: left;">模拟经营</td>
+<td style="text-align: right;">38.32</td>
+<td style="text-align: right;">7.83</td>
+<td style="text-align: right;">37.0</td>
+<td style="text-align: right;">28</td>
+<td style="text-align: right;">0.52</td>
+<td style="text-align: right;">2.30</td>
+<td style="text-align: right;">57</td>
+</tr>
+<tr class="odd">
+<td style="text-align: left;">棋牌游戏</td>
+<td style="text-align: right;">37.06</td>
+<td style="text-align: right;">8.83</td>
+<td style="text-align: right;">33.0</td>
+<td style="text-align: right;">28</td>
+<td style="text-align: right;">0.83</td>
+<td style="text-align: right;">2.37</td>
+<td style="text-align: right;">56</td>
+</tr>
+<tr class="even">
+<td style="text-align: left;">射击游戏</td>
+<td style="text-align: right;">39.96</td>
+<td style="text-align: right;">9.73</td>
+<td style="text-align: right;">39.0</td>
+<td style="text-align: right;">28</td>
+<td style="text-align: right;">1.47</td>
+<td style="text-align: right;">6.57</td>
+<td style="text-align: right;">84</td>
+</tr>
+<tr class="odd">
+<td style="text-align: left;">体育运动</td>
+<td style="text-align: right;">45.98</td>
+<td style="text-align: right;">16.18</td>
+<td style="text-align: right;">41.0</td>
+<td style="text-align: right;">28</td>
+<td style="text-align: right;">1.09</td>
+<td style="text-align: right;">3.57</td>
+<td style="text-align: right;">94</td>
+</tr>
+<tr class="even">
+<td style="text-align: left;">养成游戏</td>
+<td style="text-align: right;">42.33</td>
+<td style="text-align: right;">14.62</td>
+<td style="text-align: right;">37.5</td>
+<td style="text-align: right;">29</td>
+<td style="text-align: right;">1.53</td>
+<td style="text-align: right;">4.64</td>
+<td style="text-align: right;">80</td>
+</tr>
+<tr class="odd">
+<td style="text-align: left;">益智休闲</td>
+<td style="text-align: right;">41.80</td>
+<td style="text-align: right;">12.57</td>
+<td style="text-align: right;">39.0</td>
+<td style="text-align: right;">28</td>
+<td style="text-align: right;">1.49</td>
+<td style="text-align: right;">5.72</td>
+<td style="text-align: right;">95</td>
+</tr>
+<tr class="even">
+<td style="text-align: left;">音乐游戏</td>
+<td style="text-align: right;">40.60</td>
+<td style="text-align: right;">8.86</td>
+<td style="text-align: right;">40.0</td>
+<td style="text-align: right;">28</td>
+<td style="text-align: right;">0.32</td>
+<td style="text-align: right;">2.42</td>
+<td style="text-align: right;">58</td>
+</tr>
+<tr class="odd">
+<td style="text-align: left;">游戏工具</td>
+<td style="text-align: right;">43.62</td>
+<td style="text-align: right;">10.60</td>
+<td style="text-align: right;">48.0</td>
+<td style="text-align: right;">28</td>
+<td style="text-align: right;">-0.14</td>
+<td style="text-align: right;">1.93</td>
+<td style="text-align: right;">62</td>
+</tr>
+</tbody>
+</table>
+</div>
+</div>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb65"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb65-1"><a href="#cb65-1" aria-hidden="true" tabindex="-1"></a><span class="co"># 对 tab_01 按 Mean 进行降序排序，并提取平均热度最高的游戏类型</span></span>
+<span id="cb65-2"><a href="#cb65-2" aria-hidden="true" tabindex="-1"></a>highest_mean_category <span class="ot">&lt;-</span> tab_01 <span class="sc">%&gt;%</span></span>
+<span id="cb65-3"><a href="#cb65-3" aria-hidden="true" tabindex="-1"></a>  <span class="fu">arrange</span>(<span class="fu">desc</span>(Mean)) <span class="sc">%&gt;%</span></span>
+<span id="cb65-4"><a href="#cb65-4" aria-hidden="true" tabindex="-1"></a>  <span class="fu">slice</span>(<span class="dv">1</span>) <span class="sc">%&gt;%</span></span>
+<span id="cb65-5"><a href="#cb65-5" aria-hidden="true" tabindex="-1"></a>  <span class="fu">pull</span>(类别)</span>
+<span id="cb65-6"><a href="#cb65-6" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb65-7"><a href="#cb65-7" aria-hidden="true" tabindex="-1"></a><span class="co"># 打印结果</span></span>
+<span id="cb65-8"><a href="#cb65-8" aria-hidden="true" tabindex="-1"></a><span class="fu">print</span>(<span class="fu">paste</span>(<span class="st">'平均热度最高的游戏类型是：'</span>, highest_mean_category))</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-stdout">
+<pre><code>[1] "平均热度最高的游戏类型是： 体育运动"</code></pre>
+</div>
+</div>
+</section>
+<section id="对评分和类别的分组探索" class="level3">
+<h3 class="anchored" data-anchor-id="对评分和类别的分组探索">3.4.2 对’评分‘和’类别‘的分组探索</h3>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb67"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb67-1"><a href="#cb67-1" aria-hidden="true" tabindex="-1"></a><span class="co"># 对‘评分’进行分组统计</span></span>
+<span id="cb67-2"><a href="#cb67-2" aria-hidden="true" tabindex="-1"></a>tab_01 <span class="ot">&lt;-</span> data_game2 <span class="sc">%&gt;%</span></span>
+<span id="cb67-3"><a href="#cb67-3" aria-hidden="true" tabindex="-1"></a>  <span class="fu">group_by</span>(类别) <span class="sc">%&gt;%</span></span>
+<span id="cb67-4"><a href="#cb67-4" aria-hidden="true" tabindex="-1"></a>  <span class="fu">summarise</span>(</span>
+<span id="cb67-5"><a href="#cb67-5" aria-hidden="true" tabindex="-1"></a>    <span class="at">Mean =</span> <span class="fu">mean</span>(评分, <span class="at">na.rm =</span> <span class="cn">TRUE</span>),</span>
+<span id="cb67-6"><a href="#cb67-6" aria-hidden="true" tabindex="-1"></a>    <span class="at">SD =</span> <span class="fu">sd</span>(评分, <span class="at">na.rm =</span> <span class="cn">TRUE</span>),</span>
+<span id="cb67-7"><a href="#cb67-7" aria-hidden="true" tabindex="-1"></a>    <span class="at">Median =</span> <span class="fu">median</span>(评分, <span class="at">na.rm =</span> <span class="cn">TRUE</span>),</span>
+<span id="cb67-8"><a href="#cb67-8" aria-hidden="true" tabindex="-1"></a>    <span class="at">Min =</span> <span class="fu">min</span>(评分, <span class="at">na.rm =</span> <span class="cn">TRUE</span>),</span>
+<span id="cb67-9"><a href="#cb67-9" aria-hidden="true" tabindex="-1"></a>    <span class="at">skew =</span> <span class="fu">skewness</span>(评分, <span class="at">na.rm =</span> <span class="cn">TRUE</span>),</span>
+<span id="cb67-10"><a href="#cb67-10" aria-hidden="true" tabindex="-1"></a>    <span class="at">kurt =</span> <span class="fu">kurtosis</span>(评分, <span class="at">na.rm =</span> <span class="cn">TRUE</span>),</span>
+<span id="cb67-11"><a href="#cb67-11" aria-hidden="true" tabindex="-1"></a>    <span class="at">Max =</span> <span class="fu">max</span>(评分, <span class="at">na.rm =</span> <span class="cn">TRUE</span>)</span>
+<span id="cb67-12"><a href="#cb67-12" aria-hidden="true" tabindex="-1"></a>  )</span>
+<span id="cb67-13"><a href="#cb67-13" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb67-14"><a href="#cb67-14" aria-hidden="true" tabindex="-1"></a><span class="co"># 生成描述性统计表格</span></span>
+<span id="cb67-15"><a href="#cb67-15" aria-hidden="true" tabindex="-1"></a><span class="fu">kable</span>(</span>
+<span id="cb67-16"><a href="#cb67-16" aria-hidden="true" tabindex="-1"></a>  tab_01,</span>
+<span id="cb67-17"><a href="#cb67-17" aria-hidden="true" tabindex="-1"></a>  <span class="at">col.names =</span> <span class="fu">c</span>(<span class="st">"类别"</span>, <span class="st">"均值"</span>, <span class="st">"标准差"</span>, <span class="st">"中位数"</span>, <span class="st">"最小"</span>, <span class="st">"偏度"</span>, <span class="st">"峰度"</span>, <span class="st">"最大"</span>),</span>
+<span id="cb67-18"><a href="#cb67-18" aria-hidden="true" tabindex="-1"></a>  <span class="at">digits =</span> <span class="dv">2</span>,</span>
+<span id="cb67-19"><a href="#cb67-19" aria-hidden="true" tabindex="-1"></a>  <span class="at">caption =</span> <span class="st">"</span><span class="sc">\\</span><span class="st">label{tab2}Summary Statistics by Category"</span>,</span>
+<span id="cb67-20"><a href="#cb67-20" aria-hidden="true" tabindex="-1"></a>  <span class="at">booktabs =</span> <span class="cn">TRUE</span></span>
+<span id="cb67-21"><a href="#cb67-21" aria-hidden="true" tabindex="-1"></a>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output-display">
+<table class="caption-top table table-sm table-striped small">
+<caption>Summary Statistics by Category</caption>
+<thead>
+<tr class="header">
+<th style="text-align: left;">类别</th>
+<th style="text-align: right;">均值</th>
+<th style="text-align: right;">标准差</th>
+<th style="text-align: right;">中位数</th>
+<th style="text-align: right;">最小</th>
+<th style="text-align: right;">偏度</th>
+<th style="text-align: right;">峰度</th>
+<th style="text-align: right;">最大</th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<td style="text-align: left;">策略塔防</td>
+<td style="text-align: right;">6.88</td>
+<td style="text-align: right;">1.39</td>
+<td style="text-align: right;">7.30</td>
+<td style="text-align: right;">4.8</td>
+<td style="text-align: right;">-0.17</td>
+<td style="text-align: right;">1.54</td>
+<td style="text-align: right;">9.3</td>
+</tr>
+<tr class="even">
+<td style="text-align: left;">动作游戏</td>
+<td style="text-align: right;">6.65</td>
+<td style="text-align: right;">1.44</td>
+<td style="text-align: right;">7.00</td>
+<td style="text-align: right;">1.0</td>
+<td style="text-align: right;">-0.50</td>
+<td style="text-align: right;">3.09</td>
+<td style="text-align: right;">9.0</td>
+</tr>
+<tr class="odd">
+<td style="text-align: left;">飞行游戏</td>
+<td style="text-align: right;">5.70</td>
+<td style="text-align: right;">1.09</td>
+<td style="text-align: right;">5.20</td>
+<td style="text-align: right;">4.7</td>
+<td style="text-align: right;">1.41</td>
+<td style="text-align: right;">3.47</td>
+<td style="text-align: right;">8.2</td>
+</tr>
+<tr class="even">
+<td style="text-align: left;">格斗游戏</td>
+<td style="text-align: right;">6.78</td>
+<td style="text-align: right;">1.18</td>
+<td style="text-align: right;">6.90</td>
+<td style="text-align: right;">5.0</td>
+<td style="text-align: right;">-0.13</td>
+<td style="text-align: right;">1.72</td>
+<td style="text-align: right;">8.8</td>
+</tr>
+<tr class="odd">
+<td style="text-align: left;">角色扮演</td>
+<td style="text-align: right;">7.00</td>
+<td style="text-align: right;">1.33</td>
+<td style="text-align: right;">7.50</td>
+<td style="text-align: right;">4.6</td>
+<td style="text-align: right;">-0.35</td>
+<td style="text-align: right;">1.66</td>
+<td style="text-align: right;">9.1</td>
+</tr>
+<tr class="even">
+<td style="text-align: left;">竞速游戏</td>
+<td style="text-align: right;">6.37</td>
+<td style="text-align: right;">1.35</td>
+<td style="text-align: right;">5.80</td>
+<td style="text-align: right;">4.7</td>
+<td style="text-align: right;">0.30</td>
+<td style="text-align: right;">1.48</td>
+<td style="text-align: right;">8.8</td>
+</tr>
+<tr class="odd">
+<td style="text-align: left;">冒险解谜</td>
+<td style="text-align: right;">6.86</td>
+<td style="text-align: right;">1.23</td>
+<td style="text-align: right;">6.95</td>
+<td style="text-align: right;">4.8</td>
+<td style="text-align: right;">0.03</td>
+<td style="text-align: right;">1.89</td>
+<td style="text-align: right;">9.0</td>
+</tr>
+<tr class="even">
+<td style="text-align: left;">模拟经营</td>
+<td style="text-align: right;">6.67</td>
+<td style="text-align: right;">1.28</td>
+<td style="text-align: right;">6.90</td>
+<td style="text-align: right;">4.7</td>
+<td style="text-align: right;">-0.06</td>
+<td style="text-align: right;">1.60</td>
+<td style="text-align: right;">9.3</td>
+</tr>
+<tr class="odd">
+<td style="text-align: left;">棋牌游戏</td>
+<td style="text-align: right;">5.84</td>
+<td style="text-align: right;">1.22</td>
+<td style="text-align: right;">5.40</td>
+<td style="text-align: right;">4.5</td>
+<td style="text-align: right;">0.92</td>
+<td style="text-align: right;">2.41</td>
+<td style="text-align: right;">8.1</td>
+</tr>
+<tr class="even">
+<td style="text-align: left;">射击游戏</td>
+<td style="text-align: right;">6.61</td>
+<td style="text-align: right;">1.30</td>
+<td style="text-align: right;">7.00</td>
+<td style="text-align: right;">4.7</td>
+<td style="text-align: right;">-0.09</td>
+<td style="text-align: right;">1.40</td>
+<td style="text-align: right;">8.6</td>
+</tr>
+<tr class="odd">
+<td style="text-align: left;">体育运动</td>
+<td style="text-align: right;">6.84</td>
+<td style="text-align: right;">1.46</td>
+<td style="text-align: right;">7.40</td>
+<td style="text-align: right;">4.9</td>
+<td style="text-align: right;">-0.13</td>
+<td style="text-align: right;">1.34</td>
+<td style="text-align: right;">8.8</td>
+</tr>
+<tr class="even">
+<td style="text-align: left;">养成游戏</td>
+<td style="text-align: right;">6.55</td>
+<td style="text-align: right;">1.23</td>
+<td style="text-align: right;">6.10</td>
+<td style="text-align: right;">5.0</td>
+<td style="text-align: right;">0.34</td>
+<td style="text-align: right;">1.62</td>
+<td style="text-align: right;">8.3</td>
+</tr>
+<tr class="odd">
+<td style="text-align: left;">益智休闲</td>
+<td style="text-align: right;">6.46</td>
+<td style="text-align: right;">1.31</td>
+<td style="text-align: right;">6.10</td>
+<td style="text-align: right;">4.6</td>
+<td style="text-align: right;">0.36</td>
+<td style="text-align: right;">1.70</td>
+<td style="text-align: right;">9.6</td>
+</tr>
+<tr class="even">
+<td style="text-align: left;">音乐游戏</td>
+<td style="text-align: right;">6.40</td>
+<td style="text-align: right;">1.34</td>
+<td style="text-align: right;">5.70</td>
+<td style="text-align: right;">5.0</td>
+<td style="text-align: right;">0.62</td>
+<td style="text-align: right;">1.90</td>
+<td style="text-align: right;">9.0</td>
+</tr>
+<tr class="odd">
+<td style="text-align: left;">游戏工具</td>
+<td style="text-align: right;">5.03</td>
+<td style="text-align: right;">1.63</td>
+<td style="text-align: right;">5.10</td>
+<td style="text-align: right;">1.0</td>
+<td style="text-align: right;">-1.79</td>
+<td style="text-align: right;">5.38</td>
+<td style="text-align: right;">6.4</td>
+</tr>
+</tbody>
+</table>
+</div>
+</div>
+</section>
+<section id="数据分析" class="level3">
+<h3 class="anchored" data-anchor-id="数据分析"><strong>3.4.3 数据分析</strong></h3>
+<p>回顾前面的云雨图：</p>
+<p><img src="images/clipboard-4065424683.png" class="img-fluid"></p>
+<p>1. <strong>游戏特性分析</strong></p>
+<ul>
+<li><p><strong>角色扮演游戏（RPG）</strong>：</p>
+<p><strong>高平均评分</strong>（均值 7.00）和<strong>中位数</strong>（7.50）表明，RPG 游戏普遍受欢迎。RPG 通常具有深入的剧情、复杂的角色成长系统，这些特点吸引了偏好长时间投入游戏的用户。</p>
+<p><strong>较低的偏度和峰度</strong>：评分分布较为均匀，说明大部分 RPG 游戏都有稳定的玩家群体，不会因为少数特别热门或冷门的游戏拉大差距。</p>
+<p><strong>用户画像：</strong>这些游戏通常吸引偏好深度体验、喜欢投入时间发展的用户。用户可能偏向中青年群体，男性用户比例较高，且有一定的收入和消费能力，愿意在游戏中进行内购以提升游戏体验。</p></li>
+<li><p><strong>策略塔防</strong>：</p>
+<p><strong>高评分且分布较为均匀</strong>：策略塔防游戏的平均评分较高，说明玩家对这类需要深思熟虑和战略规划的游戏有较高的需求。</p>
+<p><strong>用户画像：</strong>这类游戏通常吸引喜欢挑战思维和策略的玩家，可能偏向高智商和耐心的用户群体。</p></li>
+<li><p><strong>飞行游戏</strong>：</p>
+<p><strong>低平均评分</strong>和<strong>较高偏度</strong>：飞行游戏整体评分较低，但存在少数非常受欢迎的游戏（如模拟飞行或空战游戏），但大部分游戏评分均比较低。</p>
+<p><strong>用户画像：</strong>这类游戏可能吸引的是寻求刺激感和成就感的用户，例如飞行爱好者或军事迷，故而对游戏的特定部分具有较高的仿真要求，只有少数制作精美的游戏才能够获得玩家认可，侧面反应了该领域游戏制作的门槛较高。</p></li>
+<li><p><strong>游戏工具</strong>：</p>
+<p><strong>低评分和高偏度</strong>：游戏工具的评分分布显示出较大的波动，主要是由于该类型的软件数量不足、质量参差不齐的原因。说明这个类别的产品质量或用户需求差异较大，开发市场前景较高。部分工具类应用可能非常有用，而其他则可能因为功能或体验不足而被冷落，用户可能更多是硬核玩家，他们需要辅助工具来提升游戏体验。不过相较于传统的游戏，辅助工具获得的评分一般来说并不和游戏具有统一的参考标准。</p></li>
+</ul>
+<p>2. <strong>市场趋势与用户行为</strong></p>
+<ul>
+<li><p><strong>多样化需求与长尾效应</strong>：</p>
+<p>从数据中的高峰度和高偏度现象可以看出，许多游戏类型可能存在“长尾效应”，即大部分游戏的评分较为平均，但少数特别受欢迎的游戏则占据了大量市场份额。这表明，虽然玩家对主流游戏类型有共识，但对于特定类型的利基市场需求依然存在。</p></li>
+<li><p><strong>游戏工具的应用</strong>：</p>
+<p>尽管平均评分较低，游戏工具类应用显示出较大的潜力，特别是对于专业玩家或某些硬核游戏的玩家群体。随着游戏复杂度和对专业化需求的增加，这一类应用可能会进一步发展。</p></li>
+<li><p><strong>变化的用户兴趣</strong>：</p>
+<p>例如，休闲益智游戏虽然整体评分适中，但最大评分达到9.6，表明这类游戏依然能产生爆款。结合移动互联网的发展，轻度和快餐式的游戏体验仍然是一个重要的市场。</p></li>
+</ul>
+<p>3. <strong>进一步的商业策略建议</strong></p>
+<ul>
+<li><p><strong>针对硬核玩家的深度产品</strong>：</p>
+<p>RPG、策略塔防和射击游戏等类型可以通过更高质量的内容、更复杂的游戏机制吸引核心玩家，并通过内购和订阅模式增加收入。</p></li>
+<li><p><strong>扩展休闲游戏的市场</strong>：</p>
+<p>休闲游戏的开发者可以考虑通过简单的游戏机制和社交互动功能吸引更广泛的用户群体，特别是通过社交媒体平台推广，以便迅速获取用户。</p></li>
+<li><p><strong>工具类应用的商业潜力</strong>：</p>
+<p>为游戏工具应用开发更专业和更精确的功能，特别是在电竞领域，可以吸引那些对游戏提升有强烈需求的用户群体，从而增加用户粘性和变现能力。</p></li>
+</ul>
+</section>
+<section id="其他有趣的性质1变量相关热图" class="level3">
+<h3 class="anchored" data-anchor-id="其他有趣的性质1变量相关热图">3.4.4 其他有趣的性质1：变量相关热图</h3>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb68"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb68-1"><a href="#cb68-1" aria-hidden="true" tabindex="-1"></a><span class="fu">library</span>(corrplot)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-stderr">
+<pre><code>corrplot 0.92 loaded</code></pre>
+</div>
+<div class="sourceCode cell-code" id="cb70"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb70-1"><a href="#cb70-1" aria-hidden="true" tabindex="-1"></a>data_game4 <span class="ot">&lt;-</span> <span class="fu">filter</span>(data_game3,<span class="sc">!</span><span class="fu">is.na</span>(<span class="st">`</span><span class="at">评分</span><span class="st">`</span>)<span class="sc">&amp;!</span><span class="fu">is.na</span>(<span class="st">`</span><span class="at">热度</span><span class="st">`</span>)<span class="sc">&amp;!</span><span class="fu">is.na</span>(<span class="st">`</span><span class="at">评论数</span><span class="st">`</span>)<span class="sc">&amp;!</span><span class="fu">is.na</span>(<span class="st">`</span><span class="at">喜欢数</span><span class="st">`</span>))</span>
+<span id="cb70-2"><a href="#cb70-2" aria-hidden="true" tabindex="-1"></a><span class="co"># 相关系数矩阵</span></span>
+<span id="cb70-3"><a href="#cb70-3" aria-hidden="true" tabindex="-1"></a>correlations <span class="ot">&lt;-</span> <span class="fu">cor</span>(data_game4[<span class="fu">c</span>(<span class="st">'评分'</span>,<span class="st">'热度'</span>,<span class="st">'评论数'</span>,<span class="st">'喜欢数'</span>)])</span>
+<span id="cb70-4"><a href="#cb70-4" aria-hidden="true" tabindex="-1"></a><span class="fu">dim</span>(correlations)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-stdout">
+<pre><code>[1] 4 4</code></pre>
+</div>
+<div class="sourceCode cell-code" id="cb72"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb72-1"><a href="#cb72-1" aria-hidden="true" tabindex="-1"></a><span class="co"># 可视化相关系数矩阵</span></span>
+<span id="cb72-2"><a href="#cb72-2" aria-hidden="true" tabindex="-1"></a><span class="fu">corrplot</span>(correlations, <span class="at">order =</span> <span class="st">"hclust"</span>,<span class="at">tl.col =</span> <span class="st">"black"</span>, <span class="at">addCoef.col =</span> <span class="st">"white"</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output-display">
+<div>
+<figure class="figure">
+<p><img src="main_homework_files/figure-html/unnamed-chunk-30-1.png" class="img-fluid figure-img" width="672"></p>
+</figure>
+</div>
+</div>
+</div>
+<p>通过该图可以发现某些性质：</p>
+<ul>
+<li><p>喜欢数和评论数相关性较高，可能因为喜欢数和评论数都是在游戏介绍界面的交互，会在游戏商品栏界面点击“喜欢”的人往往也会顺便进行评论留言，反之亦然。</p></li>
+<li><p>评分和热度之间相关性并不高，可能热度往往表现的是一个游戏短期内的“流量”而并非长期的“质量”。</p></li>
+<li><p>评分与“评论数”、“喜欢数”的相关系数相近，也就意味着后两者所反应的“游戏质量”的程度相近，但是评论数和热度的相关系数明显高于喜欢数和热度的相关系数，也说明了其实一个游戏的热度本质上被如何衡量，高热度的游戏往往引发更多的讨论，但这些褒贬不一的评论并不会带来等效程度的喜欢数，即高热度并不意味着高评分。</p></li>
+</ul>
+</section>
+<section id="其他变量的云雨图" class="level3">
+<h3 class="anchored" data-anchor-id="其他变量的云雨图">3.4.5 其他变量的云雨图</h3>
+<ol type="1">
+<li><strong>热度</strong></li>
+</ol>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb73"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb73-1"><a href="#cb73-1" aria-hidden="true" tabindex="-1"></a><span class="fu">library</span>(grid)</span>
+<span id="cb73-2"><a href="#cb73-2" aria-hidden="true" tabindex="-1"></a><span class="fu">library</span>(RColorBrewer)</span>
+<span id="cb73-3"><a href="#cb73-3" aria-hidden="true" tabindex="-1"></a><span class="fu">library</span>(SuppDists) <span class="co">#提供rJohnson()函数</span></span>
+<span id="cb73-4"><a href="#cb73-4" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb73-5"><a href="#cb73-5" aria-hidden="true" tabindex="-1"></a><span class="co">#为了画图方便，舍弃评分列缺少的行</span></span>
+<span id="cb73-6"><a href="#cb73-6" aria-hidden="true" tabindex="-1"></a>data_game3 <span class="ot">&lt;-</span> <span class="fu">filter</span>(data_game2, <span class="sc">!</span><span class="fu">is.na</span>(<span class="st">`</span><span class="at">热度</span><span class="st">`</span>))</span>
+<span id="cb73-7"><a href="#cb73-7" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb73-8"><a href="#cb73-8" aria-hidden="true" tabindex="-1"></a>f2.data <span class="ot">&lt;-</span> data_game3[<span class="fu">c</span>(<span class="st">'类别'</span>,<span class="st">'热度'</span>)]</span>
+<span id="cb73-9"><a href="#cb73-9" aria-hidden="true" tabindex="-1"></a><span class="fu">colnames</span>(f2.data) <span class="ot">&lt;-</span> <span class="fu">c</span>(<span class="st">"类别"</span>,<span class="st">"热度"</span>)</span>
+<span id="cb73-10"><a href="#cb73-10" aria-hidden="true" tabindex="-1"></a><span class="fu">table</span>(f2.data<span class="sc">$</span>类别)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-stdout">
+<pre><code>
+策略塔防 动作游戏 飞行游戏 格斗游戏 角色扮演 竞速游戏 冒险解谜 模拟经营 
+      90      136       37       28      114       85       86       53 
+棋牌游戏 射击游戏 体育运动 养成游戏 益智休闲 音乐游戏 游戏工具 
+      18      110       46       12      292       20       13 </code></pre>
+</div>
+<div class="sourceCode cell-code" id="cb75"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb75-1"><a href="#cb75-1" aria-hidden="true" tabindex="-1"></a><span class="co"># 定义颜色</span></span>
+<span id="cb75-2"><a href="#cb75-2" aria-hidden="true" tabindex="-1"></a>mycol22 <span class="ot">&lt;-</span> <span class="fu">c</span>(<span class="st">"#eb998b"</span>, <span class="st">"#fddbc8"</span>, <span class="st">"#42465c"</span>, <span class="st">"#356d67"</span>, <span class="st">"#4c9568"</span>,</span>
+<span id="cb75-3"><a href="#cb75-3" aria-hidden="true" tabindex="-1"></a>             <span class="st">"#7fb961"</span>, <span class="st">"#b0d45d"</span>, <span class="st">"#ffe788"</span>, <span class="st">"#b20000"</span>, <span class="st">"#f06152"</span>,</span>
+<span id="cb75-4"><a href="#cb75-4" aria-hidden="true" tabindex="-1"></a>             <span class="st">"#7d4444"</span>, <span class="st">"#9e6c69"</span>, <span class="st">"#cca69c"</span>, <span class="st">"#5066a1"</span>, <span class="st">"#76afda"</span>,</span>
+<span id="cb75-5"><a href="#cb75-5" aria-hidden="true" tabindex="-1"></a>             <span class="st">"#abddff"</span>, <span class="st">"#dcf2ff"</span>, <span class="st">"#e8743c"</span>, <span class="st">"#ffc556"</span>)</span>
+<span id="cb75-6"><a href="#cb75-6" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb75-7"><a href="#cb75-7" aria-hidden="true" tabindex="-1"></a><span class="co"># 计算每个类别的均值和标准差</span></span>
+<span id="cb75-8"><a href="#cb75-8" aria-hidden="true" tabindex="-1"></a>d <span class="ot">&lt;-</span> <span class="fu">group_by</span>(f2.data, 类别) <span class="sc">%&gt;%</span></span>
+<span id="cb75-9"><a href="#cb75-9" aria-hidden="true" tabindex="-1"></a>  <span class="fu">summarize</span>(<span class="at">mean =</span> <span class="fu">mean</span>(热度),</span>
+<span id="cb75-10"><a href="#cb75-10" aria-hidden="true" tabindex="-1"></a>            <span class="at">sd =</span> <span class="fu">sd</span>(热度))</span>
+<span id="cb75-11"><a href="#cb75-11" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb75-12"><a href="#cb75-12" aria-hidden="true" tabindex="-1"></a><span class="co"># 创建图形</span></span>
+<span id="cb75-13"><a href="#cb75-13" aria-hidden="true" tabindex="-1"></a><span class="fu">ggplot</span>(f2.data, <span class="fu">aes</span>(类别, 热度, <span class="at">fill =</span> 类别, <span class="at">color =</span> 类别)) <span class="sc">+</span></span>
+<span id="cb75-14"><a href="#cb75-14" aria-hidden="true" tabindex="-1"></a>  <span class="fu">geom_flat_violin</span>(<span class="at">position =</span> <span class="fu">position_nudge</span>(<span class="at">x =</span> .<span class="dv">2</span>)) <span class="sc">+</span></span>
+<span id="cb75-15"><a href="#cb75-15" aria-hidden="true" tabindex="-1"></a>  <span class="fu">geom_jitter</span>(<span class="at">width =</span> .<span class="dv">1</span>) <span class="sc">+</span></span>
+<span id="cb75-16"><a href="#cb75-16" aria-hidden="true" tabindex="-1"></a>  <span class="fu">geom_pointrange</span>(<span class="fu">aes</span>(<span class="at">y =</span> mean, <span class="at">ymin =</span> mean <span class="sc">-</span> sd, <span class="at">ymax =</span> mean <span class="sc">+</span> sd),</span>
+<span id="cb75-17"><a href="#cb75-17" aria-hidden="true" tabindex="-1"></a>                  <span class="at">data =</span> d, <span class="at">size =</span> <span class="fl">0.5</span>, <span class="at">position =</span> <span class="fu">position_nudge</span>(<span class="at">x =</span> .<span class="dv">2</span>),<span class="at">color =</span> <span class="st">'red'</span>) <span class="sc">+</span></span>
+<span id="cb75-18"><a href="#cb75-18" aria-hidden="true" tabindex="-1"></a>  <span class="fu">scale_fill_manual</span>(<span class="at">values =</span> mycol22) <span class="sc">+</span>  <span class="co"># 设置填充颜色</span></span>
+<span id="cb75-19"><a href="#cb75-19" aria-hidden="true" tabindex="-1"></a>  <span class="fu">scale_color_manual</span>(<span class="at">values =</span> mycol22) <span class="sc">+</span>  <span class="co"># 设置点的颜色</span></span>
+<span id="cb75-20"><a href="#cb75-20" aria-hidden="true" tabindex="-1"></a>  <span class="fu">theme_bw</span>() <span class="sc">+</span></span>
+<span id="cb75-21"><a href="#cb75-21" aria-hidden="true" tabindex="-1"></a>  <span class="fu">theme</span>(<span class="at">axis.text.x =</span> <span class="fu">element_text</span>(<span class="at">size =</span> <span class="dv">13</span>, <span class="at">angle =</span> <span class="dv">90</span>, <span class="at">hjust =</span> <span class="dv">1</span>),  <span class="co"># 设置x轴标签垂直</span></span>
+<span id="cb75-22"><a href="#cb75-22" aria-hidden="true" tabindex="-1"></a>        <span class="at">axis.text.y =</span> <span class="fu">element_text</span>(<span class="at">size =</span> <span class="dv">13</span>),</span>
+<span id="cb75-23"><a href="#cb75-23" aria-hidden="true" tabindex="-1"></a>        <span class="at">axis.title =</span> <span class="fu">element_text</span>(<span class="at">size =</span> <span class="dv">15</span>),</span>
+<span id="cb75-24"><a href="#cb75-24" aria-hidden="true" tabindex="-1"></a>        <span class="at">legend.position =</span> <span class="st">"none"</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output-display">
+<div>
+<figure class="figure">
+<p><img src="main_homework_files/figure-html/unnamed-chunk-31-1.png" class="img-fluid figure-img" width="672"></p>
+</figure>
+</div>
+</div>
+</div>
+<p>首先，热度往往呈现的是非对称、有偏度的分布，主要的极端值都聚集在高热度上，也可能因为过低的热度往往被截断为0而不会出现较低值。</p>
+<p>进一步，可以看到近期游戏热度大部分集中在<strong>动作游戏、体育运动、益智休闲</strong>等类型游戏，可能意味着此类型游戏是近期游戏市场热度风口，有一定挖掘潜力的发展空间。反之<strong>模拟经营、棋牌游戏、音乐游戏</strong>等类别热度较集中，没有出现极端热度的情况，说明该类型游戏的领域整体在此时并不怎么流行，再对比评分的分布情况，可以发现这些类型游戏普遍评分也不高，猜测这些类型的游戏公司还没有做出足够优秀的作品，整体上较难获得玩家的认可。</p>
+<ol start="2" type="1">
+<li><strong>评论数</strong></li>
+</ol>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb76"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb76-1"><a href="#cb76-1" aria-hidden="true" tabindex="-1"></a><span class="fu">library</span>(grid)</span>
+<span id="cb76-2"><a href="#cb76-2" aria-hidden="true" tabindex="-1"></a><span class="fu">library</span>(RColorBrewer)</span>
+<span id="cb76-3"><a href="#cb76-3" aria-hidden="true" tabindex="-1"></a><span class="fu">library</span>(SuppDists) <span class="co">#提供rJohnson()函数</span></span>
+<span id="cb76-4"><a href="#cb76-4" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb76-5"><a href="#cb76-5" aria-hidden="true" tabindex="-1"></a><span class="co">#为了画图方便，舍弃评论数列缺少的行</span></span>
+<span id="cb76-6"><a href="#cb76-6" aria-hidden="true" tabindex="-1"></a>data_game3 <span class="ot">&lt;-</span> <span class="fu">filter</span>(data_game2, <span class="sc">!</span><span class="fu">is.na</span>(<span class="st">`</span><span class="at">评论数</span><span class="st">`</span>))</span>
+<span id="cb76-7"><a href="#cb76-7" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb76-8"><a href="#cb76-8" aria-hidden="true" tabindex="-1"></a>f2.data <span class="ot">&lt;-</span> data_game3[<span class="fu">c</span>(<span class="st">'类别'</span>,<span class="st">'评论数'</span>)]</span>
+<span id="cb76-9"><a href="#cb76-9" aria-hidden="true" tabindex="-1"></a><span class="fu">colnames</span>(f2.data) <span class="ot">&lt;-</span> <span class="fu">c</span>(<span class="st">"类别"</span>,<span class="st">"评论数"</span>)</span>
+<span id="cb76-10"><a href="#cb76-10" aria-hidden="true" tabindex="-1"></a><span class="co"># 定义颜色</span></span>
+<span id="cb76-11"><a href="#cb76-11" aria-hidden="true" tabindex="-1"></a>mycol22 <span class="ot">&lt;-</span> <span class="fu">c</span>(<span class="st">"#eb998b"</span>, <span class="st">"#fddbc8"</span>, <span class="st">"#42465c"</span>, <span class="st">"#356d67"</span>, <span class="st">"#4c9568"</span>,</span>
+<span id="cb76-12"><a href="#cb76-12" aria-hidden="true" tabindex="-1"></a>             <span class="st">"#7fb961"</span>, <span class="st">"#b0d45d"</span>, <span class="st">"#ffe788"</span>, <span class="st">"#b20000"</span>, <span class="st">"#f06152"</span>,</span>
+<span id="cb76-13"><a href="#cb76-13" aria-hidden="true" tabindex="-1"></a>             <span class="st">"#7d4444"</span>, <span class="st">"#9e6c69"</span>, <span class="st">"#cca69c"</span>, <span class="st">"#5066a1"</span>, <span class="st">"#76afda"</span>,</span>
+<span id="cb76-14"><a href="#cb76-14" aria-hidden="true" tabindex="-1"></a>             <span class="st">"#abddff"</span>, <span class="st">"#dcf2ff"</span>, <span class="st">"#e8743c"</span>, <span class="st">"#ffc556"</span>)</span>
+<span id="cb76-15"><a href="#cb76-15" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb76-16"><a href="#cb76-16" aria-hidden="true" tabindex="-1"></a><span class="co"># 计算每个类别的均值和标准差</span></span>
+<span id="cb76-17"><a href="#cb76-17" aria-hidden="true" tabindex="-1"></a>d <span class="ot">&lt;-</span> <span class="fu">group_by</span>(f2.data, 类别) <span class="sc">%&gt;%</span></span>
+<span id="cb76-18"><a href="#cb76-18" aria-hidden="true" tabindex="-1"></a>  <span class="fu">summarize</span>(<span class="at">mean =</span> <span class="fu">mean</span>(评论数),</span>
+<span id="cb76-19"><a href="#cb76-19" aria-hidden="true" tabindex="-1"></a>            <span class="at">sd =</span> <span class="fu">sd</span>(评论数))</span>
+<span id="cb76-20"><a href="#cb76-20" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb76-21"><a href="#cb76-21" aria-hidden="true" tabindex="-1"></a><span class="co"># 创建图形</span></span>
+<span id="cb76-22"><a href="#cb76-22" aria-hidden="true" tabindex="-1"></a><span class="fu">ggplot</span>(f2.data, <span class="fu">aes</span>(类别, 评论数, <span class="at">fill =</span> 类别, <span class="at">color =</span> 类别)) <span class="sc">+</span></span>
+<span id="cb76-23"><a href="#cb76-23" aria-hidden="true" tabindex="-1"></a>  <span class="fu">geom_flat_violin</span>(<span class="at">position =</span> <span class="fu">position_nudge</span>(<span class="at">x =</span> .<span class="dv">2</span>)) <span class="sc">+</span></span>
+<span id="cb76-24"><a href="#cb76-24" aria-hidden="true" tabindex="-1"></a>  <span class="fu">geom_jitter</span>(<span class="at">width =</span> .<span class="dv">1</span>) <span class="sc">+</span></span>
+<span id="cb76-25"><a href="#cb76-25" aria-hidden="true" tabindex="-1"></a>  <span class="fu">geom_pointrange</span>(<span class="fu">aes</span>(<span class="at">y =</span> mean, <span class="at">ymin =</span> mean <span class="sc">-</span> sd, <span class="at">ymax =</span> mean <span class="sc">+</span> sd),</span>
+<span id="cb76-26"><a href="#cb76-26" aria-hidden="true" tabindex="-1"></a>                  <span class="at">data =</span> d, <span class="at">size =</span> <span class="fl">0.5</span>, <span class="at">position =</span> <span class="fu">position_nudge</span>(<span class="at">x =</span> .<span class="dv">2</span>),<span class="at">color =</span> <span class="st">'red'</span>) <span class="sc">+</span></span>
+<span id="cb76-27"><a href="#cb76-27" aria-hidden="true" tabindex="-1"></a>  <span class="fu">scale_fill_manual</span>(<span class="at">values =</span> mycol22) <span class="sc">+</span>  <span class="co"># 设置填充颜色</span></span>
+<span id="cb76-28"><a href="#cb76-28" aria-hidden="true" tabindex="-1"></a>  <span class="fu">scale_color_manual</span>(<span class="at">values =</span> mycol22) <span class="sc">+</span>  <span class="co"># 设置点的颜色</span></span>
+<span id="cb76-29"><a href="#cb76-29" aria-hidden="true" tabindex="-1"></a>  <span class="fu">theme_bw</span>() <span class="sc">+</span></span>
+<span id="cb76-30"><a href="#cb76-30" aria-hidden="true" tabindex="-1"></a>  <span class="fu">theme</span>(<span class="at">axis.text.x =</span> <span class="fu">element_text</span>(<span class="at">size =</span> <span class="dv">13</span>, <span class="at">angle =</span> <span class="dv">90</span>, <span class="at">hjust =</span> <span class="dv">1</span>),  <span class="co"># 设置x轴标签垂直</span></span>
+<span id="cb76-31"><a href="#cb76-31" aria-hidden="true" tabindex="-1"></a>        <span class="at">axis.text.y =</span> <span class="fu">element_text</span>(<span class="at">size =</span> <span class="dv">13</span>),</span>
+<span id="cb76-32"><a href="#cb76-32" aria-hidden="true" tabindex="-1"></a>        <span class="at">axis.title =</span> <span class="fu">element_text</span>(<span class="at">size =</span> <span class="dv">15</span>),</span>
+<span id="cb76-33"><a href="#cb76-33" aria-hidden="true" tabindex="-1"></a>        <span class="at">legend.position =</span> <span class="st">"none"</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output-display">
+<div>
+<figure class="figure">
+<p><img src="main_homework_files/figure-html/unnamed-chunk-32-1.png" class="img-fluid figure-img" width="672"></p>
+</figure>
+</div>
+</div>
+</div>
+<p>这里图画出来显然不太好看，因为有极端的评论数破坏了整体的范围，我们先找出这些极端的评论数并尝试删去最多的3个，再进行画图：</p>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb77"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb77-1"><a href="#cb77-1" aria-hidden="true" tabindex="-1"></a><span class="co"># 找出评论数最高的三个数据点</span></span>
+<span id="cb77-2"><a href="#cb77-2" aria-hidden="true" tabindex="-1"></a>(top_3_outliers <span class="ot">&lt;-</span> data_game3  <span class="sc">%&gt;%</span> </span>
+<span id="cb77-3"><a href="#cb77-3" aria-hidden="true" tabindex="-1"></a>  <span class="fu">top_n</span>(<span class="dv">3</span>, <span class="at">wt =</span> 评论数))</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-stdout">
+<pre><code># A tibble: 3 × 18
+  游戏版本1 最后更新年 最后更新月 最后更新日 游戏名称     评分 类别   热度 资费 
+      &lt;int&gt;      &lt;int&gt;      &lt;int&gt;      &lt;int&gt; &lt;chr&gt;       &lt;dbl&gt; &lt;fct&gt; &lt;dbl&gt; &lt;fct&gt;
+1         0       2016          9         21 我的世界移…   8.3 养成…    80 完全…
+2         1       2016          4          1 GTA侠盗猎…    8.1 动作…    77 完全…
+3         1       2015          4          2 GTA侠盗猎…    7.8 动作…    75 完全…
+# ℹ 9 more variables: 开发商 &lt;fct&gt;, 支持系统 &lt;fct&gt;, 评论数 &lt;dbl&gt;, 喜欢数 &lt;dbl&gt;,
+#   中文 &lt;fct&gt;, 英文 &lt;fct&gt;, 韩文 &lt;fct&gt;, 日文 &lt;fct&gt;, 其他 &lt;fct&gt;</code></pre>
+</div>
+<div class="sourceCode cell-code" id="cb79"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb79-1"><a href="#cb79-1" aria-hidden="true" tabindex="-1"></a><span class="co"># 从数据中删除这三个数据点</span></span>
+<span id="cb79-2"><a href="#cb79-2" aria-hidden="true" tabindex="-1"></a>f2.data <span class="ot">&lt;-</span> <span class="fu">anti_join</span>(data_game3, top_3_outliers, <span class="at">by =</span> <span class="fu">c</span>(<span class="st">"类别"</span>, <span class="st">"评论数"</span>))[<span class="fu">c</span>(<span class="st">'类别'</span>,<span class="st">'评论数'</span>)]</span>
+<span id="cb79-3"><a href="#cb79-3" aria-hidden="true" tabindex="-1"></a><span class="fu">colnames</span>(f2.data) <span class="ot">&lt;-</span> <span class="fu">c</span>(<span class="st">"类别"</span>,<span class="st">"评论数"</span>)</span>
+<span id="cb79-4"><a href="#cb79-4" aria-hidden="true" tabindex="-1"></a><span class="co"># 计算每个类别的均值和标准差</span></span>
+<span id="cb79-5"><a href="#cb79-5" aria-hidden="true" tabindex="-1"></a>d <span class="ot">&lt;-</span> <span class="fu">group_by</span>(f2.data, 类别) <span class="sc">%&gt;%</span></span>
+<span id="cb79-6"><a href="#cb79-6" aria-hidden="true" tabindex="-1"></a>  <span class="fu">summarize</span>(<span class="at">mean =</span> <span class="fu">mean</span>(评论数),</span>
+<span id="cb79-7"><a href="#cb79-7" aria-hidden="true" tabindex="-1"></a>            <span class="at">sd =</span> <span class="fu">sd</span>(评论数))</span>
+<span id="cb79-8"><a href="#cb79-8" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb79-9"><a href="#cb79-9" aria-hidden="true" tabindex="-1"></a><span class="co"># 创建图形</span></span>
+<span id="cb79-10"><a href="#cb79-10" aria-hidden="true" tabindex="-1"></a><span class="fu">ggplot</span>(f2.data, <span class="fu">aes</span>(类别, 评论数, <span class="at">fill =</span> 类别, <span class="at">color =</span> 类别)) <span class="sc">+</span></span>
+<span id="cb79-11"><a href="#cb79-11" aria-hidden="true" tabindex="-1"></a>  <span class="fu">geom_flat_violin</span>(<span class="at">position =</span> <span class="fu">position_nudge</span>(<span class="at">x =</span> .<span class="dv">2</span>)) <span class="sc">+</span></span>
+<span id="cb79-12"><a href="#cb79-12" aria-hidden="true" tabindex="-1"></a>  <span class="fu">geom_jitter</span>(<span class="at">width =</span> .<span class="dv">1</span>) <span class="sc">+</span></span>
+<span id="cb79-13"><a href="#cb79-13" aria-hidden="true" tabindex="-1"></a>  <span class="fu">geom_pointrange</span>(<span class="fu">aes</span>(<span class="at">y =</span> mean, <span class="at">ymin =</span> mean <span class="sc">-</span> sd, <span class="at">ymax =</span> mean <span class="sc">+</span> sd),</span>
+<span id="cb79-14"><a href="#cb79-14" aria-hidden="true" tabindex="-1"></a>                  <span class="at">data =</span> d, <span class="at">size =</span> <span class="fl">0.5</span>, <span class="at">position =</span> <span class="fu">position_nudge</span>(<span class="at">x =</span> .<span class="dv">2</span>),<span class="at">color =</span> <span class="st">'red'</span>) <span class="sc">+</span></span>
+<span id="cb79-15"><a href="#cb79-15" aria-hidden="true" tabindex="-1"></a>  <span class="fu">scale_fill_manual</span>(<span class="at">values =</span> mycol22) <span class="sc">+</span>  <span class="co"># 设置填充颜色</span></span>
+<span id="cb79-16"><a href="#cb79-16" aria-hidden="true" tabindex="-1"></a>  <span class="fu">scale_color_manual</span>(<span class="at">values =</span> mycol22) <span class="sc">+</span>  <span class="co"># 设置点的颜色</span></span>
+<span id="cb79-17"><a href="#cb79-17" aria-hidden="true" tabindex="-1"></a>  <span class="fu">theme_bw</span>() <span class="sc">+</span></span>
+<span id="cb79-18"><a href="#cb79-18" aria-hidden="true" tabindex="-1"></a>  <span class="fu">theme</span>(<span class="at">axis.text.x =</span> <span class="fu">element_text</span>(<span class="at">size =</span> <span class="dv">13</span>, <span class="at">angle =</span> <span class="dv">90</span>, <span class="at">hjust =</span> <span class="dv">1</span>),  <span class="co"># 设置x轴标签垂直</span></span>
+<span id="cb79-19"><a href="#cb79-19" aria-hidden="true" tabindex="-1"></a>        <span class="at">axis.text.y =</span> <span class="fu">element_text</span>(<span class="at">size =</span> <span class="dv">13</span>),</span>
+<span id="cb79-20"><a href="#cb79-20" aria-hidden="true" tabindex="-1"></a>        <span class="at">axis.title =</span> <span class="fu">element_text</span>(<span class="at">size =</span> <span class="dv">15</span>),</span>
+<span id="cb79-21"><a href="#cb79-21" aria-hidden="true" tabindex="-1"></a>        <span class="at">legend.position =</span> <span class="st">"none"</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output-display">
+<div>
+<figure class="figure">
+<p><img src="main_homework_files/figure-html/unnamed-chunk-33-1.png" class="img-fluid figure-img" width="672"></p>
+</figure>
+</div>
+</div>
+</div>
+<p>评论数断崖式领先的三个游戏分别为：<strong>GTA侠盗猎车手:圣安地列斯、我的世界移动版、GTA侠盗猎车手:罪恶都市</strong>，这些作为当年的知名游戏拥有大量的评论并不奇怪，甚至当之无愧。</p>
+<p>对于其他类型的游戏，大部分游戏都较为集中，同样只有少部分游戏拥有几乎“异常”高的评论数，这正说明了游戏市场的厚尾性，即少部分高质量游戏断崖式遥遥领先大部分平庸的游戏。</p>
+<ol start="3" type="1">
+<li><strong>喜欢数</strong></li>
+</ol>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb80"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb80-1"><a href="#cb80-1" aria-hidden="true" tabindex="-1"></a><span class="co">#为了画图方便，舍弃评论数列缺少的行</span></span>
+<span id="cb80-2"><a href="#cb80-2" aria-hidden="true" tabindex="-1"></a>data_game3 <span class="ot">&lt;-</span> <span class="fu">filter</span>(data_game2, <span class="sc">!</span><span class="fu">is.na</span>(<span class="st">`</span><span class="at">喜欢数</span><span class="st">`</span>))</span>
+<span id="cb80-3"><a href="#cb80-3" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb80-4"><a href="#cb80-4" aria-hidden="true" tabindex="-1"></a>f2.data <span class="ot">&lt;-</span> data_game3[<span class="fu">c</span>(<span class="st">'类别'</span>,<span class="st">'喜欢数'</span>)]</span>
+<span id="cb80-5"><a href="#cb80-5" aria-hidden="true" tabindex="-1"></a><span class="fu">colnames</span>(f2.data) <span class="ot">&lt;-</span> <span class="fu">c</span>(<span class="st">"类别"</span>,<span class="st">"喜欢数"</span>)</span>
+<span id="cb80-6"><a href="#cb80-6" aria-hidden="true" tabindex="-1"></a><span class="co"># 计算每个类别的均值和标准差</span></span>
+<span id="cb80-7"><a href="#cb80-7" aria-hidden="true" tabindex="-1"></a>d <span class="ot">&lt;-</span> <span class="fu">group_by</span>(f2.data, 类别) <span class="sc">%&gt;%</span></span>
+<span id="cb80-8"><a href="#cb80-8" aria-hidden="true" tabindex="-1"></a>  <span class="fu">summarize</span>(<span class="at">mean =</span> <span class="fu">mean</span>(喜欢数),</span>
+<span id="cb80-9"><a href="#cb80-9" aria-hidden="true" tabindex="-1"></a>            <span class="at">sd =</span> <span class="fu">sd</span>(喜欢数))</span>
+<span id="cb80-10"><a href="#cb80-10" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb80-11"><a href="#cb80-11" aria-hidden="true" tabindex="-1"></a><span class="co"># 创建图形</span></span>
+<span id="cb80-12"><a href="#cb80-12" aria-hidden="true" tabindex="-1"></a><span class="fu">ggplot</span>(f2.data, <span class="fu">aes</span>(类别, 喜欢数, <span class="at">fill =</span> 类别, <span class="at">color =</span> 类别)) <span class="sc">+</span></span>
+<span id="cb80-13"><a href="#cb80-13" aria-hidden="true" tabindex="-1"></a>  <span class="fu">geom_flat_violin</span>(<span class="at">position =</span> <span class="fu">position_nudge</span>(<span class="at">x =</span> .<span class="dv">2</span>)) <span class="sc">+</span></span>
+<span id="cb80-14"><a href="#cb80-14" aria-hidden="true" tabindex="-1"></a>  <span class="fu">geom_jitter</span>(<span class="at">width =</span> .<span class="dv">1</span>) <span class="sc">+</span></span>
+<span id="cb80-15"><a href="#cb80-15" aria-hidden="true" tabindex="-1"></a>  <span class="fu">geom_pointrange</span>(<span class="fu">aes</span>(<span class="at">y =</span> mean, <span class="at">ymin =</span> mean <span class="sc">-</span> sd, <span class="at">ymax =</span> mean <span class="sc">+</span> sd),</span>
+<span id="cb80-16"><a href="#cb80-16" aria-hidden="true" tabindex="-1"></a>                  <span class="at">data =</span> d, <span class="at">size =</span> <span class="fl">0.5</span>, <span class="at">position =</span> <span class="fu">position_nudge</span>(<span class="at">x =</span> .<span class="dv">2</span>),<span class="at">color =</span> <span class="st">'red'</span>) <span class="sc">+</span></span>
+<span id="cb80-17"><a href="#cb80-17" aria-hidden="true" tabindex="-1"></a>  <span class="fu">scale_fill_manual</span>(<span class="at">values =</span> mycol22) <span class="sc">+</span>  <span class="co"># 设置填充颜色</span></span>
+<span id="cb80-18"><a href="#cb80-18" aria-hidden="true" tabindex="-1"></a>  <span class="fu">scale_color_manual</span>(<span class="at">values =</span> mycol22) <span class="sc">+</span>  <span class="co"># 设置点的颜色</span></span>
+<span id="cb80-19"><a href="#cb80-19" aria-hidden="true" tabindex="-1"></a>  <span class="fu">theme_bw</span>() <span class="sc">+</span></span>
+<span id="cb80-20"><a href="#cb80-20" aria-hidden="true" tabindex="-1"></a>  <span class="fu">theme</span>(<span class="at">axis.text.x =</span> <span class="fu">element_text</span>(<span class="at">size =</span> <span class="dv">13</span>, <span class="at">angle =</span> <span class="dv">90</span>, <span class="at">hjust =</span> <span class="dv">1</span>),  <span class="co"># 设置x轴标签垂直</span></span>
+<span id="cb80-21"><a href="#cb80-21" aria-hidden="true" tabindex="-1"></a>        <span class="at">axis.text.y =</span> <span class="fu">element_text</span>(<span class="at">size =</span> <span class="dv">13</span>),</span>
+<span id="cb80-22"><a href="#cb80-22" aria-hidden="true" tabindex="-1"></a>        <span class="at">axis.title =</span> <span class="fu">element_text</span>(<span class="at">size =</span> <span class="dv">15</span>),</span>
+<span id="cb80-23"><a href="#cb80-23" aria-hidden="true" tabindex="-1"></a>        <span class="at">legend.position =</span> <span class="st">"none"</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output-display">
+<div>
+<figure class="figure">
+<p><img src="main_homework_files/figure-html/unnamed-chunk-34-1.png" class="img-fluid figure-img" width="672"></p>
+</figure>
+</div>
+</div>
+</div>
+<p>还是通过肉眼筛查极端异常值的数量，去掉最高的3个</p>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb81"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb81-1"><a href="#cb81-1" aria-hidden="true" tabindex="-1"></a><span class="co"># 找出评论数最高的三个数据点</span></span>
+<span id="cb81-2"><a href="#cb81-2" aria-hidden="true" tabindex="-1"></a>(top_3_outliers <span class="ot">&lt;-</span> data_game3  <span class="sc">%&gt;%</span> </span>
+<span id="cb81-3"><a href="#cb81-3" aria-hidden="true" tabindex="-1"></a>  <span class="fu">top_n</span>(<span class="dv">3</span>, <span class="at">wt =</span> 喜欢数))</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-stdout">
+<pre><code># A tibble: 3 × 18
+  游戏版本1 最后更新年 最后更新月 最后更新日 游戏名称     评分 类别   热度 资费 
+      &lt;int&gt;      &lt;int&gt;      &lt;int&gt;      &lt;int&gt; &lt;chr&gt;       &lt;dbl&gt; &lt;fct&gt; &lt;dbl&gt; &lt;fct&gt;
+1         1       2016          4          1 GTA侠盗猎…    8.1 动作…    77 完全…
+2         1       2014         12         11 勇敢的心:…    9   冒险…    59 完全…
+3         1       2016          3         18 这是我的战…   9.3 模拟…    54 完全…
+# ℹ 9 more variables: 开发商 &lt;fct&gt;, 支持系统 &lt;fct&gt;, 评论数 &lt;dbl&gt;, 喜欢数 &lt;dbl&gt;,
+#   中文 &lt;fct&gt;, 英文 &lt;fct&gt;, 韩文 &lt;fct&gt;, 日文 &lt;fct&gt;, 其他 &lt;fct&gt;</code></pre>
+</div>
+<div class="sourceCode cell-code" id="cb83"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb83-1"><a href="#cb83-1" aria-hidden="true" tabindex="-1"></a><span class="co"># 从数据中删除这三个数据点</span></span>
+<span id="cb83-2"><a href="#cb83-2" aria-hidden="true" tabindex="-1"></a>f2.data <span class="ot">&lt;-</span> <span class="fu">anti_join</span>(data_game3, top_3_outliers, <span class="at">by =</span> <span class="fu">c</span>(<span class="st">"类别"</span>, <span class="st">"喜欢数"</span>))[<span class="fu">c</span>(<span class="st">'类别'</span>,<span class="st">'喜欢数'</span>)]</span>
+<span id="cb83-3"><a href="#cb83-3" aria-hidden="true" tabindex="-1"></a><span class="fu">colnames</span>(f2.data) <span class="ot">&lt;-</span> <span class="fu">c</span>(<span class="st">"类别"</span>,<span class="st">"喜欢数"</span>)</span>
+<span id="cb83-4"><a href="#cb83-4" aria-hidden="true" tabindex="-1"></a><span class="co"># 计算每个类别的均值和标准差</span></span>
+<span id="cb83-5"><a href="#cb83-5" aria-hidden="true" tabindex="-1"></a>d <span class="ot">&lt;-</span> <span class="fu">group_by</span>(f2.data, 类别) <span class="sc">%&gt;%</span></span>
+<span id="cb83-6"><a href="#cb83-6" aria-hidden="true" tabindex="-1"></a>  <span class="fu">summarize</span>(<span class="at">mean =</span> <span class="fu">mean</span>(喜欢数),</span>
+<span id="cb83-7"><a href="#cb83-7" aria-hidden="true" tabindex="-1"></a>            <span class="at">sd =</span> <span class="fu">sd</span>(喜欢数))</span>
+<span id="cb83-8"><a href="#cb83-8" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb83-9"><a href="#cb83-9" aria-hidden="true" tabindex="-1"></a><span class="co"># 创建图形</span></span>
+<span id="cb83-10"><a href="#cb83-10" aria-hidden="true" tabindex="-1"></a><span class="fu">ggplot</span>(f2.data, <span class="fu">aes</span>(类别, 喜欢数, <span class="at">fill =</span> 类别, <span class="at">color =</span> 类别)) <span class="sc">+</span></span>
+<span id="cb83-11"><a href="#cb83-11" aria-hidden="true" tabindex="-1"></a>  <span class="fu">geom_flat_violin</span>(<span class="at">position =</span> <span class="fu">position_nudge</span>(<span class="at">x =</span> .<span class="dv">2</span>)) <span class="sc">+</span></span>
+<span id="cb83-12"><a href="#cb83-12" aria-hidden="true" tabindex="-1"></a>  <span class="fu">geom_jitter</span>(<span class="at">width =</span> .<span class="dv">1</span>) <span class="sc">+</span></span>
+<span id="cb83-13"><a href="#cb83-13" aria-hidden="true" tabindex="-1"></a>  <span class="fu">geom_pointrange</span>(<span class="fu">aes</span>(<span class="at">y =</span> mean, <span class="at">ymin =</span> mean <span class="sc">-</span> sd, <span class="at">ymax =</span> mean <span class="sc">+</span> sd),</span>
+<span id="cb83-14"><a href="#cb83-14" aria-hidden="true" tabindex="-1"></a>                  <span class="at">data =</span> d, <span class="at">size =</span> <span class="fl">0.5</span>, <span class="at">position =</span> <span class="fu">position_nudge</span>(<span class="at">x =</span> .<span class="dv">2</span>),<span class="at">color =</span> <span class="st">'red'</span>) <span class="sc">+</span></span>
+<span id="cb83-15"><a href="#cb83-15" aria-hidden="true" tabindex="-1"></a>  <span class="fu">scale_fill_manual</span>(<span class="at">values =</span> mycol22) <span class="sc">+</span>  <span class="co"># 设置填充颜色</span></span>
+<span id="cb83-16"><a href="#cb83-16" aria-hidden="true" tabindex="-1"></a>  <span class="fu">scale_color_manual</span>(<span class="at">values =</span> mycol22) <span class="sc">+</span>  <span class="co"># 设置点的颜色</span></span>
+<span id="cb83-17"><a href="#cb83-17" aria-hidden="true" tabindex="-1"></a>  <span class="fu">theme_bw</span>() <span class="sc">+</span></span>
+<span id="cb83-18"><a href="#cb83-18" aria-hidden="true" tabindex="-1"></a>  <span class="fu">theme</span>(<span class="at">axis.text.x =</span> <span class="fu">element_text</span>(<span class="at">size =</span> <span class="dv">13</span>, <span class="at">angle =</span> <span class="dv">90</span>, <span class="at">hjust =</span> <span class="dv">1</span>),  <span class="co"># 设置x轴标签垂直</span></span>
+<span id="cb83-19"><a href="#cb83-19" aria-hidden="true" tabindex="-1"></a>        <span class="at">axis.text.y =</span> <span class="fu">element_text</span>(<span class="at">size =</span> <span class="dv">13</span>),</span>
+<span id="cb83-20"><a href="#cb83-20" aria-hidden="true" tabindex="-1"></a>        <span class="at">axis.title =</span> <span class="fu">element_text</span>(<span class="at">size =</span> <span class="dv">15</span>),</span>
+<span id="cb83-21"><a href="#cb83-21" aria-hidden="true" tabindex="-1"></a>        <span class="at">legend.position =</span> <span class="st">"none"</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output-display">
+<div>
+<figure class="figure">
+<p><img src="main_homework_files/figure-html/unnamed-chunk-35-1.png" class="img-fluid figure-img" width="672"></p>
+</figure>
+</div>
+</div>
+</div>
+<p>数据分布的结论大致与评论数类似，但是除了游戏“GTA侠盗猎车手:圣安地列斯”仍然位居最高喜欢数的前几位，其余游戏并不和原来评论数的最高前3位一致，这也进一步说明了喜爱数和评论数并非高度相关。</p>
+</section>
+</section>
+<section id="机器学习预测分析方法" class="level2">
+<h2 class="anchored" data-anchor-id="机器学习预测分析方法"><strong>3.5 机器学习预测分析方法</strong></h2>
+<section id="库导入与数据集分割" class="level3">
+<h3 class="anchored" data-anchor-id="库导入与数据集分割">3.5.1 库导入与数据集分割</h3>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb84"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb84-1"><a href="#cb84-1" aria-hidden="true" tabindex="-1"></a><span class="co"># 加载必要的包</span></span>
+<span id="cb84-2"><a href="#cb84-2" aria-hidden="true" tabindex="-1"></a><span class="fu">library</span>(dplyr)</span>
+<span id="cb84-3"><a href="#cb84-3" aria-hidden="true" tabindex="-1"></a><span class="fu">library</span>(caret)  <span class="co"># 用于数据集的分割</span></span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-stderr">
+<pre><code>Loading required package: lattice</code></pre>
+</div>
+<div class="sourceCode cell-code" id="cb86"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb86-1"><a href="#cb86-1" aria-hidden="true" tabindex="-1"></a><span class="fu">library</span>(lightgbm)  <span class="co"># 用于LightGBM模型</span></span>
+<span id="cb86-2"><a href="#cb86-2" aria-hidden="true" tabindex="-1"></a><span class="fu">library</span>(Metrics)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-stderr">
+<pre><code>
+Attaching package: 'Metrics'</code></pre>
+</div>
+<div class="cell-output cell-output-stderr">
+<pre><code>The following objects are masked from 'package:caret':
+
+    precision, recall</code></pre>
+</div>
+<div class="sourceCode cell-code" id="cb89"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb89-1"><a href="#cb89-1" aria-hidden="true" tabindex="-1"></a><span class="co"># 将指定列转换为因子类型</span></span>
+<span id="cb89-2"><a href="#cb89-2" aria-hidden="true" tabindex="-1"></a>factor_columns <span class="ot">&lt;-</span> <span class="fu">c</span>(<span class="st">'类别'</span>, <span class="st">'资费'</span>, <span class="st">'开发商'</span>, <span class="st">'支持系统'</span>, <span class="st">'中文'</span>, <span class="st">'韩文'</span>, <span class="st">'英文'</span>, <span class="st">'日文'</span>, <span class="st">'其他'</span>)</span>
+<span id="cb89-3"><a href="#cb89-3" aria-hidden="true" tabindex="-1"></a>data_game3 <span class="ot">&lt;-</span> <span class="fu">filter</span>(data_game2, <span class="sc">!</span><span class="fu">is.na</span>(<span class="st">`</span><span class="at">评分</span><span class="st">`</span>))</span>
+<span id="cb89-4"><a href="#cb89-4" aria-hidden="true" tabindex="-1"></a>data_game3 <span class="ot">&lt;-</span> data_game3 <span class="sc">%&gt;%</span></span>
+<span id="cb89-5"><a href="#cb89-5" aria-hidden="true" tabindex="-1"></a>  <span class="fu">mutate_at</span>(factor_columns, as.factor)</span>
+<span id="cb89-6"><a href="#cb89-6" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb89-7"><a href="#cb89-7" aria-hidden="true" tabindex="-1"></a><span class="co"># 分割数据集为训练集和测试集7:3</span></span>
+<span id="cb89-8"><a href="#cb89-8" aria-hidden="true" tabindex="-1"></a><span class="fu">set.seed</span>(<span class="dv">123</span>)</span>
+<span id="cb89-9"><a href="#cb89-9" aria-hidden="true" tabindex="-1"></a>train_index <span class="ot">&lt;-</span> <span class="fu">createDataPartition</span>(data_game3<span class="sc">$</span>评分, <span class="at">p =</span> <span class="fl">0.7</span>, <span class="at">list =</span> <span class="cn">FALSE</span>)</span>
+<span id="cb89-10"><a href="#cb89-10" aria-hidden="true" tabindex="-1"></a>train_data <span class="ot">&lt;-</span> data_game3[train_index, ]</span>
+<span id="cb89-11"><a href="#cb89-11" aria-hidden="true" tabindex="-1"></a>test_data <span class="ot">&lt;-</span> data_game3[<span class="sc">-</span>train_index, ]</span>
+<span id="cb89-12"><a href="#cb89-12" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb89-13"><a href="#cb89-13" aria-hidden="true" tabindex="-1"></a><span class="co"># 准备LightGBM所需的数据格式</span></span>
+<span id="cb89-14"><a href="#cb89-14" aria-hidden="true" tabindex="-1"></a><span class="co"># 1. 将训练集和测试集中的目标列（评分）和特征分开</span></span>
+<span id="cb89-15"><a href="#cb89-15" aria-hidden="true" tabindex="-1"></a>y_train <span class="ot">&lt;-</span> train_data<span class="sc">$</span>评分</span>
+<span id="cb89-16"><a href="#cb89-16" aria-hidden="true" tabindex="-1"></a>y_test <span class="ot">&lt;-</span> test_data<span class="sc">$</span>评分</span>
+<span id="cb89-17"><a href="#cb89-17" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb89-18"><a href="#cb89-18" aria-hidden="true" tabindex="-1"></a><span class="co"># 再将训练集分为训练子集和验证集，按照80:20的比例</span></span>
+<span id="cb89-19"><a href="#cb89-19" aria-hidden="true" tabindex="-1"></a>train_sub_index <span class="ot">&lt;-</span> <span class="fu">createDataPartition</span>(train_data<span class="sc">$</span>评分, <span class="at">p =</span> <span class="fl">0.8</span>, <span class="at">list =</span> <span class="cn">FALSE</span>)</span>
+<span id="cb89-20"><a href="#cb89-20" aria-hidden="true" tabindex="-1"></a>train_data <span class="ot">&lt;-</span> train_data[train_sub_index, ]</span>
+<span id="cb89-21"><a href="#cb89-21" aria-hidden="true" tabindex="-1"></a>valid_data <span class="ot">&lt;-</span> train_data[<span class="sc">-</span>train_sub_index, ]</span>
+<span id="cb89-22"><a href="#cb89-22" aria-hidden="true" tabindex="-1"></a>y_train <span class="ot">&lt;-</span> y_train[train_sub_index]</span>
+<span id="cb89-23"><a href="#cb89-23" aria-hidden="true" tabindex="-1"></a>y_valid <span class="ot">&lt;-</span> y_train[<span class="sc">-</span>train_sub_index]</span>
+<span id="cb89-24"><a href="#cb89-24" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb89-25"><a href="#cb89-25" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb89-26"><a href="#cb89-26" aria-hidden="true" tabindex="-1"></a><span class="co"># 删除目标列和 '游戏名称' 列，保留自变量</span></span>
+<span id="cb89-27"><a href="#cb89-27" aria-hidden="true" tabindex="-1"></a>train_data <span class="ot">&lt;-</span> train_data <span class="sc">%&gt;%</span> <span class="fu">select</span>(<span class="sc">-</span>评分, <span class="sc">-</span>游戏名称)</span>
+<span id="cb89-28"><a href="#cb89-28" aria-hidden="true" tabindex="-1"></a>valid_data <span class="ot">&lt;-</span> valid_data <span class="sc">%&gt;%</span> <span class="fu">select</span>(<span class="sc">-</span>评分, <span class="sc">-</span>游戏名称)</span>
+<span id="cb89-29"><a href="#cb89-29" aria-hidden="true" tabindex="-1"></a>test_data <span class="ot">&lt;-</span> test_data <span class="sc">%&gt;%</span> <span class="fu">select</span>(<span class="sc">-</span>评分, <span class="sc">-</span>游戏名称)</span>
+<span id="cb89-30"><a href="#cb89-30" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb89-31"><a href="#cb89-31" aria-hidden="true" tabindex="-1"></a>train_matrix <span class="ot">&lt;-</span> <span class="fu">as.matrix</span>(train_data)</span>
+<span id="cb89-32"><a href="#cb89-32" aria-hidden="true" tabindex="-1"></a>valid_matrix <span class="ot">&lt;-</span> <span class="fu">as.matrix</span>(valid_data)</span>
+<span id="cb89-33"><a href="#cb89-33" aria-hidden="true" tabindex="-1"></a>test_matrix <span class="ot">&lt;-</span> <span class="fu">as.matrix</span>(test_data)</span>
+<span id="cb89-34"><a href="#cb89-34" aria-hidden="true" tabindex="-1"></a>train_lgb <span class="ot">&lt;-</span> <span class="fu">lgb.Dataset</span>(<span class="at">data =</span> train_matrix, <span class="at">label =</span> y_train)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-stderr">
+<pre><code>Warning in storage.mode(data) &lt;- "double": NAs introduced by coercion</code></pre>
+</div>
+<div class="sourceCode cell-code" id="cb91"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb91-1"><a href="#cb91-1" aria-hidden="true" tabindex="-1"></a>valid_lgb <span class="ot">&lt;-</span> <span class="fu">lgb.Dataset</span>(<span class="at">data =</span> valid_matrix, <span class="at">label =</span> y_valid)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-stderr">
+<pre><code>Warning in storage.mode(data) &lt;- "double": NAs introduced by coercion</code></pre>
+</div>
+</div>
+</section>
+<section id="构建预测模型" class="level3">
+<h3 class="anchored" data-anchor-id="构建预测模型">3.5.2 构建预测模型</h3>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb93"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb93-1"><a href="#cb93-1" aria-hidden="true" tabindex="-1"></a><span class="co"># 设置LightGBM的参数</span></span>
+<span id="cb93-2"><a href="#cb93-2" aria-hidden="true" tabindex="-1"></a>params <span class="ot">&lt;-</span> <span class="fu">list</span>(</span>
+<span id="cb93-3"><a href="#cb93-3" aria-hidden="true" tabindex="-1"></a>  <span class="at">boosting_type =</span> <span class="st">"gbdt"</span>,</span>
+<span id="cb93-4"><a href="#cb93-4" aria-hidden="true" tabindex="-1"></a>  <span class="at">objective =</span> <span class="st">"regression"</span>,</span>
+<span id="cb93-5"><a href="#cb93-5" aria-hidden="true" tabindex="-1"></a>  <span class="at">metric =</span> <span class="st">"rmse"</span>,</span>
+<span id="cb93-6"><a href="#cb93-6" aria-hidden="true" tabindex="-1"></a>  <span class="at">learning_rate =</span> <span class="fl">0.01</span>,</span>
+<span id="cb93-7"><a href="#cb93-7" aria-hidden="true" tabindex="-1"></a>  <span class="at">feature_fraction =</span> <span class="fl">0.9</span></span>
+<span id="cb93-8"><a href="#cb93-8" aria-hidden="true" tabindex="-1"></a>)</span>
+<span id="cb93-9"><a href="#cb93-9" aria-hidden="true" tabindex="-1"></a><span class="co"># 设置验证集</span></span>
+<span id="cb93-10"><a href="#cb93-10" aria-hidden="true" tabindex="-1"></a>valids <span class="ot">&lt;-</span> <span class="fu">list</span>(<span class="at">train =</span> train_lgb, <span class="at">valid =</span> valid_lgb)</span>
+<span id="cb93-11"><a href="#cb93-11" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb93-12"><a href="#cb93-12" aria-hidden="true" tabindex="-1"></a><span class="co"># 训练LightGBM模型</span></span>
+<span id="cb93-13"><a href="#cb93-13" aria-hidden="true" tabindex="-1"></a>lgb <span class="ot">&lt;-</span> <span class="fu">lgb.train</span>(</span>
+<span id="cb93-14"><a href="#cb93-14" aria-hidden="true" tabindex="-1"></a>  <span class="at">params =</span> params,</span>
+<span id="cb93-15"><a href="#cb93-15" aria-hidden="true" tabindex="-1"></a>  <span class="at">data =</span> train_lgb,</span>
+<span id="cb93-16"><a href="#cb93-16" aria-hidden="true" tabindex="-1"></a>  <span class="at">nrounds =</span> <span class="dv">500</span>,  <span class="co"># 训练轮数</span></span>
+<span id="cb93-17"><a href="#cb93-17" aria-hidden="true" tabindex="-1"></a>  <span class="at">valids =</span> valids,</span>
+<span id="cb93-18"><a href="#cb93-18" aria-hidden="true" tabindex="-1"></a>  <span class="at">early_stopping_rounds =</span> <span class="dv">10</span>,  <span class="co"># 如果验证集10轮没有提升，提前停止</span></span>
+<span id="cb93-19"><a href="#cb93-19" aria-hidden="true" tabindex="-1"></a>  <span class="at">verbose =</span> <span class="sc">-</span><span class="dv">1</span></span>
+<span id="cb93-20"><a href="#cb93-20" aria-hidden="true" tabindex="-1"></a>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</div>
+</section>
+<section id="模型效果评估" class="level3">
+<h3 class="anchored" data-anchor-id="模型效果评估">3.5.3 模型效果评估</h3>
+<p>我们这里只构建一个简单的预测模型baseline来观察一下数据之间在“预测”上的交互联系，通过简单的调参，大致可以得知拟合效果一般，原因有可能是</p>
+<ul>
+<li><p>数据集过小大致只有900多条，传统的机器学习模型一般在万为单位的数据集上表现更好，在小数据集上容易出现参数过多导致的过拟合。</p></li>
+<li><p>数据集本身内含的信息过少，不足以提供足够的细节来预测评分。</p></li>
+</ul>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb94"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb94-1"><a href="#cb94-1" aria-hidden="true" tabindex="-1"></a><span class="co"># 对训练集进行预测并计算各项指标</span></span>
+<span id="cb94-2"><a href="#cb94-2" aria-hidden="true" tabindex="-1"></a>predicted_train <span class="ot">&lt;-</span> <span class="fu">predict</span>(lgb, train_matrix)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-stderr">
+<pre><code>Warning in storage.mode(data) &lt;- "double": NAs introduced by coercion</code></pre>
+</div>
+<div class="sourceCode cell-code" id="cb96"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb96-1"><a href="#cb96-1" aria-hidden="true" tabindex="-1"></a>train_rmse <span class="ot">&lt;-</span> <span class="fu">rmse</span>(y_train, predicted_train)</span>
+<span id="cb96-2"><a href="#cb96-2" aria-hidden="true" tabindex="-1"></a>train_mse <span class="ot">&lt;-</span> <span class="fu">mean</span>((predicted_train <span class="sc">-</span> y_train)<span class="sc">^</span><span class="dv">2</span>)</span>
+<span id="cb96-3"><a href="#cb96-3" aria-hidden="true" tabindex="-1"></a>sst_train <span class="ot">&lt;-</span> <span class="fu">sum</span>((y_train <span class="sc">-</span> <span class="fu">mean</span>(y_train))<span class="sc">^</span><span class="dv">2</span>)</span>
+<span id="cb96-4"><a href="#cb96-4" aria-hidden="true" tabindex="-1"></a>sse_train <span class="ot">&lt;-</span> <span class="fu">sum</span>((y_train <span class="sc">-</span> predicted_train)<span class="sc">^</span><span class="dv">2</span>)</span>
+<span id="cb96-5"><a href="#cb96-5" aria-hidden="true" tabindex="-1"></a>r_squared_train <span class="ot">&lt;-</span> <span class="dv">1</span> <span class="sc">-</span> sse_train <span class="sc">/</span> sst_train</span>
+<span id="cb96-6"><a href="#cb96-6" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb96-7"><a href="#cb96-7" aria-hidden="true" tabindex="-1"></a><span class="co"># # 打印训练集结果</span></span>
+<span id="cb96-8"><a href="#cb96-8" aria-hidden="true" tabindex="-1"></a><span class="co"># print(paste("训练集 RMSE:", train_rmse))</span></span>
+<span id="cb96-9"><a href="#cb96-9" aria-hidden="true" tabindex="-1"></a><span class="co"># print(paste("训练集 MSE:", train_mse))</span></span>
+<span id="cb96-10"><a href="#cb96-10" aria-hidden="true" tabindex="-1"></a><span class="co"># print(paste("训练集 R²:", r_squared_train))</span></span>
+<span id="cb96-11"><a href="#cb96-11" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb96-12"><a href="#cb96-12" aria-hidden="true" tabindex="-1"></a><span class="co"># 对测试集进行预测并计算各项指标</span></span>
+<span id="cb96-13"><a href="#cb96-13" aria-hidden="true" tabindex="-1"></a>predicted_test <span class="ot">&lt;-</span> <span class="fu">predict</span>(lgb, test_matrix)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-stderr">
+<pre><code>Warning in storage.mode(data) &lt;- "double": NAs introduced by coercion</code></pre>
+</div>
+<div class="sourceCode cell-code" id="cb98"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb98-1"><a href="#cb98-1" aria-hidden="true" tabindex="-1"></a>test_rmse <span class="ot">&lt;-</span> <span class="fu">rmse</span>(y_test, predicted_test)</span>
+<span id="cb98-2"><a href="#cb98-2" aria-hidden="true" tabindex="-1"></a>test_mse <span class="ot">&lt;-</span> <span class="fu">mean</span>((predicted_test <span class="sc">-</span> y_test)<span class="sc">^</span><span class="dv">2</span>)</span>
+<span id="cb98-3"><a href="#cb98-3" aria-hidden="true" tabindex="-1"></a>sst_test <span class="ot">&lt;-</span> <span class="fu">sum</span>((y_test <span class="sc">-</span> <span class="fu">mean</span>(y_test))<span class="sc">^</span><span class="dv">2</span>)</span>
+<span id="cb98-4"><a href="#cb98-4" aria-hidden="true" tabindex="-1"></a>sse_test <span class="ot">&lt;-</span> <span class="fu">sum</span>((y_test <span class="sc">-</span> predicted_test)<span class="sc">^</span><span class="dv">2</span>)</span>
+<span id="cb98-5"><a href="#cb98-5" aria-hidden="true" tabindex="-1"></a>r_squared_test <span class="ot">&lt;-</span> <span class="dv">1</span> <span class="sc">-</span> sse_test <span class="sc">/</span> sst_test</span>
+<span id="cb98-6"><a href="#cb98-6" aria-hidden="true" tabindex="-1"></a><span class="co"># </span></span>
+<span id="cb98-7"><a href="#cb98-7" aria-hidden="true" tabindex="-1"></a><span class="co"># # 打印测试集结果</span></span>
+<span id="cb98-8"><a href="#cb98-8" aria-hidden="true" tabindex="-1"></a><span class="co"># print(paste("测试集 RMSE:", test_rmse))</span></span>
+<span id="cb98-9"><a href="#cb98-9" aria-hidden="true" tabindex="-1"></a><span class="co"># print(paste("测试集 MSE:", test_mse))</span></span>
+<span id="cb98-10"><a href="#cb98-10" aria-hidden="true" tabindex="-1"></a><span class="co"># print(paste("测试集 R²:", r_squared_test))</span></span>
+<span id="cb98-11"><a href="#cb98-11" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb98-12"><a href="#cb98-12" aria-hidden="true" tabindex="-1"></a><span class="co"># 创建数据框</span></span>
+<span id="cb98-13"><a href="#cb98-13" aria-hidden="true" tabindex="-1"></a>lgb_model_eval <span class="ot">&lt;-</span> <span class="fu">data.frame</span>(</span>
+<span id="cb98-14"><a href="#cb98-14" aria-hidden="true" tabindex="-1"></a>  <span class="at">model =</span> <span class="fu">rep</span>(<span class="st">"LGB"</span>, <span class="dv">2</span>),</span>
+<span id="cb98-15"><a href="#cb98-15" aria-hidden="true" tabindex="-1"></a>  <span class="at">mse =</span> <span class="fu">c</span>(train_mse, test_mse),</span>
+<span id="cb98-16"><a href="#cb98-16" aria-hidden="true" tabindex="-1"></a>  <span class="at">rmse =</span> <span class="fu">c</span>(train_rmse, test_rmse),</span>
+<span id="cb98-17"><a href="#cb98-17" aria-hidden="true" tabindex="-1"></a>  <span class="at">R2 =</span> <span class="fu">c</span>(r_squared_train, r_squared_test),</span>
+<span id="cb98-18"><a href="#cb98-18" aria-hidden="true" tabindex="-1"></a>  <span class="at">dataset =</span> <span class="fu">factor</span>(<span class="fu">c</span>(<span class="st">"train"</span>, <span class="st">"test"</span>))</span>
+<span id="cb98-19"><a href="#cb98-19" aria-hidden="true" tabindex="-1"></a>)</span>
+<span id="cb98-20"><a href="#cb98-20" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb98-21"><a href="#cb98-21" aria-hidden="true" tabindex="-1"></a><span class="co"># 打印结果</span></span>
+<span id="cb98-22"><a href="#cb98-22" aria-hidden="true" tabindex="-1"></a><span class="fu">print</span>(lgb_model_eval)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-stdout">
+<pre><code>  model       mse      rmse        R2 dataset
+1   LGB 0.3759316 0.6131326 0.8016026   train
+2   LGB 0.8707640 0.9331473 0.5116258    test</code></pre>
+</div>
+</div>
+</section>
+<section id="模型解释性分析" class="level3">
+<h3 class="anchored" data-anchor-id="模型解释性分析">3.5.4 模型解释性分析</h3>
+<p>由于模型拟合效果不强，我们只能简单地利用shap值做一个草率的分析，所得到的信息无法完全来解释每一个变量对预测的贡献：</p>
+<p>首先我们计算shap值：</p>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb100"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb100-1"><a href="#cb100-1" aria-hidden="true" tabindex="-1"></a><span class="fu">library</span>(shapviz)</span>
+<span id="cb100-2"><a href="#cb100-2" aria-hidden="true" tabindex="-1"></a>shp_lgb <span class="ot">&lt;-</span> <span class="fu">shapviz</span>(lgb,<span class="at">X_pred =</span>train_matrix)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-stderr">
+<pre><code>Warning in storage.mode(data) &lt;- "double": NAs introduced by coercion</code></pre>
+</div>
+</div>
+<p>我们选择训练集的第二条数据来展示，该游戏的各项特征如何影响最终评分的输出，可以看到：</p>
+<ul>
+<li><p>主要的贡献由评论数提供。对此的解释为评论本身需要玩家玩完游戏进一步思考和打字才能实现的交互，玩家往往更乐意对更优秀/评分高的游戏多费功夫来发表自己的感受</p></li>
+<li><p>最后更新年数也提供了对评分的一定共享，通常来说最后更新年数越晚说明游戏仍然在频繁运营和更新，侧面反应了该公司看好该游戏的发展前景，其原因正来自于玩家对该游戏的喜爱与认可</p></li>
+</ul>
+<p>但也正因为模型总体拟合效果较差，所以该瀑布图并无法很好的解释所有变量的作用。</p>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb102"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb102-1"><a href="#cb102-1" aria-hidden="true" tabindex="-1"></a><span class="co">#展示shap值</span></span>
+<span id="cb102-2"><a href="#cb102-2" aria-hidden="true" tabindex="-1"></a>choose_row <span class="ot">&lt;-</span> <span class="dv">2</span></span>
+<span id="cb102-3"><a href="#cb102-3" aria-hidden="true" tabindex="-1"></a><span class="fu">sv_waterfall</span>(shp_lgb,<span class="at">row_id =</span> choose_row,<span class="at">max_display =</span> <span class="dv">20</span>)<span class="co">#瀑布图</span></span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output-display">
+<div>
+<figure class="figure">
+<p><img src="main_homework_files/figure-html/unnamed-chunk-40-1.png" class="img-fluid figure-img" width="672"></p>
+</figure>
+</div>
+</div>
+<div class="sourceCode cell-code" id="cb103"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb103-1"><a href="#cb103-1" aria-hidden="true" tabindex="-1"></a><span class="fu">sv_force</span>(shp_lgb,<span class="at">row_id =</span> choose_row,<span class="at">max_display =</span> <span class="dv">20</span>)<span class="co">#缩合图</span></span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-stderr">
+<pre><code>Warning: ggrepel: 12 unlabeled data points (too many overlaps). Consider
+increasing max.overlaps</code></pre>
+</div>
+<div class="cell-output-display">
+<div>
+<figure class="figure">
+<p><img src="main_homework_files/figure-html/unnamed-chunk-40-2.png" class="img-fluid figure-img" width="672"></p>
+</figure>
+</div>
+</div>
+</div>
+<p>那么对于每一个特征来说，模型在判断评分时依赖的每个特征的重要程度应该怎么衡量呢？通过该方法我们也可以简单列出一个散点图和柱状图来展示这一情况，以下两张图是采用不同表现形式对重要性的展示，总的来说，<strong>评论数、喜欢数、热度</strong>贡献最大、依次递减，这一结果是符合直觉的，毕竟他们都是数据中为数不多的数值型特征，至于最后更新的时间信息为什么占据很高的贡献度呢？一种解释正如上面所说，这间接反应了游戏开发者收到游戏市场反馈的决策，进而可以度量出游戏本身受到的认可。</p>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb105"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb105-1"><a href="#cb105-1" aria-hidden="true" tabindex="-1"></a><span class="co">#特征重要性评估</span></span>
+<span id="cb105-2"><a href="#cb105-2" aria-hidden="true" tabindex="-1"></a><span class="fu">sv_importance</span>(shp_lgb, <span class="at">kind =</span> <span class="st">"beeswarm"</span>)<span class="co">#散点总结图</span></span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output-display">
+<div>
+<figure class="figure">
+<p><img src="main_homework_files/figure-html/unnamed-chunk-41-1.png" class="img-fluid figure-img" width="672"></p>
+</figure>
+</div>
+</div>
+<div class="sourceCode cell-code" id="cb106"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb106-1"><a href="#cb106-1" aria-hidden="true" tabindex="-1"></a><span class="fu">sv_importance</span>(shp_lgb,<span class="at">fill=</span><span class="st">"#fee08b"</span>)<span class="co">#条形图</span></span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output-display">
+<div>
+<figure class="figure">
+<p><img src="main_homework_files/figure-html/unnamed-chunk-41-2.png" class="img-fluid figure-img" width="672"></p>
+</figure>
+</div>
+</div>
+</div>
+</section>
+</section>
+</section>
+
+</main>
+<!-- /main column -->
+<script id="quarto-html-after-body" type="application/javascript">
+window.document.addEventListener("DOMContentLoaded", function (event) {
+  const toggleBodyColorMode = (bsSheetEl) => {
+    const mode = bsSheetEl.getAttribute("data-mode");
+    const bodyEl = window.document.querySelector("body");
+    if (mode === "dark") {
+      bodyEl.classList.add("quarto-dark");
+      bodyEl.classList.remove("quarto-light");
+    } else {
+      bodyEl.classList.add("quarto-light");
+      bodyEl.classList.remove("quarto-dark");
+    }
+  }
+  const toggleBodyColorPrimary = () => {
+    const bsSheetEl = window.document.querySelector("link#quarto-bootstrap");
+    if (bsSheetEl) {
+      toggleBodyColorMode(bsSheetEl);
+    }
+  }
+  toggleBodyColorPrimary();  
+  const icon = "";
+  const anchorJS = new window.AnchorJS();
+  anchorJS.options = {
+    placement: 'right',
+    icon: icon
+  };
+  anchorJS.add('.anchored');
+  const isCodeAnnotation = (el) => {
+    for (const clz of el.classList) {
+      if (clz.startsWith('code-annotation-')) {                     
+        return true;
+      }
+    }
+    return false;
+  }
+  const onCopySuccess = function(e) {
+    // button target
+    const button = e.trigger;
+    // don't keep focus
+    button.blur();
+    // flash "checked"
+    button.classList.add('code-copy-button-checked');
+    var currentTitle = button.getAttribute("title");
+    button.setAttribute("title", "Copied!");
+    let tooltip;
+    if (window.bootstrap) {
+      button.setAttribute("data-bs-toggle", "tooltip");
+      button.setAttribute("data-bs-placement", "left");
+      button.setAttribute("data-bs-title", "Copied!");
+      tooltip = new bootstrap.Tooltip(button, 
+        { trigger: "manual", 
+          customClass: "code-copy-button-tooltip",
+          offset: [0, -8]});
+      tooltip.show();    
+    }
+    setTimeout(function() {
+      if (tooltip) {
+        tooltip.hide();
+        button.removeAttribute("data-bs-title");
+        button.removeAttribute("data-bs-toggle");
+        button.removeAttribute("data-bs-placement");
+      }
+      button.setAttribute("title", currentTitle);
+      button.classList.remove('code-copy-button-checked');
+    }, 1000);
+    // clear code selection
+    e.clearSelection();
+  }
+  const getTextToCopy = function(trigger) {
+      const codeEl = trigger.previousElementSibling.cloneNode(true);
+      for (const childEl of codeEl.children) {
+        if (isCodeAnnotation(childEl)) {
+          childEl.remove();
+        }
+      }
+      return codeEl.innerText;
+  }
+  const clipboard = new window.ClipboardJS('.code-copy-button:not([data-in-quarto-modal])', {
+    text: getTextToCopy
+  });
+  clipboard.on('success', onCopySuccess);
+  if (window.document.getElementById('quarto-embedded-source-code-modal')) {
+    // For code content inside modals, clipBoardJS needs to be initialized with a container option
+    // TODO: Check when it could be a function (https://github.com/zenorocha/clipboard.js/issues/860)
+    const clipboardModal = new window.ClipboardJS('.code-copy-button[data-in-quarto-modal]', {
+      text: getTextToCopy,
+      container: window.document.getElementById('quarto-embedded-source-code-modal')
+    });
+    clipboardModal.on('success', onCopySuccess);
+  }
+    var localhostRegex = new RegExp(/^(?:http|https):\/\/localhost\:?[0-9]*\//);
+    var mailtoRegex = new RegExp(/^mailto:/);
+      var filterRegex = new RegExp('/' + window.location.host + '/');
+    var isInternal = (href) => {
+        return filterRegex.test(href) || localhostRegex.test(href) || mailtoRegex.test(href);
+    }
+    // Inspect non-navigation links and adorn them if external
+ 	var links = window.document.querySelectorAll('a[href]:not(.nav-link):not(.navbar-brand):not(.toc-action):not(.sidebar-link):not(.sidebar-item-toggle):not(.pagination-link):not(.no-external):not([aria-hidden]):not(.dropdown-item):not(.quarto-navigation-tool):not(.about-link)');
+    for (var i=0; i<links.length; i++) {
+      const link = links[i];
+      if (!isInternal(link.href)) {
+        // undo the damage that might have been done by quarto-nav.js in the case of
+        // links that we want to consider external
+        if (link.dataset.originalHref !== undefined) {
+          link.href = link.dataset.originalHref;
+        }
+      }
+    }
+  function tippyHover(el, contentFn, onTriggerFn, onUntriggerFn) {
+    const config = {
+      allowHTML: true,
+      maxWidth: 500,
+      delay: 100,
+      arrow: false,
+      appendTo: function(el) {
+          return el.parentElement;
+      },
+      interactive: true,
+      interactiveBorder: 10,
+      theme: 'quarto',
+      placement: 'bottom-start',
+    };
+    if (contentFn) {
+      config.content = contentFn;
+    }
+    if (onTriggerFn) {
+      config.onTrigger = onTriggerFn;
+    }
+    if (onUntriggerFn) {
+      config.onUntrigger = onUntriggerFn;
+    }
+    window.tippy(el, config); 
+  }
+  const noterefs = window.document.querySelectorAll('a[role="doc-noteref"]');
+  for (var i=0; i<noterefs.length; i++) {
+    const ref = noterefs[i];
+    tippyHover(ref, function() {
+      // use id or data attribute instead here
+      let href = ref.getAttribute('data-footnote-href') || ref.getAttribute('href');
+      try { href = new URL(href).hash; } catch {}
+      const id = href.replace(/^#\/?/, "");
+      const note = window.document.getElementById(id);
+      if (note) {
+        return note.innerHTML;
+      } else {
+        return "";
+      }
+    });
+  }
+  const xrefs = window.document.querySelectorAll('a.quarto-xref');
+  const processXRef = (id, note) => {
+    // Strip column container classes
+    const stripColumnClz = (el) => {
+      el.classList.remove("page-full", "page-columns");
+      if (el.children) {
+        for (const child of el.children) {
+          stripColumnClz(child);
+        }
+      }
+    }
+    stripColumnClz(note)
+    if (id === null || id.startsWith('sec-')) {
+      // Special case sections, only their first couple elements
+      const container = document.createElement("div");
+      if (note.children && note.children.length > 2) {
+        container.appendChild(note.children[0].cloneNode(true));
+        for (let i = 1; i < note.children.length; i++) {
+          const child = note.children[i];
+          if (child.tagName === "P" && child.innerText === "") {
+            continue;
+          } else {
+            container.appendChild(child.cloneNode(true));
+            break;
+          }
+        }
+        if (window.Quarto?.typesetMath) {
+          window.Quarto.typesetMath(container);
+        }
+        return container.innerHTML
+      } else {
+        if (window.Quarto?.typesetMath) {
+          window.Quarto.typesetMath(note);
+        }
+        return note.innerHTML;
+      }
+    } else {
+      // Remove any anchor links if they are present
+      const anchorLink = note.querySelector('a.anchorjs-link');
+      if (anchorLink) {
+        anchorLink.remove();
+      }
+      if (window.Quarto?.typesetMath) {
+        window.Quarto.typesetMath(note);
+      }
+      // TODO in 1.5, we should make sure this works without a callout special case
+      if (note.classList.contains("callout")) {
+        return note.outerHTML;
+      } else {
+        return note.innerHTML;
+      }
+    }
+  }
+  for (var i=0; i<xrefs.length; i++) {
+    const xref = xrefs[i];
+    tippyHover(xref, undefined, function(instance) {
+      instance.disable();
+      let url = xref.getAttribute('href');
+      let hash = undefined; 
+      if (url.startsWith('#')) {
+        hash = url;
+      } else {
+        try { hash = new URL(url).hash; } catch {}
+      }
+      if (hash) {
+        const id = hash.replace(/^#\/?/, "");
+        const note = window.document.getElementById(id);
+        if (note !== null) {
+          try {
+            const html = processXRef(id, note.cloneNode(true));
+            instance.setContent(html);
+          } finally {
+            instance.enable();
+            instance.show();
+          }
+        } else {
+          // See if we can fetch this
+          fetch(url.split('#')[0])
+          .then(res => res.text())
+          .then(html => {
+            const parser = new DOMParser();
+            const htmlDoc = parser.parseFromString(html, "text/html");
+            const note = htmlDoc.getElementById(id);
+            if (note !== null) {
+              const html = processXRef(id, note);
+              instance.setContent(html);
+            } 
+          }).finally(() => {
+            instance.enable();
+            instance.show();
+          });
+        }
+      } else {
+        // See if we can fetch a full url (with no hash to target)
+        // This is a special case and we should probably do some content thinning / targeting
+        fetch(url)
+        .then(res => res.text())
+        .then(html => {
+          const parser = new DOMParser();
+          const htmlDoc = parser.parseFromString(html, "text/html");
+          const note = htmlDoc.querySelector('main.content');
+          if (note !== null) {
+            // This should only happen for chapter cross references
+            // (since there is no id in the URL)
+            // remove the first header
+            if (note.children.length > 0 && note.children[0].tagName === "HEADER") {
+              note.children[0].remove();
+            }
+            const html = processXRef(null, note);
+            instance.setContent(html);
+          } 
+        }).finally(() => {
+          instance.enable();
+          instance.show();
+        });
+      }
+    }, function(instance) {
+    });
+  }
+      let selectedAnnoteEl;
+      const selectorForAnnotation = ( cell, annotation) => {
+        let cellAttr = 'data-code-cell="' + cell + '"';
+        let lineAttr = 'data-code-annotation="' +  annotation + '"';
+        const selector = 'span[' + cellAttr + '][' + lineAttr + ']';
+        return selector;
+      }
+      const selectCodeLines = (annoteEl) => {
+        const doc = window.document;
+        const targetCell = annoteEl.getAttribute("data-target-cell");
+        const targetAnnotation = annoteEl.getAttribute("data-target-annotation");
+        const annoteSpan = window.document.querySelector(selectorForAnnotation(targetCell, targetAnnotation));
+        const lines = annoteSpan.getAttribute("data-code-lines").split(",");
+        const lineIds = lines.map((line) => {
+          return targetCell + "-" + line;
+        })
+        let top = null;
+        let height = null;
+        let parent = null;
+        if (lineIds.length > 0) {
+            //compute the position of the single el (top and bottom and make a div)
+            const el = window.document.getElementById(lineIds[0]);
+            top = el.offsetTop;
+            height = el.offsetHeight;
+            parent = el.parentElement.parentElement;
+          if (lineIds.length > 1) {
+            const lastEl = window.document.getElementById(lineIds[lineIds.length - 1]);
+            const bottom = lastEl.offsetTop + lastEl.offsetHeight;
+            height = bottom - top;
+          }
+          if (top !== null && height !== null && parent !== null) {
+            // cook up a div (if necessary) and position it 
+            let div = window.document.getElementById("code-annotation-line-highlight");
+            if (div === null) {
+              div = window.document.createElement("div");
+              div.setAttribute("id", "code-annotation-line-highlight");
+              div.style.position = 'absolute';
+              parent.appendChild(div);
+            }
+            div.style.top = top - 2 + "px";
+            div.style.height = height + 4 + "px";
+            div.style.left = 0;
+            let gutterDiv = window.document.getElementById("code-annotation-line-highlight-gutter");
+            if (gutterDiv === null) {
+              gutterDiv = window.document.createElement("div");
+              gutterDiv.setAttribute("id", "code-annotation-line-highlight-gutter");
+              gutterDiv.style.position = 'absolute';
+              const codeCell = window.document.getElementById(targetCell);
+              const gutter = codeCell.querySelector('.code-annotation-gutter');
+              gutter.appendChild(gutterDiv);
+            }
+            gutterDiv.style.top = top - 2 + "px";
+            gutterDiv.style.height = height + 4 + "px";
+          }
+          selectedAnnoteEl = annoteEl;
+        }
+      };
+      const unselectCodeLines = () => {
+        const elementsIds = ["code-annotation-line-highlight", "code-annotation-line-highlight-gutter"];
+        elementsIds.forEach((elId) => {
+          const div = window.document.getElementById(elId);
+          if (div) {
+            div.remove();
+          }
+        });
+        selectedAnnoteEl = undefined;
+      };
+        // Handle positioning of the toggle
+    window.addEventListener(
+      "resize",
+      throttle(() => {
+        elRect = undefined;
+        if (selectedAnnoteEl) {
+          selectCodeLines(selectedAnnoteEl);
+        }
+      }, 10)
+    );
+    function throttle(fn, ms) {
+    let throttle = false;
+    let timer;
+      return (...args) => {
+        if(!throttle) { // first call gets through
+            fn.apply(this, args);
+            throttle = true;
+        } else { // all the others get throttled
+            if(timer) clearTimeout(timer); // cancel #2
+            timer = setTimeout(() => {
+              fn.apply(this, args);
+              timer = throttle = false;
+            }, ms);
+        }
+      };
+    }
+      // Attach click handler to the DT
+      const annoteDls = window.document.querySelectorAll('dt[data-target-cell]');
+      for (const annoteDlNode of annoteDls) {
+        annoteDlNode.addEventListener('click', (event) => {
+          const clickedEl = event.target;
+          if (clickedEl !== selectedAnnoteEl) {
+            unselectCodeLines();
+            const activeEl = window.document.querySelector('dt[data-target-cell].code-annotation-active');
+            if (activeEl) {
+              activeEl.classList.remove('code-annotation-active');
+            }
+            selectCodeLines(clickedEl);
+            clickedEl.classList.add('code-annotation-active');
+          } else {
+            // Unselect the line
+            unselectCodeLines();
+            clickedEl.classList.remove('code-annotation-active');
+          }
+        });
+      }
+  const findCites = (el) => {
+    const parentEl = el.parentElement;
+    if (parentEl) {
+      const cites = parentEl.dataset.cites;
+      if (cites) {
+        return {
+          el,
+          cites: cites.split(' ')
+        };
+      } else {
+        return findCites(el.parentElement)
+      }
+    } else {
+      return undefined;
+    }
+  };
+  var bibliorefs = window.document.querySelectorAll('a[role="doc-biblioref"]');
+  for (var i=0; i<bibliorefs.length; i++) {
+    const ref = bibliorefs[i];
+    const citeInfo = findCites(ref);
+    if (citeInfo) {
+      tippyHover(citeInfo.el, function() {
+        var popup = window.document.createElement('div');
+        citeInfo.cites.forEach(function(cite) {
+          var citeDiv = window.document.createElement('div');
+          citeDiv.classList.add('hanging-indent');
+          citeDiv.classList.add('csl-entry');
+          var biblioDiv = window.document.getElementById('ref-' + cite);
+          if (biblioDiv) {
+            citeDiv.innerHTML = biblioDiv.innerHTML;
+          }
+          popup.appendChild(citeDiv);
+        });
+        return popup.innerHTML;
+      });
+    }
+  }
+});
+</script>
+</div> <!-- /content -->
+
+
+
+
+</body></html>

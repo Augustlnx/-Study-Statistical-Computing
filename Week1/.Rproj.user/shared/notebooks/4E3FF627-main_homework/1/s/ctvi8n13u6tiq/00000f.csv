@@ -1,0 +1,4 @@
+"0","convert_t_count <- function(t) {"
+"0","    as.numeric(gsub(""℃"", """", t)) "
+"0","}"
+"0","data_game1$热度 <- sapply(data_game1$热度, convert_t_count)"

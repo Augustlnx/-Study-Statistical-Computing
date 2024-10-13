@@ -1,0 +1,3 @@
+"0","data_tv_clean <- data_tv %>%"
+"0","  filter(!is.na(剧名) & (!(is.na(点赞) & is.na(差评) & is.na(得分))))"
+"0","aggr(data_tv_clean,combined=T)"

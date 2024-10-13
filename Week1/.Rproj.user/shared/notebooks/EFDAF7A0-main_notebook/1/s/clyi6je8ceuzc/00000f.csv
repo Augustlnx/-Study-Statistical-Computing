@@ -1,0 +1,13 @@
+"0","# 相关系数矩阵"
+"0","correlations <- cor(data_game3[c('评分','热度','评论数','喜欢数')])"
+"0","dim(correlations)"
+"1","[1]"
+"1"," 4"
+"1"," 4"
+"1","
+"
+"0","# 可视化相关系数矩阵"
+"0","corrplot(correlations, order = ""hclust"",tl.col = ""black"")"
+"2","Error in corrplot(correlations, order = ""hclust"", tl.col = ""black"") : 
+  没有""corrplot""这个函数
+"

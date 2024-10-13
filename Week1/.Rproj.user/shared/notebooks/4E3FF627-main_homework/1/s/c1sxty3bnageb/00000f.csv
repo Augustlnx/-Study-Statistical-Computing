@@ -1,0 +1,11 @@
+"0","#导入手机游戏数据"
+"0","data_game <- read_csv(""9月4日作业/CH2_game.csv"", locale = locale(encoding = ""GBK""))  "
+"2","[1mRows: [22m[34m1141[39m [1mColumns: [22m[34m12[39m"
+"2","[36m──[39m [1mColumn specification[22m [36m────────────────────────────────────────────────────────────────────────[39m
+[1mDelimiter:[22m "",""
+[31mchr[39m  (8): 游戏名称, 类别, 语言, 热度, 游戏版本, 资费, 开发商, 支持系统
+[32mdbl[39m  (3): 评分, 评论数, 喜欢数
+[34mdate[39m (1): 最后更新时间"
+"2","
+[36mℹ[39m Use `spec()` to retrieve the full column specification for this data.
+[36mℹ[39m Specify the column types or set `show_col_types = FALSE` to quiet this message."

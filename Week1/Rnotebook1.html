@@ -1,0 +1,1153 @@
+<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml" lang="en" xml:lang="en"><head>
+
+<meta charset="utf-8">
+<meta name="generator" content="quarto-1.3.450">
+
+<meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=yes">
+
+<meta name="author" content="37720222204921 何啻">
+
+<title>R notebook week1</title>
+<style>
+code{white-space: pre-wrap;}
+span.smallcaps{font-variant: small-caps;}
+div.columns{display: flex; gap: min(4vw, 1.5em);}
+div.column{flex: auto; overflow-x: auto;}
+div.hanging-indent{margin-left: 1.5em; text-indent: -1.5em;}
+ul.task-list{list-style: none;}
+ul.task-list li input[type="checkbox"] {
+  width: 0.8em;
+  margin: 0 0.8em 0.2em -1em; /* quarto-specific, see https://github.com/quarto-dev/quarto-cli/issues/4556 */ 
+  vertical-align: middle;
+}
+/* CSS for syntax highlighting */
+pre > code.sourceCode { white-space: pre; position: relative; }
+pre > code.sourceCode > span { display: inline-block; line-height: 1.25; }
+pre > code.sourceCode > span:empty { height: 1.2em; }
+.sourceCode { overflow: visible; }
+code.sourceCode > span { color: inherit; text-decoration: inherit; }
+div.sourceCode { margin: 1em 0; }
+pre.sourceCode { margin: 0; }
+@media screen {
+div.sourceCode { overflow: auto; }
+}
+@media print {
+pre > code.sourceCode { white-space: pre-wrap; }
+pre > code.sourceCode > span { text-indent: -5em; padding-left: 5em; }
+}
+pre.numberSource code
+  { counter-reset: source-line 0; }
+pre.numberSource code > span
+  { position: relative; left: -4em; counter-increment: source-line; }
+pre.numberSource code > span > a:first-child::before
+  { content: counter(source-line);
+    position: relative; left: -1em; text-align: right; vertical-align: baseline;
+    border: none; display: inline-block;
+    -webkit-touch-callout: none; -webkit-user-select: none;
+    -khtml-user-select: none; -moz-user-select: none;
+    -ms-user-select: none; user-select: none;
+    padding: 0 4px; width: 4em;
+  }
+pre.numberSource { margin-left: 3em;  padding-left: 4px; }
+div.sourceCode
+  {   }
+@media screen {
+pre > code.sourceCode > span > a:first-child::before { text-decoration: underline; }
+}
+</style>
+
+
+<script src="Rnotebook1_files/libs/clipboard/clipboard.min.js"></script>
+<script src="Rnotebook1_files/libs/quarto-html/quarto.js"></script>
+<script src="Rnotebook1_files/libs/quarto-html/popper.min.js"></script>
+<script src="Rnotebook1_files/libs/quarto-html/tippy.umd.min.js"></script>
+<script src="Rnotebook1_files/libs/quarto-html/anchor.min.js"></script>
+<link href="Rnotebook1_files/libs/quarto-html/tippy.css" rel="stylesheet">
+<link href="Rnotebook1_files/libs/quarto-html/quarto-syntax-highlighting.css" rel="stylesheet" id="quarto-text-highlighting-styles">
+<script src="Rnotebook1_files/libs/bootstrap/bootstrap.min.js"></script>
+<link href="Rnotebook1_files/libs/bootstrap/bootstrap-icons.css" rel="stylesheet">
+<link href="Rnotebook1_files/libs/bootstrap/bootstrap.min.css" rel="stylesheet" id="quarto-bootstrap" data-mode="light">
+
+
+</head>
+
+<body>
+
+<div id="quarto-content" class="page-columns page-rows-contents page-layout-article">
+<div id="quarto-margin-sidebar" class="sidebar margin-sidebar">
+  <nav id="TOC" role="doc-toc" class="toc-active">
+    <h2 id="toc-title">目录</h2>
+   
+  <ul class="collapse">
+  <li><a href="#一数据类型取等判断运算优先" id="toc-一数据类型取等判断运算优先" class="nav-link active" data-scroll-target="#一数据类型取等判断运算优先">一、数据类型（取等判断、运算优先）</a>
+  <ul class="collapse">
+  <li><a href="#不同类型的数据之间相等的判断" id="toc-不同类型的数据之间相等的判断" class="nav-link" data-scroll-target="#不同类型的数据之间相等的判断">2.1 不同类型的数据之间相等的判断</a></li>
+  <li><a href="#数据之间的基本运算符号和优先级" id="toc-数据之间的基本运算符号和优先级" class="nav-link" data-scroll-target="#数据之间的基本运算符号和优先级">2.2 数据之间的基本运算符号和优先级</a></li>
+  <li><a href="#补充函数调用" id="toc-补充函数调用" class="nav-link" data-scroll-target="#补充函数调用">2.3 补充：函数调用</a></li>
+  </ul></li>
+  <li><a href="#二数据结构structure" id="toc-二数据结构structure" class="nav-link" data-scroll-target="#二数据结构structure">二、数据结构（structure）</a>
+  <ul class="collapse">
+  <li><a href="#数据结构分类" id="toc-数据结构分类" class="nav-link" data-scroll-target="#数据结构分类">3.1 数据结构分类</a></li>
+  <li><a href="#创建不同类型的数据结构" id="toc-创建不同类型的数据结构" class="nav-link" data-scroll-target="#创建不同类型的数据结构">3.2 创建不同类型的数据结构</a></li>
+  <li><a href="#数据元素命名" id="toc-数据元素命名" class="nav-link" data-scroll-target="#数据元素命名">3.3 数据元素命名</a></li>
+  </ul></li>
+  <li><a href="#补充的trick" id="toc-补充的trick" class="nav-link" data-scroll-target="#补充的trick">补充的trick：</a></li>
+  </ul>
+</nav>
+</div>
+<main class="content" id="quarto-document-content">
+
+<header id="title-block-header" class="quarto-title-block default">
+<div class="quarto-title">
+<h1 class="title">R notebook week1</h1>
+</div>
+
+
+
+<div class="quarto-title-meta">
+
+    <div>
+    <div class="quarto-title-meta-heading">Author</div>
+    <div class="quarto-title-meta-contents">
+             <p>37720222204921 何啻 </p>
+          </div>
+  </div>
+    
+  
+    
+  </div>
+  
+
+</header>
+
+<section id="一数据类型取等判断运算优先" class="level1">
+<h1>一、数据类型（取等判断、运算优先）</h1>
+<p><img src="images/1.png" class="img-fluid" width="380"></p>
+<p>通过上面的代码也可知道，默认输入的数值数据是以双精度保存的。</p>
+<p>检查数据类型的方法：</p>
+<ul>
+<li><p><strong>class</strong> 关注的是对象的高级类型，如 “data.frame”、“factor”、“matrix” 等，并且可以自定义和扩展。</p></li>
+<li><p><strong>typeof</strong> 函数描述的是对象的底层数据类型，提供更详细的内部存储信息。它返回的类型更加具体，如 “double”、“integer”、“character”、“list”、“closure”（函数）等。</p></li>
+<li><p><strong>mode</strong> 关注的是对象的底层存储模式，如 “numeric”、“character”、“list” 等。</p></li>
+</ul>
+<p>比如说对于矩阵类型的数据，class关心的是这个数据使用矩阵matrix的结构储存的，mode关心的是每个数据记载着数值numeric而不是字符，typeof关心的是这个数值的类型或者说精度是双精度double。</p>
+<p>下面提供一些更具体的例子，不过一般来说其实不怎么用到这个细节：</p>
+<pre><code># 数值型变量
+num_var &lt;- 42
+
+print(paste("num_var: mode =", mode(num_var)))     # 输出： "numeric"
+print(paste("num_var: typeof =", typeof(num_var))) # 输出： "double"
+print(paste("num_var: class =", class(num_var)))   # 输出： "numeric"
+
+# 整数型变量
+int_var &lt;- 42L
+
+print(paste("int_var: mode =", mode(int_var)))     # 输出： "numeric"
+print(paste("int_var: typeof =", typeof(int_var))) # 输出： "integer"
+print(paste("int_var: class =", class(int_var)))   # 输出： "integer"
+
+# 字符型变量
+char_var &lt;- "Hello"
+
+print(paste("char_var: mode =", mode(char_var)))     # 输出： "character"
+print(paste("char_var: typeof =", typeof(char_var))) # 输出： "character"
+print(paste("char_var: class =", class(char_var)))   # 输出： "character"
+
+# 逻辑型变量
+logical_var &lt;- TRUE
+
+print(paste("logical_var: mode =", mode(logical_var)))     # 输出： "logical"
+print(paste("logical_var: typeof =", typeof(logical_var))) # 输出： "logical"
+print(paste("logical_var: class =", class(logical_var)))   # 输出： "logical"
+
+# 列表
+list_var &lt;- list(a = 1, b = "text", c = TRUE)
+
+print(paste("list_var: mode =", mode(list_var)))     # 输出： "list"
+print(paste("list_var: typeof =", typeof(list_var))) # 输出： "list"
+print(paste("list_var: class =", class(list_var)))   # 输出： "list"
+
+# 矩阵
+matrix_var &lt;- matrix(1:4, nrow = 2)
+
+print(paste("matrix_var: mode =", mode(matrix_var)))     # 输出： "numeric"
+print(paste("matrix_var: typeof =", typeof(matrix_var))) # 输出： "double"
+print(paste("matrix_var: class =", class(matrix_var)))   # 输出： "matrix"
+
+# 因子
+factor_var &lt;- factor(c("low", "medium", "high"))
+
+print(paste("factor_var: mode =", mode(factor_var)))     # 输出： "numeric"
+print(paste("factor_var: typeof =", typeof(factor_var))) # 输出： "integer"
+print(paste("factor_var: class =", class(factor_var)))   # 输出： "factor"
+
+# 数据框
+df_var &lt;- data.frame(x = 1:3, y = c("a", "b", "c"))
+
+print(paste("df_var: mode =", mode(df_var)))     # 输出： "list"
+print(paste("df_var: typeof =", typeof(df_var))) # 输出： "list"
+print(paste("df_var: class =", class(df_var)))   # 输出： "data.frame"
+
+# 函数
+func_var &lt;- function(x) x^2
+
+print(paste("func_var: mode =", mode(func_var)))     # 输出： "function"
+print(paste("func_var: typeof =", typeof(func_var))) # 输出： "closure"
+print(paste("func_var: class =", class(func_var)))   # 输出： "function"</code></pre>
+<section id="不同类型的数据之间相等的判断" class="level2">
+<h2 class="anchored" data-anchor-id="不同类型的数据之间相等的判断">2.1 不同类型的数据之间相等的判断</h2>
+<p><strong>(1) 双精度数据之间的相等</strong></p>
+<p>双精度只是一种近似，所以比较不同方法得到的数据需要进行比较的时候，不能使用 ==，而应该使用 dplyr::near()，该函数可以容忍一些数据误差</p>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb2"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb2-1"><a href="#cb2-1" aria-hidden="true" tabindex="-1"></a>(x <span class="ot">&lt;-</span> <span class="fu">sqrt</span>(<span class="dv">2</span>) <span class="sc">^</span> <span class="dv">2</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-stdout">
+<pre><code>[1] 2</code></pre>
+</div>
+<div class="sourceCode cell-code" id="cb4"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb4-1"><a href="#cb4-1" aria-hidden="true" tabindex="-1"></a><span class="fu">print</span>(x <span class="sc">==</span> <span class="dv">2</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-stdout">
+<pre><code>[1] FALSE</code></pre>
+</div>
+<div class="sourceCode cell-code" id="cb6"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb6-1"><a href="#cb6-1" aria-hidden="true" tabindex="-1"></a>dplyr<span class="sc">::</span><span class="fu">near</span>(x, <span class="dv">2</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-stdout">
+<pre><code>[1] TRUE</code></pre>
+</div>
+</div>
+<p><strong>注释：</strong>这里的dplyr是一个R包，而::表示了不需要library的加载而直接调用，并通过::指定该R包下的函数（调用格式为：package_name::function_name），有时也可以用作区分同名称的函数，也就是说如果不嫌麻烦的情况下也可将上面的代码写成这样：</p>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb8"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb8-1"><a href="#cb8-1" aria-hidden="true" tabindex="-1"></a><span class="fu">library</span>(dplyr)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-stderr">
+<pre><code>
+Attaching package: 'dplyr'</code></pre>
+</div>
+<div class="cell-output cell-output-stderr">
+<pre><code>The following objects are masked from 'package:stats':
+
+    filter, lag</code></pre>
+</div>
+<div class="cell-output cell-output-stderr">
+<pre><code>The following objects are masked from 'package:base':
+
+    intersect, setdiff, setequal, union</code></pre>
+</div>
+<div class="sourceCode cell-code" id="cb12"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb12-1"><a href="#cb12-1" aria-hidden="true" tabindex="-1"></a>x <span class="ot">&lt;-</span> <span class="fu">sqrt</span>(<span class="dv">2</span>) <span class="sc">^</span> <span class="dv">2</span></span>
+<span id="cb12-2"><a href="#cb12-2" aria-hidden="true" tabindex="-1"></a><span class="fu">near</span>(x, <span class="dv">2</span>, <span class="at">tol =</span> .Machine<span class="sc">$</span>double.eps<span class="sc">^</span><span class="fl">0.5</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-stdout">
+<pre><code>[1] TRUE</code></pre>
+</div>
+<div class="sourceCode cell-code" id="cb14"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb14-1"><a href="#cb14-1" aria-hidden="true" tabindex="-1"></a><span class="co">#这里的tol表示了容许的误差值，默认值是 .Machine$double.eps^0.5，即机器精度的平方根。可以根据需要进行修改</span></span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</div>
+<p><strong>(2) 特殊的字符之间的相等</strong></p>
+<ul>
+<li><p>整型数据有 1 个特殊值 NA</p></li>
+<li><p>双精度型数据则有 4 个特殊值：</p>
+<ul>
+<li><p>NA（not available，不可用/缺失值）</p>
+<p>并可以分为类型NA; NA_integer_; NA_real_; NA_complex_; NA_character_</p></li>
+<li><p>NaN（not a number，不是一个数，通常在非法数学操作中出现）</p></li>
+<li><p>Inf 和 -Inf（ 由除0所产生）</p></li>
+</ul>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb15"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb15-1"><a href="#cb15-1" aria-hidden="true" tabindex="-1"></a>  <span class="co">#例如：</span></span>
+<span id="cb15-2"><a href="#cb15-2" aria-hidden="true" tabindex="-1"></a>  <span class="fu">c</span>(<span class="sc">-</span><span class="dv">1</span>, <span class="dv">0</span>, <span class="dv">1</span>, <span class="cn">NA</span>) <span class="sc">/</span> <span class="dv">0</span></span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-stdout">
+<pre><code>[1] -Inf  NaN  Inf   NA</code></pre>
+</div>
+</div></li>
+</ul>
+<p>不要使用 == 来检查这些特殊值，而应该使用辅助函数 is.nan() 、is.finite()和is.infinite()，检验的判断值如下：</p>
+<div class="quarto-figure quarto-figure-center">
+<figure class="figure">
+<p><img src="images/2024-06-25-172322.png" class="img-fluid figure-img" width="316"></p>
+</figure>
+</div>
+<p>例子：</p>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb17"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb17-1"><a href="#cb17-1" aria-hidden="true" tabindex="-1"></a>(x <span class="ot">&lt;-</span> <span class="fu">c</span>(<span class="dv">10</span>, <span class="dv">3</span>, <span class="cn">NA</span> , <span class="dv">5</span>, <span class="dv">8</span>, <span class="dv">1</span>, <span class="cn">NA</span>, <span class="fu">c</span>(<span class="sc">-</span><span class="dv">1</span>, <span class="dv">0</span>, <span class="dv">1</span>) <span class="sc">/</span> <span class="dv">0</span>))</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-stdout">
+<pre><code> [1]   10    3   NA    5    8    1   NA -Inf  NaN  Inf</code></pre>
+</div>
+<div class="sourceCode cell-code" id="cb19"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb19-1"><a href="#cb19-1" aria-hidden="true" tabindex="-1"></a><span class="fu">mean</span>(<span class="fu">is.na</span>(x)) <span class="co">#输出缺失值NA和NAN占全部数据的比例</span></span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-stdout">
+<pre><code>[1] 0.3</code></pre>
+</div>
+<div class="sourceCode cell-code" id="cb21"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb21-1"><a href="#cb21-1" aria-hidden="true" tabindex="-1"></a><span class="fu">sum</span>(<span class="sc">!</span><span class="fu">is.finite</span>(x)) <span class="co">#输出不正常值的个数，注意is.finite(x)只在常数时返回True</span></span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-stdout">
+<pre><code>[1] 5</code></pre>
+</div>
+</div>
+<p>注意在这个时候，类型如is.na(x)的函数在对一个向量判断的时候，是统计其中符合该函数条件的数目。</p>
+</section>
+<section id="数据之间的基本运算符号和优先级" class="level2">
+<h2 class="anchored" data-anchor-id="数据之间的基本运算符号和优先级">2.2 数据之间的基本运算符号和优先级</h2>
+<p>仅罗列如下，方便查找即可。</p>
+<div class="quarto-figure quarto-figure-center">
+<figure class="figure">
+<p><img src="images/屏幕截图%202024-06-25%20175412.png" class="img-fluid figure-img" width="593"></p>
+</figure>
+</div>
+<div class="quarto-figure quarto-figure-center">
+<figure class="figure">
+<p><img src="images/屏幕截图%202024-06-25%20175427.png" class="img-fluid figure-img" width="591"></p>
+</figure>
+</div>
+<p><strong>补充：</strong>代码末尾用“;”连接可以视作不换行的分隔符继续写下面的代码</p>
+</section>
+<section id="补充函数调用" class="level2">
+<h2 class="anchored" data-anchor-id="补充函数调用">2.3 补充：函数调用</h2>
+<section id="常见内置函数" class="level3">
+<h3 class="anchored" data-anchor-id="常见内置函数"><strong>（1） 常见内置函数：</strong></h3>
+<ul>
+<li>setwd：更改当前工作目录</li>
+</ul>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb23"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb23-1"><a href="#cb23-1" aria-hidden="true" tabindex="-1"></a><span class="co"># 使用正斜杠</span></span>
+<span id="cb23-2"><a href="#cb23-2" aria-hidden="true" tabindex="-1"></a><span class="co"># setwd("C:/Users/August/···")</span></span>
+<span id="cb23-3"><a href="#cb23-3" aria-hidden="true" tabindex="-1"></a><span class="co">#getwd()可用于查看当前目录</span></span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</div>
+<ul>
+<li>seq：生成有序间隔数列,length.out参数为1到10之间平分为多少个数</li>
+</ul>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb24"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb24-1"><a href="#cb24-1" aria-hidden="true" tabindex="-1"></a>(y <span class="ot">&lt;-</span> <span class="fu">seq</span>(<span class="dv">1</span>, <span class="dv">10</span>, <span class="at">length.out =</span> <span class="dv">5</span>))</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-stdout">
+<pre><code>[1]  1.00  3.25  5.50  7.75 10.00</code></pre>
+</div>
+</div>
+<ul>
+<li><p>mean：数列取均值</p></li>
+<li><p>runnif：生成一定范围的随机数</p>
+<ul>
+<li><p><strong>n</strong> 是生成的随机数的个数。</p></li>
+<li><p><strong>min</strong> 是随机数的下界（默认值为 0）。</p></li>
+<li><p><strong>max</strong> 是随机数的上界（默认值为 1）。</p></li>
+</ul></li>
+</ul>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb26"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb26-1"><a href="#cb26-1" aria-hidden="true" tabindex="-1"></a>n <span class="ot">&lt;-</span> <span class="dv">5</span></span>
+<span id="cb26-2"><a href="#cb26-2" aria-hidden="true" tabindex="-1"></a>x <span class="ot">&lt;-</span>  <span class="fu">runif</span>(n, <span class="at">min =</span> <span class="dv">0</span>, <span class="at">max =</span> <span class="dv">1</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</div>
+<ul>
+<li><p>rm：移除空间已经有的变量</p>
+<pre><code>x &lt;- 5
+rm(x) #移除特定变量
+rm(list = ls()) #移除全部变量</code></pre></li>
+<li><p>rep：</p>
+<ul>
+<li><p>x：要重复的值或向量。</p></li>
+<li><p>times：每个元素重复的次数。</p></li>
+<li><p>each：将每个元素重复多少次。</p></li>
+</ul>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb28"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb28-1"><a href="#cb28-1" aria-hidden="true" tabindex="-1"></a>(<span class="fu">rep</span>(<span class="fu">c</span>(<span class="dv">1</span>, <span class="dv">2</span>, <span class="dv">3</span>), <span class="at">times =</span> <span class="dv">2</span>))</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-stdout">
+<pre><code>[1] 1 2 3 1 2 3</code></pre>
+</div>
+<div class="sourceCode cell-code" id="cb30"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb30-1"><a href="#cb30-1" aria-hidden="true" tabindex="-1"></a>(<span class="fu">rep</span>(<span class="fu">c</span>(<span class="dv">1</span>, <span class="dv">2</span>, <span class="dv">3</span>), <span class="at">each =</span> <span class="dv">3</span>))</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-stdout">
+<pre><code>[1] 1 1 1 2 2 2 3 3 3</code></pre>
+</div>
+<div class="sourceCode cell-code" id="cb32"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb32-1"><a href="#cb32-1" aria-hidden="true" tabindex="-1"></a><span class="co"># 将向量 c(1, 2, 3) 重复 2 次，但每个元素分别重复 3 次</span></span>
+<span id="cb32-2"><a href="#cb32-2" aria-hidden="true" tabindex="-1"></a>(<span class="fu">rep</span>(<span class="fu">c</span>(<span class="dv">1</span>, <span class="dv">2</span>, <span class="dv">3</span>), <span class="at">times =</span> <span class="dv">2</span>, <span class="at">each =</span> <span class="dv">3</span>))</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-stdout">
+<pre><code> [1] 1 1 1 2 2 2 3 3 3 1 1 1 2 2 2 3 3 3</code></pre>
+</div>
+</div></li>
+<li><p>cbind: 合并数据</p>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb34"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb34-1"><a href="#cb34-1" aria-hidden="true" tabindex="-1"></a>a <span class="ot">&lt;-</span> <span class="dv">1</span></span>
+<span id="cb34-2"><a href="#cb34-2" aria-hidden="true" tabindex="-1"></a>b <span class="ot">&lt;-</span> <span class="dv">2</span></span>
+<span id="cb34-3"><a href="#cb34-3" aria-hidden="true" tabindex="-1"></a><span class="fu">cbind</span>(a,b)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-stdout">
+<pre><code>     a b
+[1,] 1 2</code></pre>
+</div>
+</div></li>
+</ul>
+</section>
+<section id="创建函数" class="level3">
+<h3 class="anchored" data-anchor-id="创建函数"><strong>（2） 创建函数</strong></h3>
+<ul>
+<li><p>在当前代码内创建函数：</p>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb36"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb36-1"><a href="#cb36-1" aria-hidden="true" tabindex="-1"></a>add_numbers <span class="ot">&lt;-</span> <span class="cf">function</span>(a, b) {</span>
+<span id="cb36-2"><a href="#cb36-2" aria-hidden="true" tabindex="-1"></a>  sum <span class="ot">&lt;-</span> a <span class="sc">+</span> b</span>
+<span id="cb36-3"><a href="#cb36-3" aria-hidden="true" tabindex="-1"></a>  <span class="fu">return</span>(sum)</span>
+<span id="cb36-4"><a href="#cb36-4" aria-hidden="true" tabindex="-1"></a>}</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</div>
+<p>调用函数：</p>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb37"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb37-1"><a href="#cb37-1" aria-hidden="true" tabindex="-1"></a>result <span class="ot">&lt;-</span> <span class="fu">add_numbers</span>(<span class="dv">3</span>, <span class="dv">5</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</div></li>
+<li><p>在当前目录下子文件夹中创建函数包</p>
+<p>调用函数：</p>
+<pre><code># 加载函数文件
+# 获取当前工作目录
+current_dir &lt;- getwd()
+# 设置工作目录到函数文件所在的文件夹
+setwd(file.path(current_dir, "代码", "函数"))
+# 加载函数文件
+source("add_numbers.R")
+# 设置工作目录回到原始目录
+setwd(current_dir)
+#此时工作区已经有加载好了的函数add_numbers，调用方法同上：
+result &lt;- add_numbers(3, 5)</code></pre></li>
+</ul>
+<p><strong>一类特殊的函数：泛型函数，</strong>它会根据第一个参数的类调用特定方法，例如summary(x) 提供了输入对象的概览，可以处理很多模型的描述性统计的工作。</p>
+<ul>
+<li>如果 x 是一个表格，那么 summary()就会调用 summary.data.frame()</li>
+</ul>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb39"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb39-1"><a href="#cb39-1" aria-hidden="true" tabindex="-1"></a><span class="fu">library</span>(mosaicData) </span>
+<span id="cb39-2"><a href="#cb39-2" aria-hidden="true" tabindex="-1"></a><span class="fu">summary</span>(CPS85) </span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-stdout">
+<pre><code>      wage             educ       race     sex     hispanic   south   
+ Min.   : 1.000   Min.   : 2.00   NW: 67   F:245   Hisp: 27   NS:378  
+ 1st Qu.: 5.250   1st Qu.:12.00   W :467   M:289   NH  :507   S :156  
+ Median : 7.780   Median :12.00                                       
+ Mean   : 9.024   Mean   :13.02                                       
+ 3rd Qu.:11.250   3rd Qu.:15.00                                       
+ Max.   :44.500   Max.   :18.00                                       
+                                                                      
+    married        exper         union          age             sector   
+ Married:350   Min.   : 0.00   Not  :438   Min.   :18.00   prof    :105  
+ Single :184   1st Qu.: 8.00   Union: 96   1st Qu.:28.00   clerical: 97  
+               Median :15.00               Median :35.00   service : 83  
+               Mean   :17.82               Mean   :36.83   manuf   : 68  
+               3rd Qu.:26.00               3rd Qu.:44.00   other   : 68  
+               Max.   :55.00               Max.   :64.00   manag   : 55  
+                                                           (Other) : 58  </code></pre>
+</div>
+</div>
+<ul>
+<li>如果 x 是一个线性模型（lm），那么就会调用 summary.lm()</li>
+</ul>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb41"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb41-1"><a href="#cb41-1" aria-hidden="true" tabindex="-1"></a><span class="fu">summary</span>(<span class="fu">lm</span>(wage <span class="sc">~</span> educ <span class="sc">+</span> sex <span class="sc">+</span> union, <span class="at">data =</span> CPS85))</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-stdout">
+<pre><code>
+Call:
+lm(formula = wage ~ educ + sex + union, data = CPS85)
+
+Residuals:
+   Min     1Q Median     3Q    Max 
+-8.711 -2.916 -0.680  2.020 36.099 
+
+Coefficients:
+            Estimate Std. Error t value Pr(&gt;|t|)    
+(Intercept) -2.20909    1.03514  -2.134 0.033294 *  
+educ         0.75786    0.07598   9.975  &lt; 2e-16 ***
+sexM         1.89420    0.40330   4.697 3.37e-06 ***
+unionUnion   1.90010    0.52349   3.630 0.000311 ***
+---
+Signif. codes:  0 '***' 0.001 '**' 0.01 '*' 0.05 '.' 0.1 ' ' 1
+
+Residual standard error: 4.586 on 530 degrees of freedom
+Multiple R-squared:  0.208, Adjusted R-squared:  0.2036 
+F-statistic: 46.41 on 3 and 530 DF,  p-value: &lt; 2.2e-16</code></pre>
+</div>
+</div>
+</section>
+</section>
+</section>
+<section id="二数据结构structure" class="level1">
+<h1>二、数据结构（structure）</h1>
+<p>这里先补充解释来区分以下前一章“数据类型”和“数据结构”的区别，数据类型关注的是每一个数据本身是什么类型的数据，数据结构关注的是一组数据以什么方式来储存的结构。</p>
+<section id="数据结构分类" class="level2">
+<h2 class="anchored" data-anchor-id="数据结构分类">3.1 数据结构分类</h2>
+<p><img src="images/屏幕截图%202024-06-29%20191921.png" class="img-fluid" width="594"></p>
+<p><strong>注：</strong>列表和tibble（数据框）的区别是，列表允许不同长度的向量，这说明列表可以更自由的组合不同的矩阵、向量来储存，数据框更像是一个自变量的数据矩阵list化的结果。</p>
+<p>直观的表示：</p>
+<p><img src="images/屏幕截图%202024-06-29%20192441.png" class="img-fluid" width="370"></p>
+<p>这几种类型主要差别在“维度”和“元素储存单位是否同质”，我们解释如下五种类型中，前三种依次是维度的逐渐扩大造成的变化，后两种是储存元素是否允许异质带来的差别。按照最开始分的类别，前三个都是同质的原子向量，后俩个是异质的泛型向量。</p>
+<table class="table">
+<thead>
+<tr class="header">
+<th>Vector</th>
+<th>Matrix</th>
+<th>Array</th>
+<th>Data frame</th>
+<th>List</th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<td>向量</td>
+<td>矩阵</td>
+<td>数组</td>
+<td>数据框</td>
+<td>列表</td>
+</tr>
+</tbody>
+</table>
+<p>这里额外补充说明“数组”的形式，它在二维的时候就是矩阵，三维的时候如图一样是一个方块，但调用的时候要额外注意你的数据到底在第几层的第几行第几列。n维的时候就不好直观展示了，但本质上来说，每一个维度都可以看做是一个分组，调用其实就是根据一个分组一个分组的索引去找。直观理解上呢，我一般把他比作切片的吐司面包片，每一片就是一个矩阵，合在一起就是一个方块的大面包。</p>
+<p><code>{r} data &lt;- 1:24 # 创建一个 2x3x4 的数组 (three_d_array &lt;- array(data, dim = c(2, 3, 4)))}</code></p>
+<p>另外还要提一个特殊的数据类型“NULL”表示不存在，对比之前提到的”NA“，后者表示的是存在但未知、缺失，可以说是将其当做一个任何常规属性的、替代数据在这个位置占位的类型，所以它是有长度的。而NULL表示的就是完全不存在，长度为0。</p>
+<p>注：数据库管理系统中的 NULL 值相当于 R 中的 NA 值</p>
+<p>通过新增加特性后，除了原子向量可以扩展为矩阵或数组以外，原子向量和列表还可构建出另外一</p>
+<p>些重要的向量类型：</p>
+<table class="table">
+<thead>
+<tr class="header">
+<th>Factor</th>
+<th><strong>Data frame/tibble</strong></th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<td>因子</td>
+<td>数据框</td>
+</tr>
+<tr class="even">
+<td>基于整型向量构建</td>
+<td>基于列表构建</td>
+</tr>
+</tbody>
+</table>
+<p>这俩不如上面的好理解，我们稍微解释一下：</p>
+<ul>
+<li><p><strong>因子（factor）</strong>是一种用于处理分类数据的特殊向量。因子通常用于存储定性（分类）数据，例如性别、颜色、品牌等。它们与字符向量类似，但因子主要区别在字符向量可以随便储存不同的字符就像文本一样，而因子明确的要用于分类，也就是一般来说通过factor的值可以将数据分成几个有限的大类。</p>
+<p>此外，因子还有一些特殊的性质：</p>
+<ol type="1">
+<li><p><strong>水平/类别（levels）</strong>：因子类型的数据内部有一个类别的集合levels，储存所有数据可能的类别，不管是采集错误还是特殊的类别，只要不在该集合内的所有值输入后都会自动转换为 NA。</p></li>
+<li><p><strong>存储为整数</strong>：因子内部存储为整数，每个整数对应一个类别。</p></li>
+<li><p><strong>有序因子和无序因子</strong>：因子可以是有序的（表示有顺序关系的分类数据，如大、中、小）或无序的（表示没有顺序关系的分类数据，如红、黄、蓝），可以在输入时额外的设置，这个属性很可能会影响回归的准确性。</p></li>
+</ol>
+<p>注：这里的因子和因子分析里的因子不是一个意思，笔者在最开始稍微疑惑了下，实际上这里的因子直接理解为分类变量就好了，而因子分析里的因子其实大致是若干个自变量的意思。</p></li>
+<li></li>
+</ul>
+</section>
+<section id="创建不同类型的数据结构" class="level2">
+<h2 class="anchored" data-anchor-id="创建不同类型的数据结构">3.2 创建不同类型的数据结构</h2>
+<section id="行向量" class="level3">
+<h3 class="anchored" data-anchor-id="行向量">（1）<strong>（行）向量</strong></h3>
+<p><strong>操作注记：</strong>alt+-连按表示了带空格的等于号“ &lt;- ”</p>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb43"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb43-1"><a href="#cb43-1" aria-hidden="true" tabindex="-1"></a><span class="co">#数值：</span></span>
+<span id="cb43-2"><a href="#cb43-2" aria-hidden="true" tabindex="-1"></a>  (vector1 <span class="ot">&lt;-</span> <span class="fu">c</span>(<span class="dv">1</span>,<span class="dv">2</span>,<span class="dv">3</span>,<span class="dv">4</span>,<span class="dv">5</span>))</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-stdout">
+<pre><code>[1] 1 2 3 4 5</code></pre>
+</div>
+<div class="sourceCode cell-code" id="cb45"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb45-1"><a href="#cb45-1" aria-hidden="true" tabindex="-1"></a>  <span class="co">#也可以创造有序间隔数（双精度）</span></span>
+<span id="cb45-2"><a href="#cb45-2" aria-hidden="true" tabindex="-1"></a>  (vector1_1 <span class="ot">&lt;-</span> <span class="fu">seq</span>(<span class="dv">0</span>, <span class="dv">10</span>, <span class="at">length.out =</span> <span class="dv">5</span>))</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-stdout">
+<pre><code>[1]  0.0  2.5  5.0  7.5 10.0</code></pre>
+</div>
+<div class="sourceCode cell-code" id="cb47"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb47-1"><a href="#cb47-1" aria-hidden="true" tabindex="-1"></a><span class="co">#字符:</span></span>
+<span id="cb47-2"><a href="#cb47-2" aria-hidden="true" tabindex="-1"></a>  (vector2 <span class="ot">&lt;-</span> <span class="fu">c</span>(<span class="st">"one"</span>, <span class="st">"two"</span>, <span class="st">"three"</span>, <span class="st">"four"</span>, <span class="st">"five"</span>))</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-stdout">
+<pre><code>[1] "one"   "two"   "three" "four"  "five" </code></pre>
+</div>
+</div>
+<p>额外说明下c()的赋值是双精度和文本类型（字符串）：</p>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb49"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb49-1"><a href="#cb49-1" aria-hidden="true" tabindex="-1"></a><span class="fu">cat</span>(<span class="fu">typeof</span>(vector),<span class="fu">typeof</span>(str))</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-stdout">
+<pre><code>closure closure</code></pre>
+</div>
+</div>
+</section>
+<section id="矩阵" class="level3">
+<h3 class="anchored" data-anchor-id="矩阵">（2）<strong>矩阵</strong></h3>
+<p><strong>填充数据型</strong></p>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb51"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb51-1"><a href="#cb51-1" aria-hidden="true" tabindex="-1"></a>    data<span class="ot">=</span><span class="dv">1</span><span class="sc">:</span><span class="dv">15</span></span>
+<span id="cb51-2"><a href="#cb51-2" aria-hidden="true" tabindex="-1"></a>            (mymatrix <span class="ot">&lt;-</span> <span class="fu">matrix</span>(data,<span class="co">#需要填充进矩阵的数据</span></span>
+<span id="cb51-3"><a href="#cb51-3" aria-hidden="true" tabindex="-1"></a>                            <span class="at">nrow=</span><span class="dv">5</span>,<span class="co">#行数</span></span>
+<span id="cb51-4"><a href="#cb51-4" aria-hidden="true" tabindex="-1"></a>                            <span class="at">ncol=</span><span class="dv">3</span>,<span class="co">#列数</span></span>
+<span id="cb51-5"><a href="#cb51-5" aria-hidden="true" tabindex="-1"></a>                            <span class="at">byrow=</span><span class="cn">FALSE</span>,<span class="co">#默认按列填充，即先按序将第一列填满再填第二列</span></span>
+<span id="cb51-6"><a href="#cb51-6" aria-hidden="true" tabindex="-1"></a>                            <span class="at">dimnames=</span><span class="fu">list</span>(<span class="fu">c</span>(<span class="st">"r1"</span>,<span class="st">"r2"</span>,<span class="st">"r3"</span>,<span class="st">"r4"</span>,<span class="st">"r5"</span>),</span>
+<span id="cb51-7"><a href="#cb51-7" aria-hidden="true" tabindex="-1"></a>                            <span class="fu">c</span>(<span class="st">"c1"</span>,<span class="st">"c2"</span>,<span class="st">"c3"</span>))<span class="co">#这里对行、列进行命名</span></span>
+<span id="cb51-8"><a href="#cb51-8" aria-hidden="true" tabindex="-1"></a>                            ))</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-stdout">
+<pre><code>   c1 c2 c3
+r1  1  6 11
+r2  2  7 12
+r3  3  8 13
+r4  4  9 14
+r5  5 10 15</code></pre>
+</div>
+<div class="sourceCode cell-code" id="cb53"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb53-1"><a href="#cb53-1" aria-hidden="true" tabindex="-1"></a>            <span class="co">#上述可以简化为：</span></span>
+<span id="cb53-2"><a href="#cb53-2" aria-hidden="true" tabindex="-1"></a>            <span class="fu">matrix</span>(<span class="at">data=</span><span class="dv">1</span><span class="sc">:</span><span class="dv">15</span>, <span class="at">ncol=</span><span class="dv">5</span>, <span class="at">nrow=</span><span class="dv">3</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-stdout">
+<pre><code>     [,1] [,2] [,3] [,4] [,5]
+[1,]    1    4    7   10   13
+[2,]    2    5    8   11   14
+[3,]    3    6    9   12   15</code></pre>
+</div>
+</div>
+<p><strong>直接生成单一数值元型</strong></p>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb55"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb55-1"><a href="#cb55-1" aria-hidden="true" tabindex="-1"></a>    <span class="co"># 创建一个 3 行 3 列的全 0 矩阵</span></span>
+<span id="cb55-2"><a href="#cb55-2" aria-hidden="true" tabindex="-1"></a>    matrix_zeros <span class="ot">&lt;-</span> <span class="fu">matrix</span>(<span class="dv">0</span>, <span class="at">nrow =</span> <span class="dv">3</span>, <span class="at">ncol =</span> <span class="dv">3</span>)</span>
+<span id="cb55-3"><a href="#cb55-3" aria-hidden="true" tabindex="-1"></a>    <span class="fu">print</span>(matrix_zeros)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-stdout">
+<pre><code>     [,1] [,2] [,3]
+[1,]    0    0    0
+[2,]    0    0    0
+[3,]    0    0    0</code></pre>
+</div>
+</div>
+<p><strong>向量合并型</strong></p>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb57"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb57-1"><a href="#cb57-1" aria-hidden="true" tabindex="-1"></a><span class="co"># 创建三个向量</span></span>
+<span id="cb57-2"><a href="#cb57-2" aria-hidden="true" tabindex="-1"></a>vec1 <span class="ot">&lt;-</span> <span class="fu">c</span>(<span class="dv">1</span>, <span class="dv">2</span>, <span class="dv">3</span>)</span>
+<span id="cb57-3"><a href="#cb57-3" aria-hidden="true" tabindex="-1"></a>vec2 <span class="ot">&lt;-</span> <span class="fu">c</span>(<span class="dv">4</span>, <span class="dv">5</span>, <span class="dv">6</span>)</span>
+<span id="cb57-4"><a href="#cb57-4" aria-hidden="true" tabindex="-1"></a>vec3 <span class="ot">&lt;-</span> <span class="fu">c</span>(<span class="dv">7</span>, <span class="dv">8</span>, <span class="dv">9</span>)</span>
+<span id="cb57-5"><a href="#cb57-5" aria-hidden="true" tabindex="-1"></a><span class="co"># 使用 cbind 合并向量</span></span>
+<span id="cb57-6"><a href="#cb57-6" aria-hidden="true" tabindex="-1"></a>(result_matrix <span class="ot">&lt;-</span> <span class="fu">cbind</span>(vec1, vec2, vec3))</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-stdout">
+<pre><code>     vec1 vec2 vec3
+[1,]    1    4    7
+[2,]    2    5    8
+[3,]    3    6    9</code></pre>
+</div>
+</div>
+<p>额外注意下这里本来的向量是行向量，但拼接的时候是先把他们全变成列向量再依次拼接的。</p>
+<p>如果拼接对象本身就是矩阵的话，同样也是从左到右依次的例如A和B拼起来就是（A,B）。如果维数不匹配，会自动重复低纬的向量来填充。</p>
+</section>
+<section id="数组" class="level3">
+<h3 class="anchored" data-anchor-id="数组">（3）<strong>数组</strong></h3>
+<p>创建方式基本和上面相同，毕竟只是维度上的扩增而已，额外小心的地方就是这里维度是需要输入向量，命名是需要输入列表的。</p>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb59"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb59-1"><a href="#cb59-1" aria-hidden="true" tabindex="-1"></a>  dim1 <span class="ot">&lt;-</span> <span class="fu">c</span>(<span class="st">"A1"</span>, <span class="st">"A2"</span>, <span class="st">"A3"</span>, <span class="st">"A4"</span>) <span class="co"># 第一个维度的变量名,维度长度为 3</span></span>
+<span id="cb59-2"><a href="#cb59-2" aria-hidden="true" tabindex="-1"></a>  dim2 <span class="ot">&lt;-</span> <span class="fu">c</span>(<span class="st">"B1"</span>, <span class="st">"B2"</span>, <span class="st">"B3"</span>) <span class="co"># 第二个维度的变量名,维度长度为 3</span></span>
+<span id="cb59-3"><a href="#cb59-3" aria-hidden="true" tabindex="-1"></a>  dim3 <span class="ot">&lt;-</span> <span class="fu">c</span>(<span class="st">"C1"</span>, <span class="st">"C2"</span>) <span class="co"># 第三个维度的变量名,维度长度为 2</span></span>
+<span id="cb59-4"><a href="#cb59-4" aria-hidden="true" tabindex="-1"></a>  (z <span class="ot">&lt;-</span> <span class="fu">array</span>(<span class="at">data =</span> <span class="dv">1</span><span class="sc">:</span><span class="dv">24</span>,</span>
+<span id="cb59-5"><a href="#cb59-5" aria-hidden="true" tabindex="-1"></a>  <span class="at">dim =</span> <span class="fu">c</span>(<span class="dv">4</span>, <span class="dv">3</span>, <span class="dv">2</span>), <span class="co"># 各个维度的长度</span></span>
+<span id="cb59-6"><a href="#cb59-6" aria-hidden="true" tabindex="-1"></a>  <span class="at">dimnames =</span> <span class="fu">list</span>(dim1, dim2, dim3))) <span class="co"># 各个维度的变量名</span></span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-stdout">
+<pre><code>, , C1
+
+   B1 B2 B3
+A1  1  5  9
+A2  2  6 10
+A3  3  7 11
+A4  4  8 12
+
+, , C2
+
+   B1 B2 B3
+A1 13 17 21
+A2 14 18 22
+A3 15 19 23
+A4 16 20 24</code></pre>
+</div>
+</div>
+<p>可以这么来记三维数组的格式，前俩个就是正常的矩阵的行列，第三个参数就是这是第几片矩阵。在调用的时候，以下两种方法结果是一样的。</p>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb61"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb61-1"><a href="#cb61-1" aria-hidden="true" tabindex="-1"></a>z[<span class="dv">3</span>, <span class="dv">1</span>, <span class="dv">2</span>] <span class="sc">==</span> z[<span class="st">"A3"</span>,<span class="st">"B1"</span>,<span class="st">"C2"</span>]</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-stdout">
+<pre><code>[1] TRUE</code></pre>
+</div>
+</div>
+</section>
+<section id="列表" class="level3">
+<h3 class="anchored" data-anchor-id="列表">（4）<strong>列表</strong></h3>
+<p>创建方式很简单，只要用list()把你想要的变量名包起来并用逗号隔开就好了。注意如果是按照下面的例子在list（）内部有num_vector = c(1, 2, 3)的形式，那么相当于顺便起了个名字“num_vector”,而如果是单纯的list（num_vector，char_vector）对已知的向量包起来的话是没有名字的，调用也只能通过数值调用。</p>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb63"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb63-1"><a href="#cb63-1" aria-hidden="true" tabindex="-1"></a><span class="co"># 创建一个包含不同类型元素的列表并顺便命名</span></span>
+<span id="cb63-2"><a href="#cb63-2" aria-hidden="true" tabindex="-1"></a>my_list <span class="ot">&lt;-</span> <span class="fu">list</span>(</span>
+<span id="cb63-3"><a href="#cb63-3" aria-hidden="true" tabindex="-1"></a>  <span class="at">num_vector =</span> <span class="fu">c</span>(<span class="dv">1</span>, <span class="dv">2</span>, <span class="dv">3</span>),        <span class="co"># 数值向量</span></span>
+<span id="cb63-4"><a href="#cb63-4" aria-hidden="true" tabindex="-1"></a>  <span class="at">char_vector =</span> <span class="fu">c</span>(<span class="st">"a"</span>, <span class="st">"b"</span>, <span class="st">"c"</span>), <span class="co"># 字符向量</span></span>
+<span id="cb63-5"><a href="#cb63-5" aria-hidden="true" tabindex="-1"></a>  <span class="at">matrix_2x2 =</span> <span class="fu">matrix</span>(<span class="dv">1</span><span class="sc">:</span><span class="dv">4</span>, <span class="dv">2</span>, <span class="dv">2</span>), <span class="co"># 矩阵</span></span>
+<span id="cb63-6"><a href="#cb63-6" aria-hidden="true" tabindex="-1"></a>  <span class="at">sub_list =</span> <span class="fu">list</span>(                <span class="co"># 嵌套列表</span></span>
+<span id="cb63-7"><a href="#cb63-7" aria-hidden="true" tabindex="-1"></a>    <span class="at">x =</span> <span class="dv">10</span>,</span>
+<span id="cb63-8"><a href="#cb63-8" aria-hidden="true" tabindex="-1"></a>    <span class="at">y =</span> <span class="st">"hello"</span></span>
+<span id="cb63-9"><a href="#cb63-9" aria-hidden="true" tabindex="-1"></a>  )</span>
+<span id="cb63-10"><a href="#cb63-10" aria-hidden="true" tabindex="-1"></a>)</span>
+<span id="cb63-11"><a href="#cb63-11" aria-hidden="true" tabindex="-1"></a><span class="co"># 查看列表内容</span></span>
+<span id="cb63-12"><a href="#cb63-12" aria-hidden="true" tabindex="-1"></a><span class="fu">print</span>(my_list) <span class="co">#查看的排版比较宽松，主要展示的是每一个列名对应数据的内容</span></span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-stdout">
+<pre><code>$num_vector
+[1] 1 2 3
+
+$char_vector
+[1] "a" "b" "c"
+
+$matrix_2x2
+     [,1] [,2]
+[1,]    1    3
+[2,]    2    4
+
+$sub_list
+$sub_list$x
+[1] 10
+
+$sub_list$y
+[1] "hello"</code></pre>
+</div>
+<div class="sourceCode cell-code" id="cb65"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb65-1"><a href="#cb65-1" aria-hidden="true" tabindex="-1"></a><span class="fu">str</span>(my_list) <span class="co">#查看的排版比较紧凑，主要展示的是每一个列名对应数据的类型/结构</span></span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-stdout">
+<pre><code>List of 4
+ $ num_vector : num [1:3] 1 2 3
+ $ char_vector: chr [1:3] "a" "b" "c"
+ $ matrix_2x2 : int [1:2, 1:2] 1 2 3 4
+ $ sub_list   :List of 2
+  ..$ x: num 10
+  ..$ y: chr "hello"</code></pre>
+</div>
+</div>
+<p>注：列表可以嵌套，意思就是一个列表里可以包含另一个列表，一层层套下去，如图示一样每个正方体都是数值，圆角框就是一个列表：</p>
+<div class="quarto-figure quarto-figure-center">
+<figure class="figure">
+<p><img src="images/屏幕截图%202024-06-30%20112630.png" class="img-fluid figure-img" width="289"></p>
+</figure>
+</div>
+<p><strong>访问/修改/删除列表元素：</strong></p>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb67"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb67-1"><a href="#cb67-1" aria-hidden="true" tabindex="-1"></a><span class="co"># 访问数值向量，意思就是按照创建列表时从前到后的第几个来索引</span></span>
+<span id="cb67-2"><a href="#cb67-2" aria-hidden="true" tabindex="-1"></a>num_vector <span class="ot">&lt;-</span> my_list[[<span class="dv">1</span>]]</span>
+<span id="cb67-3"><a href="#cb67-3" aria-hidden="true" tabindex="-1"></a><span class="co"># 使用名称访问数值向量</span></span>
+<span id="cb67-4"><a href="#cb67-4" aria-hidden="true" tabindex="-1"></a>num_vector <span class="ot">&lt;-</span> my_list<span class="sc">$</span>num_vector</span>
+<span id="cb67-5"><a href="#cb67-5" aria-hidden="true" tabindex="-1"></a><span class="fu">print</span>(num_vector)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-stdout">
+<pre><code>[1] 1 2 3</code></pre>
+</div>
+</div>
+<p>注，我们提及下几个要点：</p>
+<ul>
+<li><p>创建列表用的是list（）括号，但用数值访问时是list[[1]]不要搞错了，使用名称$name访问和[[]]是一样的。</p></li>
+<li><p>能访问那修改就是和一般变量一样的<code>my_list$num_vector &lt;- a</code></p></li>
+<li><p>增加元素只需要调用你打算起的新列名当做已知来赋值就行。</p>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb69"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb69-1"><a href="#cb69-1" aria-hidden="true" tabindex="-1"></a><span class="co"># 使用名称添加新元素</span></span>
+<span id="cb69-2"><a href="#cb69-2" aria-hidden="true" tabindex="-1"></a>(my_list<span class="sc">$</span>new_element <span class="ot">&lt;-</span> <span class="st">"new value"</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-stdout">
+<pre><code>[1] "new value"</code></pre>
+</div>
+</div></li>
+<li><p>删除元素只需要调用名称给他赋值NULL即可</p>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb71"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb71-1"><a href="#cb71-1" aria-hidden="true" tabindex="-1"></a><span class="co"># 使用名称移除元素</span></span>
+<span id="cb71-2"><a href="#cb71-2" aria-hidden="true" tabindex="-1"></a>my_list<span class="sc">$</span>new_element <span class="ot">&lt;-</span> <span class="cn">NULL</span></span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</div></li>
+<li><p>如果想要取子集，也就是提取列表中的多个元素，使得提取出来后还是一个列表，那需要用[]来提取，这比之前少了一层[]，可以说[[]]多了的[]像剥水果一样去掉了一层数据的一层结构。另外，此时显然用向量数值调用会比单独用名称一个个调用完再合并快的多（如果你知道你想要的元素在list的第几个的话）。</p>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb72"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb72-1"><a href="#cb72-1" aria-hidden="true" tabindex="-1"></a><span class="fu">str</span>(num_vector <span class="ot">&lt;-</span> my_list[<span class="fu">c</span>(<span class="dv">1</span>,<span class="dv">2</span>)])</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-stdout">
+<pre><code>List of 2
+ $ num_vector : num [1:3] 1 2 3
+ $ char_vector: chr [1:3] "a" "b" "c"</code></pre>
+</div>
+</div></li>
+</ul>
+</section>
+<section id="因子" class="level3">
+<h3 class="anchored" data-anchor-id="因子">（5）因子</h3>
+<ol type="1">
+<li><p><strong>无序因子</strong></p>
+<p><strong>方法1：</strong>先新建因子集合levels，然后再输入数据：</p></li>
+</ol>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb74"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb74-1"><a href="#cb74-1" aria-hidden="true" tabindex="-1"></a>x1 <span class="ot">&lt;-</span> <span class="fu">c</span>(<span class="st">"Dec"</span>, <span class="st">"Apr"</span>, <span class="st">"Jam"</span>)</span>
+<span id="cb74-2"><a href="#cb74-2" aria-hidden="true" tabindex="-1"></a>month_levels <span class="ot">&lt;-</span> <span class="fu">c</span>( <span class="st">"Jan"</span>, <span class="st">"Feb"</span>, <span class="st">"Mar"</span>, <span class="st">"Apr"</span>, <span class="st">"May"</span>, <span class="st">"Jun"</span>,<span class="st">"Jul"</span>, <span class="st">"Aug"</span>, <span class="st">"Sep"</span>, <span class="st">"Oct"</span>, <span class="st">"Nov"</span>, <span class="st">"Dec"</span> )</span>
+<span id="cb74-3"><a href="#cb74-3" aria-hidden="true" tabindex="-1"></a>(y2 <span class="ot">&lt;-</span> <span class="fu">factor</span>(x1, <span class="at">levels =</span> month_levels))</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-stdout">
+<pre><code>[1] Dec  Apr  &lt;NA&gt;
+Levels: Jan Feb Mar Apr May Jun Jul Aug Sep Oct Nov Dec</code></pre>
+</div>
+</div>
+<p>如前面所说的，x1[3]由于拼写错误不在levels内，于是转化为NA。输出的结果里第一行是转化后最终输入的因子，第二行是因子集合。</p>
+<p><strong>方法2：</strong>先有数据集，然后直接根据数据集中分类变量的集合创建因子水平：</p>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb76"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb76-1"><a href="#cb76-1" aria-hidden="true" tabindex="-1"></a>data <span class="ot">&lt;-</span> <span class="fu">c</span>(<span class="st">"红色"</span>, <span class="st">"蓝色"</span>, <span class="st">"绿色"</span>, <span class="st">"红色"</span>, <span class="st">"蓝色"</span>, <span class="st">"红色"</span>)</span>
+<span id="cb76-2"><a href="#cb76-2" aria-hidden="true" tabindex="-1"></a>(factor_data <span class="ot">&lt;-</span> <span class="fu">factor</span>(data))</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-stdout">
+<pre><code>[1] 红色 蓝色 绿色 红色 蓝色 红色
+Levels: 红色 蓝色 绿色</code></pre>
+</div>
+</div>
+<ol start="2" type="1">
+<li><p><strong>有序因子</strong></p>
+<p>其实这里和之前的唯一差别就是在设置因子水平levels要实现排个序，然后开启factor里的参数ordered = T就可以了。</p>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb78"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb78-1"><a href="#cb78-1" aria-hidden="true" tabindex="-1"></a><span class="co"># 创建一个包含字符向量的数据</span></span>
+<span id="cb78-2"><a href="#cb78-2" aria-hidden="true" tabindex="-1"></a>sizes <span class="ot">&lt;-</span> <span class="fu">c</span>(<span class="st">"小"</span>, <span class="st">"中"</span>, <span class="st">"大"</span>, <span class="st">"中"</span>, <span class="st">"小"</span>, <span class="st">"大"</span>)</span>
+<span id="cb78-3"><a href="#cb78-3" aria-hidden="true" tabindex="-1"></a><span class="co"># 将字符向量转换为有序因子</span></span>
+<span id="cb78-4"><a href="#cb78-4" aria-hidden="true" tabindex="-1"></a>(ordered_sizes <span class="ot">&lt;-</span> <span class="fu">factor</span>(sizes, <span class="at">levels =</span> <span class="fu">c</span>(<span class="st">"小"</span>, <span class="st">"中"</span>, <span class="st">"大"</span>), <span class="at">ordered =</span> <span class="cn">TRUE</span>))</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-stdout">
+<pre><code>[1] 小 中 大 中 小 大
+Levels: 小 &lt; 中 &lt; 大</code></pre>
+</div>
+</div>
+<p>此外由于有了比较排序的定义，相应的可以对因子进行比较大小的操作，例如下面的操作就可得到一个判断数据大于给定水平的逻辑向量，从而可以进行相应的筛选等等操作：</p>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb80"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb80-1"><a href="#cb80-1" aria-hidden="true" tabindex="-1"></a>sizes <span class="sc">&gt;=</span> <span class="st">"中"</span></span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-stdout">
+<pre><code>[1] FALSE  TRUE FALSE  TRUE FALSE FALSE</code></pre>
+</div>
+</div></li>
+</ol>
+</section>
+<section id="数据框" class="level3">
+<h3 class="anchored" data-anchor-id="数据框">（6）数据框</h3>
+<p>数据框的创建方式和list几乎一样，只要data.frame()包住你要加入的任何类型的等长度变量就行，不过你会发现输出的格式似乎高级了一点，并且此时data.frame是不需要额外命名的，它会自动获取你包起来的变量的变量名，而list就做不到这一点。</p>
+<p>不过注意获取名称时会自动校正一次，例如原数据集中有个变量名为 “Health Insurance” ，传统data.frame 会把变量名改为“Health.Insurance”（因为基础 R 函数中变量名不能有空格）</p>
+<p>此外，下面<code>row.names=c('r1', 'r2','r3','r4')</code> 的这一部分给行命名是可以去除的，它的主要好处是例如你搜集的是年份的数据，那最后不管做什么操作时要关注某一年特殊表现时可以直接查看行名称来获取对应年份是哪一年。</p>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb82"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb82-1"><a href="#cb82-1" aria-hidden="true" tabindex="-1"></a>ID <span class="ot">&lt;-</span> <span class="fu">c</span>(<span class="dv">1</span>, <span class="dv">2</span>, <span class="dv">3</span>, <span class="dv">4</span>)</span>
+<span id="cb82-2"><a href="#cb82-2" aria-hidden="true" tabindex="-1"></a>age <span class="ot">&lt;-</span> <span class="fu">c</span>(<span class="dv">25</span>, <span class="dv">34</span>, <span class="dv">28</span>, <span class="dv">52</span>)</span>
+<span id="cb82-3"><a href="#cb82-3" aria-hidden="true" tabindex="-1"></a>insurance <span class="ot">&lt;-</span> <span class="fu">c</span>(<span class="st">"yes"</span>, <span class="st">"no"</span>, <span class="st">"yes"</span>, <span class="st">"yes"</span>)</span>
+<span id="cb82-4"><a href="#cb82-4" aria-hidden="true" tabindex="-1"></a>health <span class="ot">&lt;-</span> <span class="fu">c</span>(<span class="st">"Poor"</span>, <span class="st">"Improved"</span>, <span class="st">"Excellent"</span>, <span class="st">"Poor"</span>)</span>
+<span id="cb82-5"><a href="#cb82-5" aria-hidden="true" tabindex="-1"></a>(survey_data <span class="ot">&lt;-</span> <span class="fu">data.frame</span>(ID, age, insurance, health,<span class="at">row.names=</span><span class="fu">c</span>(<span class="st">'r1'</span>, <span class="st">'r2'</span>,<span class="st">'r3'</span>,<span class="st">'r4'</span>)))</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-stdout">
+<pre><code>   ID age insurance    health
+r1  1  25       yes      Poor
+r2  2  34        no  Improved
+r3  3  28       yes Excellent
+r4  4  52       yes      Poor</code></pre>
+</div>
+</div>
+</section>
+<section id="tibble数据框升级版" class="level3">
+<h3 class="anchored" data-anchor-id="tibble数据框升级版">（7）tibble（数据框升级版）</h3>
+<p>从介绍上看<strong>tibble</strong>是一种现代化的改进数据框，提供了更好的打印格式、避免意外转换、增强的类型检查以及与 tidyverse 生态系统的良好兼容性——这都是我问AI的hhhh总之对于新生来说，记得tibble比data.frame厉害就行，额外注意下因为这个格式比较新所以有些旧的R包可能不匹配，还是得用data.frame。</p>
+<p>如果要说具体区别在哪，这里简单罗列一下：</p>
+<ol type="1">
+<li><p><strong>更清晰的打印格式</strong>：tibble 提供简洁、整洁的打印格式，即使数据很大，也只显示前 10 行和所有列的前 10 个字符。这有助于在控制台中查看数据结构，而不会被过多的信息淹没。</p></li>
+<li><p><strong>避免意外转换</strong>：tibble 在子集操作时，不会像 data.frame 那样自动简化结果。例如，从 tibble 中提取单列时，结果仍是 tibble 而不是向量。</p></li>
+<li><p><strong>兼容性和扩展性</strong>：tibble 与 data.frame 兼容，并且可以与 dplyr 和 tidyr 等 tidyverse 包无缝协作。</p></li>
+<li><p><strong>更严格的类型检查</strong>：tibble 在创建时会进行严格的类型检查，确保数据类型的一致性，减少类型错误。</p></li>
+<li><p><strong>非标准评估</strong>：tibble 支持非标准评估，使得在代码中使用变量名更加方便和直观。</p></li>
+<li><p><strong>更好地处理缺失值</strong>：tibble 更好地处理缺失值，并在打印时明确显示。</p></li>
+</ol>
+<p>读取excel或者csv进来read_csv()的数据一般来说就是以tibble储存的，总之根据上面的种种优点来看，没事用tibble就对了!所以我们再提一下转化为tibble格式的函数，这里有一个之前没提到的细节，因为前面向量创建时都默认是行向量，转化为矩阵时填充是默认先填满第一列在填下一列，而这里的tibble转化和list转化都是把他们变成了列向量然后再合并在一起的：</p>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb84"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb84-1"><a href="#cb84-1" aria-hidden="true" tabindex="-1"></a>x <span class="ot">&lt;-</span> <span class="fu">c</span>(<span class="dv">1</span><span class="sc">:</span><span class="dv">5</span>) </span>
+<span id="cb84-2"><a href="#cb84-2" aria-hidden="true" tabindex="-1"></a>(y <span class="ot">&lt;-</span> <span class="fu">as_tibble</span>(x))</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-stdout">
+<pre><code># A tibble: 5 × 1
+  value
+  &lt;int&gt;
+1     1
+2     2
+3     3
+4     4
+5     5</code></pre>
+</div>
+</div>
+<p>我们这里再提一下tibble几个需要留意的特性：</p>
+<ul>
+<li><p>不关心输入类型，可存储任意类型，包括list类型</p></li>
+<li><p>tibble没有行名设置 row.names</p></li>
+<li><p>tibble自动添加列名且不会修改不合法的列名（但后面调用起来还是很麻烦，不如一开始都规范下）</p></li>
+<li><p>tibble会自动重复长度为 1 的输入（向量循环），也就是如果某一个输入例如y = 1，那么tibble会自动填充符合长度的全为1的一列</p></li>
+<li><p>和data.frame和list不一样，从tibble中提取的子集格式仍然是tibble</p></li>
+</ul>
+</section>
+</section>
+<section id="数据元素命名" class="level2">
+<h2 class="anchored" data-anchor-id="数据元素命名">3.3 数据元素命名</h2>
+<section id="创建向量时命名" class="level4">
+<h4 class="anchored" data-anchor-id="创建向量时命名"><strong>创建向量时命名：</strong></h4>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb86"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb86-1"><a href="#cb86-1" aria-hidden="true" tabindex="-1"></a>(a1 <span class="ot">&lt;-</span> <span class="fu">c</span>(<span class="at">x =</span> <span class="dv">1</span>, <span class="at">y =</span> <span class="dv">2</span>, <span class="at">z =</span> <span class="dv">4</span>))</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-stdout">
+<pre><code>x y z 
+1 2 4 </code></pre>
+</div>
+</div>
+</section>
+<section id="创建向量后修改命名" class="level4">
+<h4 class="anchored" data-anchor-id="创建向量后修改命名"><strong>创建向量后修改命名：</strong></h4>
+<p>在 R 语言中，<strong>attributes()</strong>&nbsp;函数用于访问或设置对象的属性。属性是存储在对象中的元数据，提供有关对象的信息或额外的数据。常见的属性包括&nbsp;<strong>names（名称）</strong>、<strong>dim（维度）</strong>、<strong>class（数据结构）</strong>&nbsp;等。</p>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb88"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb88-1"><a href="#cb88-1" aria-hidden="true" tabindex="-1"></a><span class="co"># 创建一个向量</span></span>
+<span id="cb88-2"><a href="#cb88-2" aria-hidden="true" tabindex="-1"></a>a1 <span class="ot">&lt;-</span> <span class="fu">c</span>(<span class="dv">1</span>, <span class="dv">2</span>, <span class="dv">3</span>, <span class="dv">4</span>)</span>
+<span id="cb88-3"><a href="#cb88-3" aria-hidden="true" tabindex="-1"></a><span class="co"># 查看向量的属性，结果为NULL，因为默认情况下，向量没有任何属性</span></span>
+<span id="cb88-4"><a href="#cb88-4" aria-hidden="true" tabindex="-1"></a><span class="fu">attributes</span>(a1)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-stdout">
+<pre><code>NULL</code></pre>
+</div>
+</div>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb90"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb90-1"><a href="#cb90-1" aria-hidden="true" tabindex="-1"></a>a1 <span class="ot">&lt;-</span> <span class="fu">c</span>(<span class="dv">1</span>, <span class="dv">2</span>, <span class="dv">3</span>, <span class="dv">4</span>)</span>
+<span id="cb90-2"><a href="#cb90-2" aria-hidden="true" tabindex="-1"></a><span class="co"># 给向量添加一个名字属性</span></span>
+<span id="cb90-3"><a href="#cb90-3" aria-hidden="true" tabindex="-1"></a><span class="fu">names</span>(a1) <span class="ot">&lt;-</span> <span class="fu">c</span>(<span class="st">"one"</span>, <span class="st">"two"</span>, <span class="st">"three"</span>, <span class="st">"four"</span>)</span>
+<span id="cb90-4"><a href="#cb90-4" aria-hidden="true" tabindex="-1"></a><span class="co"># 再次查看属性</span></span>
+<span id="cb90-5"><a href="#cb90-5" aria-hidden="true" tabindex="-1"></a><span class="fu">attributes</span>(a1)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-stdout">
+<pre><code>$names
+[1] "one"   "two"   "three" "four" </code></pre>
+</div>
+</div>
+<p>此时名字可以看做是调用向量中每个值的索引，相应调用方式改变如下，这主要是在数据繁多的时候有时为了区别某些数值为特殊的意义所设置的调用方式，如我要单独调用“因子数量”并在代码中表示这一点，就可以这么写。另外，命名向量也有助于更加方便地进行向量子集的提取以及其他子集操作。</p>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb92"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb92-1"><a href="#cb92-1" aria-hidden="true" tabindex="-1"></a><span class="co"># 通过名字属性来访问元素</span></span>
+<span id="cb92-2"><a href="#cb92-2" aria-hidden="true" tabindex="-1"></a><span class="fu">cat</span>(a1[<span class="st">"one"</span>],a1[<span class="st">"three"</span>])     <span class="co"># 返回 1 3</span></span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-stdout">
+<pre><code>1 3</code></pre>
+</div>
+</div>
+<p>另外，因为改变属性本质上是创建对数值的一个调用索引，所以也可以单独创造一个新的索引不对应原来的某个数据位置，单纯地为了储存这个向量的某个标签：</p>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb94"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb94-1"><a href="#cb94-1" aria-hidden="true" tabindex="-1"></a><span class="co"># 添加一个自定义属性，可以看做是标签</span></span>
+<span id="cb94-2"><a href="#cb94-2" aria-hidden="true" tabindex="-1"></a><span class="fu">attributes</span>(a1)<span class="sc">$</span>tag <span class="ot">&lt;-</span> <span class="st">"this vector is used to ····"</span></span>
+<span id="cb94-3"><a href="#cb94-3" aria-hidden="true" tabindex="-1"></a><span class="co"># 查看所有属性</span></span>
+<span id="cb94-4"><a href="#cb94-4" aria-hidden="true" tabindex="-1"></a><span class="fu">attributes</span>(a1)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-stdout">
+<pre><code>$names
+[1] "one"   "two"   "three" "four" 
+
+$tag
+[1] "this vector is used to ····"</code></pre>
+</div>
+</div>
+<p>注：这里notebook的运行方式有点特殊，因为我把代码分了几个块，必须从最开始的含有创建向量的代码运行后，后面的代码才能有操作的a1对象。</p>
+</section>
+</section>
+</section>
+<section id="补充的trick" class="level1">
+<h1>补充的trick：</h1>
+<ol type="1">
+<li>注释与取消注释的快捷键是 Ctrl + Shift + C，可同时对多行用快捷键进行注释</li>
+<li>整体缩进的快捷键是：选中 + <strong>增加缩进Ctrl + ]/减少缩进Ctrl + [</strong></li>
+<li>按下Alt + Shift + K 组合键会调用出Rstudio中所有的快捷键</li>
+<li>(y &lt;- seq(1, 10, length.out = 5))可以视作赋值后直接执行输出，可以简化代码</li>
+</ol>
+<p>注记：quarto格式输出的pdf和html都没办法在知乎内发表，直接粘贴qmd文件里的格式到markdown格式里会导致图片全部不能跟过去的问题，需要一个一个重新传上去，后来解决方法是直接导出的格式（最开始那部分format的部分）设置为md，结果还真能导出含有所有图片的md文件，然后再用vscode打开。</p>
+<p>但这里还有一个问题是，这个类型转的md文件虽然能在vscode里的预览正常显示，但是知乎似乎识别不了这个上传的方法，而如果重新再导入图片的话，因为屏幕截图类型的文件里连接符是“-”，vscode里无法识别会自动认为是空格，而上传图片的代码引用的文件名里有空格又会报错，所以如果重新导入图片不仅要改图片名称还要再一个个导入。</p>
+<p>解决方法是，在vscode里可以直接复制预览里的图片，原地粘贴，这个时候就可以正常显示了，只不过要每个图片都原地复制粘贴，再把原来的代码删掉过一遍。</p>
+</section>
+
+</main>
+<!-- /main column -->
+<script id="quarto-html-after-body" type="application/javascript">
+window.document.addEventListener("DOMContentLoaded", function (event) {
+  const toggleBodyColorMode = (bsSheetEl) => {
+    const mode = bsSheetEl.getAttribute("data-mode");
+    const bodyEl = window.document.querySelector("body");
+    if (mode === "dark") {
+      bodyEl.classList.add("quarto-dark");
+      bodyEl.classList.remove("quarto-light");
+    } else {
+      bodyEl.classList.add("quarto-light");
+      bodyEl.classList.remove("quarto-dark");
+    }
+  }
+  const toggleBodyColorPrimary = () => {
+    const bsSheetEl = window.document.querySelector("link#quarto-bootstrap");
+    if (bsSheetEl) {
+      toggleBodyColorMode(bsSheetEl);
+    }
+  }
+  toggleBodyColorPrimary();  
+  const icon = "";
+  const anchorJS = new window.AnchorJS();
+  anchorJS.options = {
+    placement: 'right',
+    icon: icon
+  };
+  anchorJS.add('.anchored');
+  const isCodeAnnotation = (el) => {
+    for (const clz of el.classList) {
+      if (clz.startsWith('code-annotation-')) {                     
+        return true;
+      }
+    }
+    return false;
+  }
+  const clipboard = new window.ClipboardJS('.code-copy-button', {
+    text: function(trigger) {
+      const codeEl = trigger.previousElementSibling.cloneNode(true);
+      for (const childEl of codeEl.children) {
+        if (isCodeAnnotation(childEl)) {
+          childEl.remove();
+        }
+      }
+      return codeEl.innerText;
+    }
+  });
+  clipboard.on('success', function(e) {
+    // button target
+    const button = e.trigger;
+    // don't keep focus
+    button.blur();
+    // flash "checked"
+    button.classList.add('code-copy-button-checked');
+    var currentTitle = button.getAttribute("title");
+    button.setAttribute("title", "Copied!");
+    let tooltip;
+    if (window.bootstrap) {
+      button.setAttribute("data-bs-toggle", "tooltip");
+      button.setAttribute("data-bs-placement", "left");
+      button.setAttribute("data-bs-title", "Copied!");
+      tooltip = new bootstrap.Tooltip(button, 
+        { trigger: "manual", 
+          customClass: "code-copy-button-tooltip",
+          offset: [0, -8]});
+      tooltip.show();    
+    }
+    setTimeout(function() {
+      if (tooltip) {
+        tooltip.hide();
+        button.removeAttribute("data-bs-title");
+        button.removeAttribute("data-bs-toggle");
+        button.removeAttribute("data-bs-placement");
+      }
+      button.setAttribute("title", currentTitle);
+      button.classList.remove('code-copy-button-checked');
+    }, 1000);
+    // clear code selection
+    e.clearSelection();
+  });
+  function tippyHover(el, contentFn) {
+    const config = {
+      allowHTML: true,
+      content: contentFn,
+      maxWidth: 500,
+      delay: 100,
+      arrow: false,
+      appendTo: function(el) {
+          return el.parentElement;
+      },
+      interactive: true,
+      interactiveBorder: 10,
+      theme: 'quarto',
+      placement: 'bottom-start'
+    };
+    window.tippy(el, config); 
+  }
+  const noterefs = window.document.querySelectorAll('a[role="doc-noteref"]');
+  for (var i=0; i<noterefs.length; i++) {
+    const ref = noterefs[i];
+    tippyHover(ref, function() {
+      // use id or data attribute instead here
+      let href = ref.getAttribute('data-footnote-href') || ref.getAttribute('href');
+      try { href = new URL(href).hash; } catch {}
+      const id = href.replace(/^#\/?/, "");
+      const note = window.document.getElementById(id);
+      return note.innerHTML;
+    });
+  }
+      let selectedAnnoteEl;
+      const selectorForAnnotation = ( cell, annotation) => {
+        let cellAttr = 'data-code-cell="' + cell + '"';
+        let lineAttr = 'data-code-annotation="' +  annotation + '"';
+        const selector = 'span[' + cellAttr + '][' + lineAttr + ']';
+        return selector;
+      }
+      const selectCodeLines = (annoteEl) => {
+        const doc = window.document;
+        const targetCell = annoteEl.getAttribute("data-target-cell");
+        const targetAnnotation = annoteEl.getAttribute("data-target-annotation");
+        const annoteSpan = window.document.querySelector(selectorForAnnotation(targetCell, targetAnnotation));
+        const lines = annoteSpan.getAttribute("data-code-lines").split(",");
+        const lineIds = lines.map((line) => {
+          return targetCell + "-" + line;
+        })
+        let top = null;
+        let height = null;
+        let parent = null;
+        if (lineIds.length > 0) {
+            //compute the position of the single el (top and bottom and make a div)
+            const el = window.document.getElementById(lineIds[0]);
+            top = el.offsetTop;
+            height = el.offsetHeight;
+            parent = el.parentElement.parentElement;
+          if (lineIds.length > 1) {
+            const lastEl = window.document.getElementById(lineIds[lineIds.length - 1]);
+            const bottom = lastEl.offsetTop + lastEl.offsetHeight;
+            height = bottom - top;
+          }
+          if (top !== null && height !== null && parent !== null) {
+            // cook up a div (if necessary) and position it 
+            let div = window.document.getElementById("code-annotation-line-highlight");
+            if (div === null) {
+              div = window.document.createElement("div");
+              div.setAttribute("id", "code-annotation-line-highlight");
+              div.style.position = 'absolute';
+              parent.appendChild(div);
+            }
+            div.style.top = top - 2 + "px";
+            div.style.height = height + 4 + "px";
+            let gutterDiv = window.document.getElementById("code-annotation-line-highlight-gutter");
+            if (gutterDiv === null) {
+              gutterDiv = window.document.createElement("div");
+              gutterDiv.setAttribute("id", "code-annotation-line-highlight-gutter");
+              gutterDiv.style.position = 'absolute';
+              const codeCell = window.document.getElementById(targetCell);
+              const gutter = codeCell.querySelector('.code-annotation-gutter');
+              gutter.appendChild(gutterDiv);
+            }
+            gutterDiv.style.top = top - 2 + "px";
+            gutterDiv.style.height = height + 4 + "px";
+          }
+          selectedAnnoteEl = annoteEl;
+        }
+      };
+      const unselectCodeLines = () => {
+        const elementsIds = ["code-annotation-line-highlight", "code-annotation-line-highlight-gutter"];
+        elementsIds.forEach((elId) => {
+          const div = window.document.getElementById(elId);
+          if (div) {
+            div.remove();
+          }
+        });
+        selectedAnnoteEl = undefined;
+      };
+      // Attach click handler to the DT
+      const annoteDls = window.document.querySelectorAll('dt[data-target-cell]');
+      for (const annoteDlNode of annoteDls) {
+        annoteDlNode.addEventListener('click', (event) => {
+          const clickedEl = event.target;
+          if (clickedEl !== selectedAnnoteEl) {
+            unselectCodeLines();
+            const activeEl = window.document.querySelector('dt[data-target-cell].code-annotation-active');
+            if (activeEl) {
+              activeEl.classList.remove('code-annotation-active');
+            }
+            selectCodeLines(clickedEl);
+            clickedEl.classList.add('code-annotation-active');
+          } else {
+            // Unselect the line
+            unselectCodeLines();
+            clickedEl.classList.remove('code-annotation-active');
+          }
+        });
+      }
+  const findCites = (el) => {
+    const parentEl = el.parentElement;
+    if (parentEl) {
+      const cites = parentEl.dataset.cites;
+      if (cites) {
+        return {
+          el,
+          cites: cites.split(' ')
+        };
+      } else {
+        return findCites(el.parentElement)
+      }
+    } else {
+      return undefined;
+    }
+  };
+  var bibliorefs = window.document.querySelectorAll('a[role="doc-biblioref"]');
+  for (var i=0; i<bibliorefs.length; i++) {
+    const ref = bibliorefs[i];
+    const citeInfo = findCites(ref);
+    if (citeInfo) {
+      tippyHover(citeInfo.el, function() {
+        var popup = window.document.createElement('div');
+        citeInfo.cites.forEach(function(cite) {
+          var citeDiv = window.document.createElement('div');
+          citeDiv.classList.add('hanging-indent');
+          citeDiv.classList.add('csl-entry');
+          var biblioDiv = window.document.getElementById('ref-' + cite);
+          if (biblioDiv) {
+            citeDiv.innerHTML = biblioDiv.innerHTML;
+          }
+          popup.appendChild(citeDiv);
+        });
+        return popup.innerHTML;
+      });
+    }
+  }
+});
+</script>
+</div> <!-- /content -->
+
+
+
+</body></html>

@@ -1,0 +1,1 @@
+{"height":365.88380716934486,"width":592.0,"size_behavior":0,"conditions":[[1,"Warning: Using the `size` aesthetic with geom_polygon was deprecated in ggplot2 3.4.0.\nPlease use the `linewidth` aesthetic instead."],[1,"Warning: Using the `size` aesthetic with geom_path was deprecated in ggplot2 3.4.0.\nPlease use the `linewidth` aesthetic instead."]]}

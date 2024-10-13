@@ -1,0 +1,420 @@
+---
+title: "R study notebook 2"
+format: html
+editor: visual
+toc: true
+toc-title: "目录"
+toc-depth: 2
+---
+
+# 一、数据导入与导出
+
+导入必要的包
+
+```         
+install.packages(c("tidyverse",
+"readxl", "writexl",
+"haven", "sjlabelled"))
+```
+
+## 1.1 数据导入基本函数
+
+![](images/clipboard-2602801535.png){fig-align="center" width="561"}
+
+上图中对于读取保存在纯文本格式中的表格文件（如 csv、txt 等），有两种方式，第一种就是用 R 基础包中read.csv()、read.table() 等函数导入，但是更推荐用后一种 tidyverse 系列包中的 readr 中的read_csv()、read_table2()等函数导入，原因如下：
+
+-   **读入的数据框保存为 tibble 类型**，其中的好处就是前一节说过的tibble类型数据的好处：
+
+    1.  不自动将字符型列转换成因子
+
+    2.  不自动修改变量名为合法变量名
+
+    3.  不设置行名
+
+-   **比基础模块中的函数速度更快（约快 10 倍）**
+
+-   **更易于重复使用**
+
+    这是因为R基础包中的函数会继承操作系统的功能，并依赖环境变量，因此，可以在你的计
+
+算机上正常运行的代码在导入他人计算机时，不一定能正常运行。
+
+还有一些不常见的：
+
+![](images/clipboard-278879221.png)
+
+## 1.2 数据文件格式CSV与读入函数read_csv()
+
+这里我们主要介绍最常用的格式csv和其对应的读入函数。
+
+![](images/clipboard-4060932497.png)
+
+#### 读入函数read_csv()
+
+#### （1）开头行设置
+
+-   使用参数skip = n 来跳过前 n 行，同样还可以用参数n_max设置最多读入几行（这里读入的行数是不计算默认将第一行作为列名的行，也就是第一行做列名的话，n_max计算的是剩下几行最多读了多少）
+
+```{r}
+(data <- read_csv("The first line of metadata
+          The second line of metadata
+          x,y,z
+          1,2,3", skip = 2, n_max = 1))
+#注，第一个跳出来的一大串提示信息不是报错，只是在申明你这个数据格式的信息。对每列的类型，readr 用前 1000 行猜测合理的类型（隐藏代码，并显示各列说明 Column specification），并在读取后显示猜测的每列类型
+```
+
+-   使用参数comment = "\#" 来丢弃所有以 \# 开头的行
+
+```{r}
+(data <- read_csv("# A comment I want to skip
+x,y,z
+1,2,3", comment = "#"))
+```
+
+#### （2）列名设置
+
+设置的列名就是参数col_names，如果没有列名则=FALSE，各列将默认依次标注为 X1 至 Xn 。
+
+注意此时数据是全都读进来的，也就是并没有把原来数据的第一行当做列名。
+
+```{r}
+#转义符 "\n" 是 用于添加新行的快捷方式
+read_csv("1,2,3\n4,5,6", col_names = c("x", "y", "z"))
+```
+
+可以查看列名：
+
+```{r}
+library(sjlabelled)
+ get_label(data)
+```
+
+#### （3）编码问题与设置
+
+![](images/clipboard-4038313067.png)
+
+简单来说就是readr默认读入UTF-8，而含有中文的文件以GBK编码，所以为了读入用 GBK 编码的中文 CSV 文件， 额外需要利用 locale 参数和 locale() 函数：
+
+```{r}
+path <- r"(C:\Users\August\Desktop\数据科学中的R语言\test代码\test_project\data\wb-win.csv)"
+(dt.wb <- read_csv(path, locale = locale(encoding = "GBK")))
+```
+
+![](images/clipboard-1626136137.png)
+
+#### （4）缺失值转换
+
+默认将“空缺值”和NA读入为NA，也可以额外设置识别想要的字符，将其读入为NA：
+
+```{r}
+#将“.”读入为NA
+read_csv("a,b,c\n1,2,.", na = ".")
+```
+
+当然也可以先不处理，读入后再转换，例如
+
+```{r}
+#假设前一部分已经读入 dt.wb <- read_csv("data/wb.csv")
+dt.wb[["幸福感分值"]] <-
+as.numeric(dt.wb[["幸福感"]])
+dt.wb
+```
+
+**补充**
+
+-   **as.numeric()**用于将输入的数据转换为数值型（numeric）。如果 **幸福感** 列中包含的是字符型或因子型数据，**as.numeric()** 将尝试将这些数据转换为数值。此处就是先将幸福感列按字符型读入，再增加一列转换为数值型的列，非数值转换为 NA
+
+#### （5）指定导入数据每列的类型
+
+默认readr 用前 1000 行猜测合理的类型，但是有可能类型改变发生在 1000 行之后，所以如果不嫌麻烦也可以提前指定。
+
+参数col_types 选项可以通过 cols() 或字符串指定每一列的类型
+
+-   各列类型如 col_double(), col_integer(), col_character(), col_factor(), col_date(), col_datetime 等
+
+```{r}
+path <- r"(C:\Users\August\Desktop\数据科学中的R语言\test代码\test_project\data\wb-win.csv)"
+(dt.wb <- read_csv(path,
+                  col_types=cols(`序号` = col_double(),
+                                `幸福感` = col_character()),
+                  locale = locale(encoding = "GBK")
+                  ))
+```
+
+-   对因子，需要在 col_factor() 中用 levels 指定因子水平，即col_factor(levels=···)
+
+```{r}
+path1 <- r"(C:\Users\August\Desktop\数据科学中的R语言\test代码\test_project\data\insurance.csv)"
+d.i <- read_csv(path1,
+                col_types=cols(.default = col_double(),
+                name = col_character(),
+                insurance=col_factor(levels=c("Y","N"))))
+str(d.i)
+#str 是 R 语言中的一个函数，主要用于紧凑地显示R对象的内部结构。它的全称是structure，能够为用户提供一个简要的、格式化的、易于阅读的对象摘要。
+```
+
+-   cols() 函数可以用来规定各列类型，并且有一个.default 参数指定缺省类型
+
+#### 补充：
+
+-   如果遇到严重的解析问题， 可试着使用 read_lines() 、read_file() 函数读取，再查看问题
+
+    -   read_lines() 按行读入，每行转为一个字符串，将文件转为一个长度为行数个数的字符向量
+
+    -   read_file() 将整个文件一起读取，转为一个长度为 1 的字符向量，也就是全文拼成一个字符串
+
+```{r}
+read_lines(path,locale = locale(encoding = "GBK"))
+```
+
+## 1.3 数据导出
+
+一般可通过 readr 包的 write_excel_csv() 函数将 tibble 对象保存下来， 总是使用 UTF-8 有 BOM 编码，结果可以被 MS Office 读取。（write_csv() 函数则使用 UTF-8 无 BOM 编码，有可能不被 MS Office 读取）
+
+```         
+write_excel_csv(x,
+                file,
+                na = "NA",
+                col_names = TRUE, ...)
+```
+
+-   x：要导出的数据框或 tibble
+
+-   file：要导入的文件路径
+
+-   na：缺失值设置
+
+-   col_names：第一行是否是行名，默认为 T
+
+## 补充：
+
+1.  **R格式的数据**就是像一般的参数文件一样，一般来说根据Rstudio点一点的操作就可以完成了，这里只简单提一下：
+
+    ![](images/clipboard-2934712124.png)
+
+2.  **网络数据导入**
+
+    以 UCI 数据库中成人收入数据 Adult Data Set 为示例
+
+```{r}
+
+loc <- "http://archive.ics.uci.edu/ml/machine-learning-databases/" # UCI 数据网址
+ds <- "adult/adult.data" # 成人收入数据数据
+url <- paste(loc, ds, sep="");url # 字符串拼接，得到完整的数据网址
+adultdt <- read_csv(url,
+                    col_names = c("age",
+                                  "workclass",
+                                  "fnlwgt",
+                                  "education",
+                                  "education-num",
+                                  "marital-status",
+                                  "occupation",
+                                  "relationship",
+                                  "race",
+                                  "sex",
+                                  "capital-gain",
+                                  "capital-loss",
+                                  "hours-per-week",
+                                  "native-country",
+                                  "income"))
+
+```
+
+试着描述性统计一下：
+
+```{r}
+summary(adultdt)
+```
+
+3.  **其他类型数据导入**
+
+![](images/clipboard-1729993663.png)
+
+# 二、基于 dplyr 的数据预处理
+
+## 2.1 R包与数据导入
+
+注意第一次加载时tidyverse会出现的表格，打钩的是支持的功能函数，打叉的是R语言基础函数中会被覆盖的同名函数，此时调用应该用完整的“R包名称：：函数名称”，如stats::filter()
+
+![](images/clipboard-2429756934.png){fig-align="center" width="173"}
+
+```{r}
+library(tidyverse)
+library(haven)
+library(sjlabelled)#获取变量标签
+```
+
+### 2.1.1 导入数据集
+
+示例数据集 cgss_2ks 为 2017 年中国综合社会调查（CGSS 2017）中的抽样样本，共 2000 个样本、11 个变量
+
+```{r}
+cgss_2ks <- read_dta("data/cgss_2ks.dta")
+cgss_2ks
+```
+
+### 2.1.2 数据预览：
+
+#### （1）列名与标签
+
+我们可以对列名做一个预览（主要是对标签，因为上面的tibble数据预览时不会显示标签）
+
+```{r}
+#通过获取单纯的列名
+colnames(cgss_2ks);class(colnames(cgss_2ks))
+#或者也可以用names，输出的类型是一样的
+names(cgss_2ks);class(colnames(cgss_2ks))
+
+#通过获取列名和标签
+cgss_2ks_lab <- get_label(cgss_2ks)
+cgss_2ks_lab
+```
+
+我们也可以单独导出列名和标签的信息成为一个新的表格：
+
+```{r}
+cgss_2ks_lablist <- tibble(name = names(cgss_2ks_lab),
+label = cgss_2ks_lab)
+cgss_2ks_lablist
+```
+
+如果要查看特定列名的标签
+
+```{r}
+cgss_2ks_a15lab <- tibble(values = get_values(cgss_2ks$a15),
+                          labels = get_labels(cgss_2ks$a15))
+rename_with(cgss_2ks_a15lab,~ get_label(cgss_2ks$a15),labels)
+#其中get_values和get_labels作用同名称一样，获取的是该列值的并集（所有元素互异）
+#返回的类型是
+cat(paste("值"),get_values(cgss_2ks$a15),paste("类型是"),class(get_values(cgss_2ks$a15)),"\n")
+cat(paste("值"),get_label(cgss_2ks$a15),paste("类型是"),class(get_label(cgss_2ks$a15)))                                       
+```
+
+这里补充一下
+
+-   `get_value(x,sort.val = TRUE,drop.na=FALSE)`，后俩个参数控制了是否要排序和丢弃缺失值，默认的参数设置就左边那样。
+
+-   `get_label(cgss_2ks$a15)`要注意这里是函数末尾是label不是前面的labels，前面获取的是所有标签的并集，而这里不带s的get_label是获取该列列名，上面的rename_with的设置，就是把cgss_2ks中列名为labels的列更换列名为`get_label(cgss_2ks$a15)` 的列名。
+
+## 2.2 基础函数篇
+
+![](images/clipboard-2212860117.png)
+
+我们说明：
+
+-   这里的函数输入的是数据框，输出的还是数据框类型不变
+
+-   后续我们会看到可以用pipline将它们编写成一套流水线操作，从而不用每次用一个操作生成一个“中间产物”的数据框，实际应用中这很重要，因为假如你有一个非常大的数据集，你多产生几个中间变量还懒得删掉的话，R语言的工作区内存会很快占满从而降低运行效率
+
+## 2.2.1 filter 筛选
+
+#### （1）基于值筛选行
+
+-   第一个参数是数据框名称
+
+-   第二个参数以及随后的参数是用来筛选数据框的逻辑判断表达式
+
+1.  **根据一般表达式筛选**
+
+例如以下部分筛选出a7a=1和a15=5时对应的列，对于如果要根据精度判断近似的数值，详情参见notebook1的部分
+
+```{r}
+#要求同时成立
+filter(cgss_2ks, a7a == 1, a15 == 2)
+#等价于 filter(cgss_2ks, a7a == 1 & a15 == 2)
+```
+
+相应不要求同时成立就可以用或，其余类型的逻辑判断都可以用在这里，本质就是筛选符合运算逻辑为TURE的行，例如 `filter(cgss_2ks, a7a == 1 | a15 == 5)` ，然后我们列出几个方便直观理解要筛选的目标效果：
+
+![](images/clipboard-1607017613.png){width="446"}
+
+此时如果我们有一种特定的范围形逻辑判断，比如说要筛选出在一定范围内的行，就可以用下面的代码，此时%in%是一种特殊设定的符号来实现真正意义上的“在……之内”的判断。
+
+```{r}
+filter(cgss_2ks, a15 %in% c(4, 5))
+```
+
+2.  **筛选NA值**
+
+我们前置介绍下对NA值的查找、判定和处理
+
+-   对单个值就是`is.na()` 返回一个逻辑值
+
+-   对一个n行m列数据框，`is.na(df)` 返回的是一个n行m列的逻辑判断矩阵
+
+-   对一个n行m列数据框，判断几行有NA，`complete.cases(df)` 返回的是一个n值的逻辑判断向量，此时如果要计算总共有多少行有NA，把它加和一下就好了`sum(complete.cases(df))`
+
+例如
+
+```{r}
+df <- tibble(x = c(1, 2, NA),
+y = c("a", NA, "b"))
+is.na(df)
+```
+
+也可以用一些特定的可视化包来简化一下这个结果
+
+```{r}
+library(VIM)  #缺失值处理
+#查看哪些变量存在缺失值
+aggr(df,plot=F)#不画图，单纯统计df中所有各列的NA数量
+aggr(df,plot=T)#画俩张图，分别是个列NA比例的柱状图和n行m列df对应矩阵，红色部分就是NA
+aggr(df,combined=T)#只画n行m列df对应矩阵，红色部分就是NA，一般用于数据量很大的预览
+```
+
+对于用filter筛选NA时，大小比较都会默认不筛选出有NA的行（只在此时看做逻辑返回是FALSE，一般运算NA\>3返回的还是NA），例如
+
+```{r}
+df <- tibble(x = c(1, NA , 3 ,2 ,3))
+filter(df, x > 1)
+```
+
+如果要保留NA，则在相应的逻辑运算里用`is.na(x) | x>1` 就可以了。
+
+### 2.2.2 arrange 排列
+
+默认的排列方式是
+
+```{r}
+arrange(cgss_2ks, a8a, a31, a15)
+# A tibble: 2,000 × 11
+#       id a2          a31 a7a                  a8a       a15          a44     a45      a46     a47     a48    
+#    <dbl> <dbl+lbl> <dbl> <dbl+lbl>            <dbl+lbl> <dbl+lbl>    <dbl+l> <dbl+lb> <dbl+l> <dbl+l> <dbl+l>
+#  1  7905 2 [女]     1932 2 [私塾、扫盲班]     0         3 [一般]   … 2 [否]…  3 [从… 3 
+#  2  9124 2 [女]     1933 1 [没有受过任何教育] 0         4 [比较健康… 2 [否]…  3 [从… 2 
+#  3  9043 1 [男]     1934 3 [小学]             0         2 [比较不健… 2 [否]…  3 [从… 3 
+#  4 10890 1 [男]     1934 3 [小学]             0         2 [比较不健… 3 [没…  3 [从… 2 [比…
+#  5 13775 2 [女]     1934 1 [没有受过任何教育] 0         4 [比较健康… 1 [是]…  3 [从… 3 
+#  6 13751 2 [女]     1934 1 [没有受过任何教育] 0         5 [很健康] … 2 [否]…  3 [从… 2 
+#  7 12237 2 [女]     1937 1 [没有受过任何教育] 0         1 [很不健康… 1 [是]…  3 [从… 2 
+#  8 10540 2 [女]     1937 1 [没有受过任何教育] 0         1 [很不健康… 2 [否]…  3 [从… 2 
+#  9  7499 1 [男]     1937 3 [小学]             0         2 [比较不健… 1 [是]… 98 [不… 2 
+# 10  6291 2 [女]     1937 1 [没有受过任何教育] 0         4 [比较健康… 2 [否]…  3 [从… 3 
+# ℹ 1,990 more rows
+# ℹ Use `print(n = ...)` to see more rows
+```
+
+```{r}
+cgss_2ks_s <- select(cgss_2ks, id, a31)
+cgss_2ks_s
+```
+
+## mutate
+
+### 添加新列
+
+-   这里的操作就是对原数据表格的若干列进行操作，并且默认mutate会将处理/运算后得到的结果储存到新列
+
+```{r}
+mutate(cgss_2ks_s,
+      age = 2017 - a31,
+      older = age >= 65)
+```
+
+如果只保留新列，则可以使用transmute
+
+## 管道（pipeline）
+
+```{r}
+
+```

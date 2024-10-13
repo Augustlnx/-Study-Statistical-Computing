@@ -1,0 +1,10 @@
+"0","#先将所有空值、null、0转变为缺失值，便于查看"
+"0","data_game[data_game[1:nrow(data_game), ] == """"] <- NA"
+"0","data_game[is.null(data_game)] <- NA"
+"0","data_game[data_game[1:nrow(data_game), ] == 0] <- NA"
+"0",""
+"0","#查看哪些变量存在缺失值"
+"0","aggr(data_game,plot=FALSE)"
+"1","
+ Missings in variables:
+"

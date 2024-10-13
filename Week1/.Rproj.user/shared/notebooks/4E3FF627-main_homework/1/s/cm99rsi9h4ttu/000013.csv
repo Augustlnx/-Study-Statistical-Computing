@@ -1,0 +1,8 @@
+"0","data_game_clean <- data_game %>%"
+"0","  filter(rowSums(is.na(.)) != ncol(.))"
+"0","print(paste('删去的行数为：',nrow(data_game)-nrow(data_game_clean)))"
+"1","[1]"
+"1"," ""删去的行数为： 1"""
+"1","
+"
+"0","aggr(data_game_clean,combined=T)"

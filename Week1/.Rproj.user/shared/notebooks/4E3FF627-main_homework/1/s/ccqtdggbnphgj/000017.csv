@@ -1,0 +1,12 @@
+"0","#先将所有空值、null、0转变为缺失值，便于查看"
+"0","data_tv[data_tv[1:nrow(data_tv), ] == """"] <- NA"
+"0","data_tv[is.null(data_tv)] <- NA"
+"0","data_tv[data_tv[1:nrow(data_tv), ] == 0] <- NA"
+"0","data_tv[data_tv[1:nrow(data_tv), ] == ""null""] <- NA"
+"0","data_tv[data_tv[1:nrow(data_tv), ] == '.'] <- NA"
+"0",""
+"0","#查看哪些变量存在缺失值"
+"0","aggr(data_tv,plot=FALSE)"
+"1","
+ Missings in variables:
+"

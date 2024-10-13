@@ -1,0 +1,7 @@
+"0","# 选择all_types对应的列名"
+"0","selected_columns <- all_types[!is.na(all_types)]"
+"0",""
+"0","# 删除所有这些列均为NA的行"
+"0","data_tv2 <- data_tv1 %>% "
+"0","  filter(rowSums(is.na(select(., all_of(selected_columns)))) != length(selected_columns))"
+"0",""

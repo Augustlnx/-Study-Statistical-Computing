@@ -1,0 +1,9 @@
+"0","#导入电视剧数据"
+"0","data_tv <- read_csv(""9月4日作业/CH2_TV.csv"", locale = locale(encoding = ""GBK""))  "
+"2","[1mRows: [22m[34m4266[39m [1mColumns: [22m[34m7[39m"
+"2","[36m──[39m [1mColumn specification[22m [36m────────────────────────────────────────────────────────────────────────[39m
+[1mDelimiter:[22m "",""
+[31mchr[39m (7): 剧名, 类型, 播放量, 点赞, 差评, 得分, 采集日期"
+"2","
+[36mℹ[39m Use `spec()` to retrieve the full column specification for this data.
+[36mℹ[39m Specify the column types or set `show_col_types = FALSE` to quiet this message."

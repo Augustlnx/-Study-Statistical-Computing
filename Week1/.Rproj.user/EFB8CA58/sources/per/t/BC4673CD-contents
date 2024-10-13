@@ -1,0 +1,2843 @@
+---
+title: "main_notebook"
+format: html
+editor: visual
+---
+
+## 一、数据加载和预处理
+
+## 1.1 加载包和数据
+
+```{r}
+#加载包
+library(readr)  #读取数据
+library(dplyr)  #数据处理
+library(tidyr)
+library(ggplot2)  #数据可视化
+library(VIM)  #缺失值处理
+library(rpart)  #回归树方法，建立模型预测缺失值
+#library(InformationValue) #计算数据的预测价值
+#library(stringr)  #字符串处理
+library(randomForest) #建立预测模型
+library(reshape2)
+library(kableExtra)
+library(corrplot)
+library(e1071)
+#library(melt)
+library(ggprism)
+library(ggridges)
+library(foreign)
+library(viridis)   # 用于 viridis 调色板
+library(viridisLite)
+library(RColorBrewer)
+library(ClusterR)
+library(factoextra)
+library(grf)
+library(data.table)
+library(doParallel)
+library(caret)
+library(plotly)
+library(forcats)
+library(gridExtra)
+library(ggRandomForests)
+library(flexclust)
+library(MASS)
+library(caret)
+library(glmnet)
+library(topsis)
+library(xgboost)
+library(catboost)
+library(lightgbm)
+# 加载Metrics库，用于计算RMSE
+library(Metrics)
+library(lmtest)
+library(Ckmeans.1d.dp)
+library(car)  # 用于Levene的方差齐性检验
+library(shapviz)
+
+```
+
+检查工作目录
+
+```{r}
+getwd()
+#如果需要
+#filepath <- 
+#setwd(filepath)
+```
+
+```{r}
+#导入数据
+data <- read_csv("data/train.csv", locale = locale(encoding = "GBK"))  #导入数据集
+pred_data <- read_csv("data/test.csv", locale = locale(encoding = "GBK"))  #导入预测集
+#删去data和all_data的标签
+data$id <- NULL
+pred_data$id <- NULL
+```
+
+```{r}
+pre_nrow_of_data <- nrow(data)
+#数据去重
+data <- unique(data)
+print(nrow(data)-pre_nrow_of_data)
+```
+
+## 1.2 合并数据进行数据预处理
+
+```{r}
+
+#将两个数据集合并，方便进行数据预处理
+all_data <- bind_rows(data, pred_data)
+#查看数据集数据类型等信息
+str(all_data)
+```
+
+合并之后的数据集共包含21个变量，1048575条数据，其中，1793880条为训练数据，745305条为测试数据。
+
+## 1.3 检查缺失值和异常值
+
+### 缺失值检验
+
+```{r}
+#先将所有空值转变为缺失值，便于查看
+all_data[all_data[1:nrow(all_data), ] == ""] <- NA
+
+```
+
+```{r}
+#查看哪些变量存在缺失值
+aggr(all_data,plot=FALSE)
+aggr(all_data,combined=T)
+```
+
+0个缺失变量，上图红区为待预测变量
+
+### 异常值检验
+
+```{r}
+# 设置图形参数，创建一个2行1列的布局，并设置较小的间距
+# 将数据从宽格式转换为长格式
+data_melted <- melt(data[, !"洪水概率", with = FALSE],id.vars = "风险水平")
+
+# 绘制除去“风险水平”外所有列的箱线图
+pic <- ggplot(data = data_melted, aes(x = variable, y = value)) +
+  geom_boxplot(aes(fill = variable), size = 0.8, width = 0.8) +
+  labs(title = "各洪水事件指标得分的箱线图", x = "指标", y = "得分") +
+  theme_minimal() +  # 使用白色背景的主题
+  theme(axis.text.x = element_text(angle = 45, hjust = 1))
+  
+print(pic)
+```
+
+### 删除异常值
+
+1.  箱线图法
+
+```{r}
+# 获取包含异常值的行索引
+outlier_rows <- unique(unlist(lapply(data, function(column) {
+  if(is.numeric(column)) {
+    outliers <- boxplot.stats(column)$out
+    which(column %in% outliers)
+  } else {
+    NULL
+  }
+})))
+
+# 删除包含异常值的行
+data_clean <- data[-outlier_rows, ]
+
+# 查看清理的数据量
+print(nrow(data)-nrow(data_clean))
+```
+
+发现删去过多异常值，不采用该方法
+
+2.  3$\sigma$原则
+
+```{r}
+
+# 定义剔除3σ方法以外的异常值的函数
+remove_outliers <- function(x) {
+  mu <- mean(x, na.rm=TRUE)   # 计算均值
+  sigma <- sd(x, na.rm=TRUE)  # 计算标准差
+  # 取保存在3个标准差范围内的值，其他值被替换为NA
+  x[abs(x - mu) > 3 * sigma] <- NA
+  return(x)
+}
+# 对数据框的每一列应用剔除异常值的函数
+cleaned_data <- as.data.frame(lapply(data, remove_outliers))
+print(nrow(data)-nrow(cleaned_data))
+
+```
+
+# 二、洪水概率的相关性分析
+
+### 描述性统计
+
+```{r}
+tab_01 = data.frame(
+  Mean  = c(colMeans(data)),
+  SD = c(sapply(data, sd)),
+  Median = c(sapply(data, median)),
+  Min = c(sapply(data, min)),
+  # 计算数据的偏度
+  skew = c(sapply(data, skewness)),
+  # 计算数据的峰度
+  kurt = c(sapply(data, kurtosis)),
+  Max = c(sapply(data, max))
+) 
+## table for descriptive statistics
+kable(
+  tab_01,
+  col.names = c("均值", "标准差", "中位数","偏度","峰度", "最小", "最大"),
+  digits = 2,
+  caption = "\\label{tab2}Summary Statistics",
+  booktabs = T
+)
+```
+
+### 用直方/山脊图画出分布展示图
+
+```{r}
+# 前十个变量
+p1 <- ggplot(melt(data[, 1:10]), aes(x = value, y = variable, fill = variable)) +
+  geom_density_ridges(stat = "binline", bins = 40) +
+  theme_prism(palette = "candy_bright",
+              base_fontface = "plain",
+              base_family = "serif",
+              base_size = 16,
+              base_line_size = 0.8) +
+  scale_fill_brewer(palette = 4) +
+  theme(
+    legend.position = "none",
+    axis.line.y = element_blank(),
+    axis.ticks.y = element_blank(),
+    axis.text.y = element_text(size = 10),  # 调整纵轴变量名标签的大小
+    axis.title.y = element_blank(),  # 隐藏纵轴标题
+    axis.text.x = element_text(size = 10)  # 调整横坐标数值显示的大小
+  ) +
+  labs(y = NULL) +  # 去掉纵轴标签
+  scale_y_discrete(expand = c(0.05, 0)) +
+  scale_x_continuous(
+    breaks = seq(floor(min(melt(data[, 1:10])$value)), ceiling(max(melt(data[, 1:10])$value)), by = 1),
+    #expand = expansion(mult = c(0.05, 0.1))  # 设置横轴间隔为 1 并稍微扩大间隔
+  )
+#p1 
+
+# 后十个变量
+p2 <- ggplot(melt(data[, 11:20]), aes(x = value, y = variable, fill = variable)) +
+    geom_density_ridges(stat = "binline", bins = 40) +
+  theme_prism(palette = "candy_bright",
+              base_fontface = "plain",
+              base_family = "serif",
+              base_size = 16,
+              base_line_size = 0.8) +
+  scale_fill_brewer(palette = 4) +
+  theme(
+    legend.position = "none",
+    axis.line.y = element_blank(),
+    axis.ticks.y = element_blank(),
+    axis.text.y = element_text(size = 10),  # 调整纵轴变量名标签的大小
+    axis.title.y = element_blank(),  # 隐藏纵轴标题
+    axis.text.x = element_text(size = 10)  # 调整横坐标数值显示的大小
+  ) +
+  labs(y = NULL) +  # 去掉纵轴标签
+  scale_y_discrete(expand = c(0.05, 0)) +
+  scale_x_continuous(
+    breaks = seq(floor(min(melt(data[, 1:10])$value)), ceiling(max(melt(data[, 1:10])$value)), by = 1),
+    #expand = expansion(mult = c(0.05, 0.1))  # 设置横轴间隔为 1 并稍微扩大间隔
+  )
+#p2 
+#联合显示
+cowplot::plot_grid(p1, p2, ncol = 2) 
+```
+
+```{r}
+# 创建山脊图 - 第21个变量
+
+col <- "洪水概率"
+# 将数据转换为浮点型并设置较大的带宽
+data[["洪水概率"]] <- as.numeric(data[[col]])
+
+# 创建核密度图
+p3 <- ggplot(data, aes_string(x = col)) +
+  geom_density(fill = "#5EC2B1", alpha = 0.5, adjust = 2) +  # 调整带宽
+  ggtitle(paste("洪水概率核密度图")) +
+  xlab("洪水概率") +
+  ylab("Density")+
+  theme(
+panel.background = element_rect(fill = "white", color = NA),  # 背景设置为白色
+panel.grid.major = element_blank(),  # 移除主要网格线
+panel.grid.minor = element_blank(),  # 移除次要网格线
+plot.background = element_rect(fill = "white", color = NA))  # 绘图区域背景设置为白色
+
+
+#直方图
+p4 <- ggplot(data, aes_string(x = "洪水概率")) +
+  geom_histogram(fill = "#5EC2B1", alpha = 0.5, bins = 30) +  # 创建直方图
+  ggtitle("洪水概率直方图") +
+  xlab("洪水概率") +
+  ylab("Frequency") +
+  theme(
+    panel.background = element_rect(fill = "white", color = NA),  # 背景设置为白色
+    panel.grid.major = element_blank(),  # 移除主要网格线
+    panel.grid.minor = element_blank(),  # 移除次要网格线
+    plot.background = element_rect(fill = "white", color = NA)  # 绘图区域背景设置为白色
+  )
+#拼接
+cowplot::plot_grid(p3, p4, ncol = 2) 
+```
+
+### 正态性检验（拟合优度检验Pearson's chi-squared）
+
+```{r}
+
+set.seed(123)  # 设置随机种子以确保结果可重现
+# 计算观察频率和期望频率的函数
+calculate_expected_frequency <- function(x) {
+  observed_freq <- table(x)  # 观察频率
+  n <- length(x)  # 样本大小
+  mean_x <- mean(x)  # 样本均值
+  sd_x <- sd(x)  # 样本标准差
+  
+  # 计算每一个离散值的期望频率
+  distinct_values <- as.numeric(names(observed_freq))
+  expected_freq <- numeric(length(distinct_values))
+  
+  for (i in seq_along(distinct_values)) {
+    if (i == 1) {
+      # 第一个区间：小于第一个离散值 + 0.5
+      lower_bound <- -Inf
+      upper_bound <- distinct_values[i] + 0.5
+    } else if (i == length(distinct_values)) {
+      # 最后一个区间：大于等于最后一个离散值 - 0.5
+      lower_bound <- distinct_values[i] - 0.5
+      upper_bound <- Inf
+    } else {
+      # 中间区间
+      lower_bound <- distinct_values[i] - 0.5
+      upper_bound <- distinct_values[i] + 0.5
+    }
+    expected_freq[i] <- (pnorm(upper_bound, mean = mean_x, sd = sd_x) - pnorm(lower_bound, mean = mean_x, sd = sd_x)) * n
+  }
+
+  return(list(observed = observed_freq, expected = expected_freq))
+}
+
+# 对数据框的每一列应用 chi-squared 检验
+perform_chisq_test <- function(x) {
+  freq <- calculate_expected_frequency(x)
+  chisq_test_result <- chisq.test(freq$observed, p = freq$expected / sum(freq$expected), rescale.p = TRUE)
+  return(chisq_test_result)
+}
+
+# 获取每列的检验结果
+chisq_test_results <- lapply(data, perform_chisq_test)
+
+# 打印每列的检验结果及其 p 值
+chisq_p_values <- sapply(chisq_test_results, function(test) test$p.value)
+print(chisq_p_values)
+# 将结果整理成表格
+p_value_table <- data.frame(
+  Column = names(data),
+  P_Value = chisq_p_values
+)
+```
+
+## 1.5 相关性分析
+
+### 计算变量与洪水概率的相关系数
+
+```{r}
+
+# 计算相关系数
+correlation_matrix <- cor(data[,1:20], data$洪水概率)
+variable_names <- colnames(data[, 1:20]) 
+correlation_df <- data.frame(
+  Variable = variable_names,
+  Correlation = correlation_matrix
+)
+# 从每个相关系数中减去固定值
+correlation_df$AdjustedCorrelation <- correlation_df$Correlation - 0.17
+# 对调整后的相关系数进行降序排列
+correlation_df <- correlation_df[order(correlation_df$AdjustedCorrelation, decreasing = TRUE), ]
+
+ggplot(correlation_df, aes(x = reorder(Variable, -AdjustedCorrelation), y = AdjustedCorrelation, fill = AdjustedCorrelation > 0)) +
+  geom_col() + # 绘制柱状图
+  geom_text(aes(label = sprintf("%.5f", AdjustedCorrelation+0.17)), hjust = 1, color = "black", size = 3) + # 在柱状图上方添加数值
+  scale_fill_manual(values = c("#5EC2B1", "blue")) +  # 为正相关和负相关指定颜色
+  labs(title = "变量与洪水概率的相关性",
+       x = "变量",
+       y = "减去1.7后的相关性数值") +
+  theme_minimal() +
+  theme(axis.text.x = element_text(angle = 90, hjust = 1)) +  # 将文本旋转90度以适应所有变量名
+  coord_cartesian(ylim = c(0.9*min(correlation_df$Correlation), max(correlation_df$AdjustedCorrelation) + 0.01))+  # 调整y轴范围
+  coord_flip()
+
+```
+
+**根据变量分组后调整相关系数显示范围后的画图**
+
+```{r}
+# 假设 data 是您的洪水数据集
+# 计算相关系数
+correlation_matrix <- cor(data[,1:20], data$洪水概率)
+variable_names <- colnames(data[, 1:20])
+
+
+# 创建变量名与分类的映射
+categories <- c("季风强度", "地形排水", "气候变化", "淤积", "海岸脆弱性", "滑坡", "流域", "湿地损失",
+                "森林砍伐", "城市化", "农业实践", "侵蚀", "人口得分", "规划不足", "政策因素",
+                "河流管理", "大坝质量", "无效防灾", "排水系统", "基础设施恶化")
+category_labels <- rep(c("自然条件", "人类活动与政策", "基础设施管理"), times = c(8, 6, 6))
+category_colors <- c(rep("#91D1C2B2", 8), rep("#abddff", 6), rep("#ffc556", 6))
+names(category_colors) <- categories
+
+# 创建数据框，包括变量、相关系数、分类和分类颜色
+correlation_df <- data.frame(
+  Variable = variable_names,
+  Correlation = correlation_matrix,
+  Category = category_labels[match(variable_names, categories)],
+  Color = category_colors[variable_names]
+)
+
+# 从每个相关系数中减去固定值
+correlation_df$AdjustedCorrelation <- correlation_df$Correlation - 0.17
+# 对调整后的相关系数进行降序排列
+correlation_df <- correlation_df[order(correlation_df$AdjustedCorrelation, decreasing = TRUE), ]
+
+ p <- ggplot(correlation_df, aes(x = reorder(Variable, -AdjustedCorrelation), y = AdjustedCorrelation, fill = Color)) +
+  geom_col() + # 绘制柱状图
+  geom_text(aes(label = sprintf("%.5f", AdjustedCorrelation+0.17)), hjust = 1, color = "black", size = 3) + # 在柱状图旁添加数值
+  scale_fill_identity() + # 使用指定的颜色
+  labs(title = "变量与洪水概率的相关性",
+       x = "变量 (分类)",
+       y = "减去0.17后的相关性数值") +
+  theme_minimal() +
+  theme(axis.text.x = element_text(angle = 90, hjust = 1, vjust = 0.5)) +  # 将文本旋转90度
+  coord_flip() # 翻转坐标轴以更好地显示长标签
+p
+```
+
+### 变量之间的相关系数热图
+
+```{r}
+# 相关系数矩阵
+correlations <- cor(data)
+dim(correlations)
+
+# 可视化相关系数矩阵
+corrplot(correlations, order = "hclust",tl.col = "black")
+```
+
+## 1.6 基于随机森林的重要性筛选
+
+```{r}
+set.seed(123)  # 设置种子以保证结果可复现
+
+# 抽取1%的样本加快训练效率
+sample_indices <- sample(1:nrow(data), size = 0.001 * nrow(data))
+sample_data <- data[sample_indices, ]
+
+# 划分训练集和测试集，比例为70%训练集，30%测试集
+train_indices <- sample(1:nrow(sample_data), size = 0.7 * nrow(sample_data))
+train <- sample_data[train_indices, ]
+test <- sample_data[-train_indices, ]
+set.seed(123)
+fit <- randomForest(洪水概率 ~ ., data = train, importance = TRUE, ntree = 500)
+print(fit)
+
+```
+
+查看模型结果：\
+
+```{r}
+#变量重要性查看
+gg_dta <- gg_vimp(fit)
+plot(gg_dta)
+
+```
+
+## 1.7 基于因果森林的因果分析
+
+```{r}
+
+# 设置变量
+outcome_var <- "洪水概率"  # 结果变量
+treatment_var <- "基础设施恶化"  # 处理变量，可以根据需要更改
+covariates <- setdiff(names(data), c(outcome_var, treatment_var))  # 自动选择除处理和结果变量外的所有变量为协变量
+
+# 高效数据处理
+set.seed(123)
+data <- as.data.table(data)  # 转换为 data.table 格式提高处理效率
+
+# 随机采样50%的数据
+sample_fraction <- 0.05
+sample_data <- data[sample(.N, size = .N * sample_fraction)]
+
+# 分割采样后的数据
+train_index <- sample(nrow(sample_data), size = 0.9 * nrow(sample_data))
+#标准化
+#data_train <- scale(sample_data[train_index])
+#data_test <- scale(sample_data[-train_index])
+#不标准化
+data_train <- sample_data[train_index]
+data_test <- sample_data[-train_index]
+
+# 检测核数并启动并行环境
+num_cores <- detectCores() - 1
+cl <- makeCluster(num_cores)
+registerDoParallel(cl)
+
+# 训练因果森林模型 (使用并行计算)
+tau.forest <- causal_forest(data_train[, covariates, with = FALSE], data_train[[outcome_var]], data_train[[treatment_var]])
+
+# 关闭并行环境
+stopCluster(cl)
+registerDoSEQ()
+
+```
+
+#### 训练集的袋外效果/测试集 估计和可视化：
+
+```{r}
+# 评估模型（使用袋外估计）
+tau.hat.oob <- predict(tau.forest)
+print(mean(tau.hat.oob$predictions))  # 输出袋外预测的平均处理效应
+hist(tau.hat.oob$predictions)
+
+# 使用测试集进行验证
+tau.hat.test <- predict(tau.forest, newdata = data_test[, covariates, with = FALSE])
+print(mean(tau.hat.test$predictions))  # 输出测试集的平均处理效应
+
+plot(data_test[[treatment_var]], tau.hat.test$predictions, ylim = range(tau.hat.test$predictions, 0, 0.005), xlab = "x", ylab = "tau", type = "l")
+
+```
+
+#### **计算所有数据集的平均处理效果 (CATE) 和重叠区域的条件平均处理效果：**
+
+```{r}
+cate_all <- average_treatment_effect(tau.forest, target.sample = "all", method = "AIPW")
+cate_overlap <- average_treatment_effect(tau.forest, target.sample = "overlap", method = "AIPW")
+cate_all
+cate_overlap
+```
+
+画出HTE（效果一般）
+
+```{r}
+
+# 使用测试数据集预测处理效应，并估计其方差
+tau.hat <- predict(tau.forest, newdata = data_test[, ..covariates], estimate.variance = TRUE)
+sigma.hat <- sqrt(tau.hat$variance.estimates)
+
+# 调整 x 轴的标签和 y 轴的标签以适应您的具体变量
+plot(data_test[[treatment_var]], tau.hat$predictions, ylim = range(tau.hat$predictions + 1.96 * sigma.hat, tau.hat$predictions - 1.96 * sigma.hat, 0, 0.005), xlab = "Selected Covariate", ylab = "Estimated Treatment Effect (Tau)", type = "l", main = "Heterogeneous Treatment Effects with Confidence Intervals")
+
+# 绘制置信区间线
+lines(data_test[[treatment_var]], tau.hat$predictions + 1.96 * sigma.hat, col = 1, lty = 2) # 上置信区间
+lines(data_test[[treatment_var]], tau.hat$predictions - 1.96 * sigma.hat, col = 1, lty = 2) # 下置信区间
+
+# 可选：如果有理论效应线（如示例中的红线），也可以添加
+# lines(data_test[, 1], pmax(0, data_test[, 1]), col = 2, lty = 1)  # 红色理论线
+
+```
+
+#### 循环运行计算每一列指标的TE（耗时久）
+
+```{r}
+
+# 设置变量
+outcome_var <- "洪水概率"  # 结果变量
+all_vars <- setdiff(names(data), outcome_var) # 所有候选的处理变量
+
+# 高效数据处理
+set.seed(123)
+data <- as.data.table(data)  # 转换为 data.table 格式提高处理效率
+
+# 随机采样1%的数据
+sample_fraction <- 0.1
+sample_data <- data[sample(.N, size = .N * sample_fraction)]
+
+# 分割采样后的数据
+train_index <- sample(nrow(sample_data), size = 0.9 * nrow(sample_data))
+data_train <- sample_data[train_index]
+data_test <- sample_data[-train_index]
+
+# 准备存储评估结果的列表
+results <- list()
+
+# 检测核数并启动并行环境
+num_cores <- detectCores() - 1
+cl <- makeCluster(num_cores)
+registerDoParallel(cl)
+
+for (treatment_var in all_vars) {
+  print(treatment_var)
+  # 更新协变量集
+  covariates <- setdiff(names(data), c(outcome_var, treatment_var))
+  
+  # 如果处理变量的值在训练或测试集中是常量（例如，全为0或全为1），则跳过该变量
+  if (length(unique(data_train[[treatment_var]])) < 2 || length(unique(data_test[[treatment_var]])) < 2) {
+    next
+  }
+  
+  # 训练因果森林模型 (使用并行计算)
+  tau.forest <- causal_forest(data_train[, covariates, with = FALSE], data_train[[outcome_var]], data_train[[treatment_var]])
+  
+  # 评估模型（使用袋外估计）
+  tau.hat.oob <- predict(tau.forest)
+  
+  # 使用测试集进行验证
+  tau.hat.test <- predict(tau.forest, newdata = data_test[, covariates, with = FALSE])
+  
+  # 计算基于全样本的 CATE 和 CATT
+  cate_all <- average_treatment_effect(tau.forest, target.sample = "all", method = "AIPW")
+  cate_overlap <- average_treatment_effect(tau.forest, target.sample = "overlap", method = "AIPW")
+  
+  # 存储结果
+  results[[treatment_var]] <- list(
+    oob_TE = mean(tau.hat.oob$predictions),
+    test_TE = mean(tau.hat.test$predictions),
+    CATE_ALL = cate_all[1],
+    CATE_OVERLAP = cate_overlap[1]
+  )
+  print(results)
+}
+
+# 关闭并行环境
+stopCluster(cl)
+registerDoSEQ()
+
+# 转换结果为 data.table 格式
+results_dt <- data.table::rbindlist(lapply(results, function(x) data.table::data.table(t(x))), use.names = TRUE, fill = TRUE)
+results_dt[, treatment_var := names(results)]
+
+# 输出结果
+# print(results_dt)
+
+```
+
+整理格式
+
+```{r}
+# 假设results_dt是一个list包含如上结构
+# 提取数值并将其存为一个新的数值向量
+cate_all <- sapply(results_dt$CATE_ALL, function(x) x["estimate"])
+cate_overlap <- sapply(results_dt$CATE_OVERLAP, function(x) x["estimate"])
+# 如果希望将其保存回results_dt中，可以添加一个新的列
+results_dt$cate_all <- cate_all
+results_dt$cate_overlap <- cate_overlap
+# 检查新数据结构
+head(results_dt)
+```
+
+#### 画图展示各类te指标
+
+```{r}
+# 转换为长格式
+results_long <- results_dt[, .(oob_TE, test_TE, cate_all, cate_overlap, treatment_var)]
+
+# 创建变量名与分类的映射
+categories <- c("季风强度", "地形排水", "气候变化", "淤积", "海岸脆弱性", "滑坡", "流域", "湿地损失",
+                "森林砍伐", "城市化", "农业实践", "侵蚀", "人口得分", "规划不足", "政策因素",
+                "河流管理", "大坝质量", "无效防灾", "排水系统", "基础设施恶化")
+category_labels <- rep(c("自然条件", "人类活动与政策", "基础设施管理"), times = c(8, 6, 6))
+category_colors <- c(rep("#7CC767", 8), rep("#abddff", 6), rep("#ffc556", 6))
+names(category_colors) <- categories
+
+# 将分类和颜色添加到数据中
+results_long <- results_long %>%
+  mutate(Category = category_labels[match(treatment_var, categories)],
+         Color = category_colors[treatment_var])
+
+# 确保 oob 和 test 列是列表中的数值
+results_long[, `:=`(
+  oob_TE = sapply(oob_TE, function(x) ifelse(is.null(x), NA, x)),
+  test_TE = sapply(test_TE, function(x) ifelse(is.null(x), NA, x)),
+  cate = sapply(cate, function(x) ifelse(is.null(x), NA, x)),
+  catt = sapply(catt, function(x) ifelse(is.null(x), NA, x))
+)]
+
+results_long$Color <- trimws(results_long$Color)  # 确保 'Color' 列没有空白字符
+# 图表标题列表
+titles <- c(
+  "基于训练数据袋外方法估计 的处理效应（TE）",
+  "基于测试数据估计的 处理效应（TE）",
+  "基于全样本计算的条件平均处理效应（CATE_ALL）",
+  "基于重叠区域计算的条件平均处理效应（CATE_OVERLAP）"
+)
+for (i in c("oob_TE", "test_TE", "cate", "catt")) {
+  #i <- "oob"
+  # 动态标题
+  title <- titles[match(i, c("oob_TE", "test_TE", "cate_all", "cate_overlap"))]
+  # 从每个相关系数中减去固定值
+  results_long$Adjusted <- results_long[[i]] -0.005
+  
+  # 绘制分组柱状图
+  p <- ggplot(results_long, aes(x = reorder(treatment_var, -Adjusted), y = Adjusted, fill = Color)) +
+    geom_col() +  # 绘制柱状图
+    geom_text(aes(label = sprintf("%.5f", get(i))), hjust = 1, color = "black", size = 3) + # 在柱状图旁添加数值
+    scale_fill_identity() +  # 使用指定的颜色
+    labs(title = title,
+         x = "变量 (分类)",
+         y = "减去0.004后的处理效应（TE）") +
+    theme_minimal() +
+    theme(axis.text.x = element_text(angle = 90, hjust = 1, vjust = 0.5)) +  # 将文本旋转90度
+    coord_flip()  # 翻转坐标轴以更好地显示长标签
+  
+  print(p)
+}
+```
+
+特征重要性的集成评估
+
+```{r}
+#修正格式排序评分
+specified_order <- colnames(data)[colnames(data) != "洪水概率"]
+# 将Variable列转换为因子并设定因子级别
+correlation_df$Variable <- factor(correlation_df$Variable, levels = specified_order)
+results_long$treatment_var <- factor(results_long$treatment_var, levels = specified_order)
+# 按照指定顺序排序
+sorted_df1 <- correlation_df %>% arrange(Variable)
+# 查看结果
+sorted_df2 <- results_long %>% arrange(treatment_var)
+
+importance_df <- cbind(
+  sorted_df1[, c("Variable", "Correlation")],  # 选择sorted_df1的特定列
+  sorted_df2[, 1:4]  # 选择sorted_df2的前四列
+)
+
+```
+
+#### 计算topsis得分
+
+```{r}
+
+# 提取需要进行TOPSIS评分的列
+data_matrix <- as.matrix(importance_df[, 2:6])
+
+# 标准化数据
+normalize <- function(x) {
+  return((x - min(x)) / (max(x) - min(x)))
+}
+
+normalized_matrix <- apply(data_matrix, 2, normalize)
+
+# 指定正向和负向指标
+# 假设所有指标都是正向的。如果有负向指标，请调整相应的列。
+weights <- rep(1, ncol(normalized_matrix))  # 可以根据需要调整权重
+
+# 进行TOPSIS评分
+topsis_scores <- topsis(normalized_matrix, weights, impacts = rep("+", ncol(normalized_matrix)))
+
+# 添加得分到数据框
+importance_df$TOPSIS_Score <- topsis_scores$score
+
+# 按TOPSIS得分排序
+#importance_df <- importance_df[order(importance_df$TOPSIS_Score, decreasing = TRUE), ]
+
+
+#修正格式排序评分
+specified_order <- colnames(data)[colnames(data) != "洪水概率"]
+# 将Variable列转换为因子并设定因子级别
+importance_df$Variable <- factor(importance_df$Variable, levels = specified_order)
+# 按照指定顺序排序
+sorted_df <- importance_df %>% arrange(Variable)
+```
+
+TOPSIS数值可视化
+
+```{r}
+topsis_scores <- list(c(0.4152037, 0.8625982, 0.6170360, 0.6761902, 0.5750974, 
+                        0.4535839, 0.9085219, 0.6345573, 0.1905561, 0.1766034, 
+                        0.5249999, 0.3092377, 0.5751789, 0.5809497, 0.5696913,
+                        0.6989955, 0.8409149, 0.3580385, 0.6698495, 0.4952619))
+# 将topsis_scores转换为data.table
+topsis_dt <- data.table(t(matrix(unlist(topsis_scores), nrow = length(topsis_scores[[1]]))))
+col_names <- setdiff(names(data), c("风险水平","洪水概率") ) # 假设 
+# 设置列名
+setnames(topsis_dt, col_names)
+# 标签颜色
+
+# 使用unlist()将第一行转换为向量
+first_row_values <- unlist(topsis_dt[1, ])
+
+# 使用这个向量进行排序，获取排序后的索引
+sorted_indices <- order(first_row_values, decreasing = TRUE)
+topsis_dt <- as.data.frame(topsis_dt)
+# 根据排序后的索引重新排序数据框的列，确保R正确解释sorted_indices为变量
+topsis_dt_sorted <- topsis_dt[, sorted_indices]
+
+
+# 将数据框转换为长格式
+topsis_dt_long <- melt(topsis_dt_sorted, variable.name = "Variable", value.name = "Value")
+
+# 绘制柱状图，仅显示前20列
+ggplot(topsis_dt_long, aes(x = reorder(Variable, -Value), y = Value)) +
+  geom_bar(stat = "identity", fill = "steelblue") +
+  geom_text(aes(label = round(Value, 2)), vjust = -0.5, size = 3) +
+  labs(title = " ", x = "指标", y = "TOPSIS得分") +
+  theme(axis.text.x = element_text(angle = 45, hjust = 1),
+        panel.background = element_rect(fill = "white", colour = "black"),
+        plot.background = element_rect(fill = "white", colour = NA)) +
+  coord_cartesian(xlim = c(1, 20))  # 限制只显示前20列
+```
+
+# 三、风险聚类
+
+## 3.1 修正的kmeans++聚类算法
+
+```{r}
+# 计算权重因子
+#topsis_scores <- sorted_df$TOPSIS_Score  # 这里假设你已经有了TOPSIS得分向量
+topsis_scores <- c(0.4152037, 0.8625982, 0.6170360, 0.6761902, 0.5750974, 
+                        0.4535839, 0.9085219, 0.6345573, 0.1905561, 0.1766034, 
+                        0.5249999, 0.3092377, 0.5751789, 0.5809497, 0.5696913,
+                        0.6989955, 0.8409149, 0.3580385, 0.6698495, 0.4952619)
+c0_initial <- 6
+c0 <- c0_initial
+# 随机抽样10%的数据
+sample_fraction <- 0.05
+sample_data <- data %>% sample_frac(sample_fraction)
+
+# 计算洪水概率的分位数
+quantiles <- quantile(data$洪水概率, probs = c(0.25, 0.5, 0.75))
+q1_q2_diff <- quantiles[3] - quantiles[1]
+
+# 聚类和迭代调整c0
+while(TRUE) {
+  # 为数据集的所有变量应用权重
+  weighted_data <- as.data.frame(sapply(1:ncol(sample_data), function(i) {
+    if (names(data)[i] == "洪水概率") {
+      sample_data[[i]] * c0
+    } else {
+      sample_data[[i]] * topsis_scores[i]
+    }
+  }))
+  
+  # 使用加权数据进行k-means聚类
+  set.seed(123)  # 保持可重复性
+  kmeans_result <- kmeans(weighted_data, centers = 3, nstart = 25)
+  max_diff <- max(kmeans_result$centers[,21])-min(kmeans_result$centers[,21])
+  
+  # 检查迭代停止条件
+  if (max_diff >= c0*q1_q2_diff) {
+    break
+  } else {
+    c0 <- c0 + 3  # 逐渐增加c0
+  }
+  print(c0)
+  cat(max(kmeans_result$centers[,21])-min(kmeans_result$centers[,21]),c0*q1_q2_diff)
+}
+
+# 输出最终聚类结果和选定的c0值
+cat(max(kmeans_result$centers[,21])-min(kmeans_result$centers[,21]),c0*q1_q2_diff)
+print(paste("Optimal c0:", c0))
+
+```
+
+使用最佳的c0值来聚类
+
+```{r}
+
+weighted_data <- as.data.frame(sapply(1:ncol(data), function(i) {
+    if (names(data)[i] == "洪水概率") {
+      data[[i]] * c0
+    } else {
+      data[[i]] * topsis_scores[i]
+    }
+  }))
+
+# 将概率分为三个类别
+kmeans_result <- kmeans(weighted_data, centers = 3, nstart = 25)
+# kmeans_result
+# 查看分类结果
+print(kmeans_result$centers)  # 聚类中心
+cat(max(kmeans_result$centers[,21])-min(kmeans_result$centers[,21]),c0*q1_q2_diff)
+
+```
+
+检测聚类结果
+
+```{r}
+fviz_cluster(kmeans_result, data = data, 
+             ellipse = F, # 增加椭圆
+             ellipse.type = "t", # 椭圆类型
+             geom = "point", # 只显示点不要文字
+             palette = "Spectral", # 支持超多配色方案
+             ggtheme = theme_bw() # 支持更换主题
+             )
+```
+
+观察洪水概率在聚类下的效果（区分度）
+
+```{r}
+# 将聚类结果重新标记
+clusterlabel <- c("中风险", "低风险", "高风险")
+#标记原始数据集
+data$风险水平 <- as.factor(kmeans_result$cluster)  # 添加风险类别到数据框
+data$风险水平 <- factor(data$风险水平, levels = c(3, 2, 1), labels = clusterlabel)
+data$OriginalCategory <- data$风险水平
+# 计算每个类别的洪水概率均值
+category_means <- aggregate(洪水概率 ~ 风险水平, data = data, mean)
+# 找出均值最大和最小的类别
+high_risk_category <- category_means$风险水平[which.max(category_means$洪水概率)]
+low_risk_category <- category_means$风险水平[which.min(category_means$洪水概率)]
+# 重新标记风险水平
+data$风险水平 <- ifelse(data$风险水平 == high_risk_category, "高风险",
+                      ifelse(data$风险水平 == low_risk_category, "低风险", "中风险"))
+data$OriginalCategory <- NULL
+#标记加权后的数据集
+weighted_data$风险水平 <- data$风险水平
+#修正列名
+colnames(weighted_data) <- colnames(data)
+```
+
+```{r}
+
+# 使用重新标记后的风险水平列进行绘制
+p1 <- ggplot(data, aes(x = 洪水概率, fill = 风险水平)) +
+  geom_density(alpha = 0.5,adjust = 3) +
+  labs(title = "洪水概率聚类密度图", x = "洪水概率", y = "密度", fill = "风险水平") +
+  theme_minimal()
+
+# 使用重新标记后的风险水平列进行绘制
+p2 <- ggplot(data, aes(x = 风险水平, y = 洪水概率, fill = 风险水平)) +
+  geom_boxplot(alpha = 0.5) +
+  labs(title = "洪水概率聚类箱线图", x = "风险水平", y = "洪水概率", fill = "风险水平") +
+  theme_minimal()
+combined_plot <- cowplot::plot_grid(p1, p2, ncol = 2, rel_widths = c(1.5, 1.5)) 
+combined_plot
+```
+
+检测三分位数
+
+```{r}
+# 假设洪水概率在名为 "洪水概率" 的列中
+flood_probabilities <- data$洪水概率
+
+# 计算25%，50%，75%分位数
+quantiles <- quantile(flood_probabilities, probs = c(0.25, 0.5, 0.75))
+
+# 打印结果
+print(quantiles)
+
+```
+
+### 保存分类结果
+
+```{r}
+# 保存数据框到CSV文件
+#write_csv(weighted_data, "weighted_data.csv")
+#导入数据
+data <- read_csv("data/train.csv", locale = locale(encoding = "GBK"))  #导入数据集
+#删去data和all_data的标签
+data$id <- NULL
+weighted_data <- read_csv("weighted_data.csv")
+data$风险水平 <- weighted_data$风险水平
+
+```
+
+## 3.2 不同风险水平的指标差异性分析
+
+### 3.2.1 方差分析
+
+单一变量的方差分析（以季风强度为例），通过Levene方差齐性检验发现方差非齐性，于是选用Welch的ANOVA
+
+```{r}
+# 进行逐个变量方差分析
+aov_result <- aov(data$季风强度 ~ data$风险水平, data = data)
+summary(aov_result)
+# 进行Levene方差齐性检验
+levene_test_result <- leveneTest(data$季风强度 ~ data$风险水平, data = data)
+print(levene_test_result)
+# 发现方差非齐性
+
+
+
+# 使用Welch的ANOVA
+oneway.test(data$季风强度 ~ data$风险水平, data = data, var.equal = FALSE)
+
+```
+
+找到Welch-ANOVA中p值最小的6个
+
+```{r}
+
+# 进行Welch ANOVA并收集每个变量的p值
+results_p <- list()  # 用于存储每个Welch ANOVA的结果
+variables <- setdiff(names(data), "风险水平")  # 排除'风险水平'变量
+
+for (var in variables) {
+  formula <- as.formula(paste(var, "~ 风险水平"))
+  aov_result <- oneway.test(formula, data = data, var.equal = FALSE)  # 使用Welch ANOVA
+  p_value <- aov_result$p.value  # 获取P值
+  results_p[[var]] <- p_value
+}
+
+# 转换结果为数据框并排序
+p_values_df <- data.frame(Variable = names(results_p), P_Value = unlist(results_p))
+top_variables <- p_values_df %>%
+  arrange(P_Value) %>%  # 按P值排序
+  slice_head(n = 6)  # 选择P值最小的六个变量
+
+# 输出这六个特征的均值差异
+for (var in top_variables$Variable) {
+  print(paste("Variable:", var))
+  print(tapply(data[[var]], data$风险水平, mean))
+}
+
+```
+
+```{r}
+colnames(data) <- colnames(weighted_data)
+color = c("#B0CDFF","#7FDC9B","#FBBAB6")
+# 高效数据处理
+set.seed(123)
+data <- as.data.table(data)  # 转换为 data.table 格式提高处理效率
+# 随机采样1%的数据
+sample_fraction <- 0.01
+sample_data <- data[sample(.N, size = .N * sample_fraction)]
+# 将数据从宽格式转换为长格式
+data_melted <- melt(sample_data, id.vars = "风险水平")
+colnames(data_melted) <- c("风险水平", "Gene", "Expression")
+
+# 对每个基因进行Welch方差分析
+results <- data_melted %>%
+  group_by(Gene) %>%
+  do({
+    # 进行Welch方差分析
+    welch_aov_result <- oneway.test(Expression ~ 风险水平, data = ., var.equal = FALSE)
+    # 获取方差分析结果中的p值
+    p_value <- welch_aov_result$p.value
+    # 返回显著性水平
+    data.frame(Gene = unique(.$Gene), p.value = p_value)
+  })
+
+# 计算显著性标记
+results$Significance <- ifelse(results$p.value < 0.001, "***",
+                              ifelse(results$p.value < 0.01, "**",
+                                     ifelse(results$p.value < 0.05, "*", "ns")))
+max_expr <- aggregate(Expression ~ Gene, data = data_melted, max)
+data_annotated <- merge(data_melted, results, by = "Gene")
+data_annotated <- merge(data_annotated, max_expr, by = "Gene", suffixes = c("", ".max"))
+
+p <- ggplot(data_annotated, aes(x = 风险水平, y = Expression, fill = 风险水平)) +
+  geom_violin() +
+  geom_boxplot(width = 0.1, position = position_dodge(width = 0.9), outlier.shape = NA) +
+  scale_fill_manual(values = color) +
+  facet_wrap(~Gene, scales = "free_y") +
+  labs(x = "风险水平", y = "表达水平") +
+  theme_bw() +
+  theme(axis.text.x = element_text(angle = 45, hjust = 1), legend.title = element_blank()) +
+  geom_text(aes(y = Expression.max*1.1 , label = Significance), vjust = 1)  # 将 y 固定为最大值的 1.05 倍
+  
+print(p)
+
+```
+
+## 3.3 有序多分类逻辑回归
+
+```{r}
+# 高效数据处理
+set.seed(123)
+weighted_data <- as.data.table(weighted_data)  # 转换为 data.table 格式提高处理效率
+# 随机采样1%的数据
+sample_fraction <- 0.5
+sample_data <- data[sample(.N, size = .N * sample_fraction)]
+train_sub <- sample(nrow(sample_data), 0.75 * nrow(sample_data))
+train_data <- sample_data[train_sub,]
+test_data <- sample_data[-train_sub,]
+
+# 确定所有自变量列（除去“风险水平”）
+independent_vars <- setdiff(names(data), c( "风险水平"))
+
+# 构建有序逻辑回归模型
+# 将“风险水平”转换为因子
+train_data$风险水平 <- factor(train_data$风险水平, ordered = TRUE)
+formula <- as.formula(paste("风险水平 ~", paste(independent_vars, collapse = " + ")))
+ord.model <- polr(formula, data = train_data, Hess = TRUE)
+summary(ord.model)
+
+# 系数的显著性检验
+ctable <- coef(summary(ord.model))
+p <- 2 * pnorm(abs(ctable[, "t value"]), lower.tail = FALSE)
+p
+
+# 测试集结果预测
+pre_logistic <- predict(ord.model, newdata = test_data)
+
+# 预测正确百分比
+# table(test_data$风险水平, pre_logistic)
+# 多分类混淆矩阵
+conMat4 <- confusionMatrix(as.factor(pre_logistic), as.factor(test_data$风险水平))
+conMat4
+```
+
+考虑到变量过多没有做到“选择性”，引入以下算法：
+
+## 3.4 带正则化的逻辑回归
+
+训练集和测试集数据分割
+
+```{r}
+
+set.seed(123)
+
+# 使用data.table提高数据处理效率
+weighted_data <- as.data.table(weighted_data)
+sample_fraction <- 0.01
+sample_data <- weighted_data[sample(.N, size = .N * sample_fraction)]
+
+train_sub <- sample(nrow(sample_data), 0.75 * nrow(sample_data))
+train_data <- sample_data[train_sub,]
+test_data <- sample_data[-train_sub,]
+
+# 确定自变量和因变量
+independent_vars <- setdiff(names(sample_data), "风险水平")
+x_train <- as.matrix(train_data[, ..independent_vars])
+y_train <- train_data$风险水平
+x_test <- as.matrix(test_data[, ..independent_vars])
+y_test <- test_data$风险水平
+```
+
+### 交叉训练选择最佳lambda
+
+```{r}
+
+# 使用cv.glmnet进行交叉验证和模型拟合
+cv_model <- cv.glmnet(x_train, y_train, family = "multinomial", type.multinomial = "grouped", alpha = 0.5)
+plot(cv_model)
+(best_lambda <- cv_model$lambda.min  # 获取最佳lambda值)
+
+```
+
+### 使用最佳lambda拟合模型
+
+```{r}
+# best_lambda <- 0.000392
+# 使用最优lambda拟合模型
+final_model <- glmnet(x_train, y_train, family = "multinomial", lambda = best_lambda, alpha = 0.5)
+str(final_model)
+
+```
+
+### 测试集分类结果
+
+```{r}
+# 使用final_model进行预测，假设x_test是你的测试特征矩阵
+ predictions <- predict(final_model, newx = x_test, type = "class")
+ # y_test 是你测试集中的实际类别标签
+ accuracy <- mean(predictions == y_test)
+ print(paste("Accuracy: ", accuracy))
+ conf_mat <- confusionMatrix(table(predictions, as.matrix(y_test)))
+ print(conf_mat)
+```
+
+### 基于全样本数据检查拟合情况：
+
+```{r}
+
+# 使用data.table提高数据处理效率
+weighted_data <- as.data.table(weighted_data)
+sample_fraction <- 1
+sample_data <- weighted_data[sample(.N, size = .N * sample_fraction)]
+
+
+# 确定自变量和因变量
+independent_vars <- setdiff(names(sample_data), "风险水平")
+x_test2 <- as.matrix(sample_data[, ..independent_vars])
+y_test2 <- sample_data$风险水平
+
+ predictions <- predict(final_model, newx = x_test2, type = "class")
+ accuracy <- mean(predictions == y_test2)
+ print(paste("Accuracy: ", accuracy))
+ conf_mat <- confusionMatrix(table(predictions, as.matrix(y_test2)))
+ print(conf_mat)
+
+```
+
+### 提取模型信息与可视化
+
+混淆矩阵
+
+```{r}
+# 创建混淆矩阵
+confusion_matrix <- matrix(c(416746, 2297, 1683,
+                             391, 283502, 1027,
+                             726, 1273, 340930),
+                           nrow = 3, byrow = TRUE)
+
+# 添加行列名
+rownames(confusion_matrix) <- c("低风险", "高风险", "中风险")
+colnames(confusion_matrix) <- c("低风险", "高风险", "中风险")
+
+# 将矩阵转换为数据框，适合ggplot2使用
+confusion_matrix_melted <- melt(confusion_matrix)
+
+# 绘制热力图
+ggplot(data = confusion_matrix_melted, aes(x = Var2, y = Var1, fill = value)) +
+  geom_tile(color = "white") +
+  geom_text(aes(label = value), color = "black") +
+  scale_fill_gradient(low = "#ffc556", high = "#b20000") +
+  labs(x = "预测", y = "实际", fill = "计数") +
+  theme_minimal() +
+  theme(axis.text.x = element_text(angle = 45, hjust = 1))
+
+```
+
+提取每个指标的线性权重
+
+```{r}
+#提取回归系数
+beta_df <- as.data.frame(as.matrix(final_model$beta))
+beta_df <- as.data.frame(do.call(cbind, lapply(beta_df$V1, function(mat) as.matrix(mat))))
+
+finalmodel_beta <- cbind.data.frame(beta_df, "修正系数" = c(topsis_scores,c0))
+
+# 计算新的列
+finalmodel_beta$new_col1 <- finalmodel_beta[,1] * finalmodel_beta$修正系数
+finalmodel_beta$new_col2 <- finalmodel_beta[,2] * finalmodel_beta$修正系数
+finalmodel_beta$new_col3 <- finalmodel_beta[,3] * finalmodel_beta$修正系数
+
+colnames(finalmodel_beta) <- c("高风险","中风险","低风险","修正系数","高","中","低")
+# 查看最终结果
+print(finalmodel_beta)
+kable(
+  finalmodel_beta,
+  col.names = c("高风险","中风险","低风险","修正系数","高风险","中风险","低风险"),
+  digits = 2,
+  caption = "\\label{tab2}Summary Statistics",
+  booktabs = T
+)
+
+```
+
+## 3.5 灵敏度分析
+
+### 方法1：随机列数添加高斯噪声
+
+```{r}
+c0=33
+topsis_scores <- list(c(0.4152037, 0.8625982, 0.6170360, 0.6761902, 0.5750974, 
+                        0.4535839, 0.9085219, 0.6345573, 0.1905561, 0.1766034, 
+                        0.5249999, 0.3092377, 0.5751789, 0.5809497, 0.5696913,
+                        0.6989955, 0.8409149, 0.3580385, 0.6698495, 0.4952619,c0))
+#自动在topsis中添加了c0方便后面统一加权
+# 将topsis_scores转换为data.table
+topsis_dt <- data.table(t(matrix(unlist(topsis_scores), nrow = length(topsis_scores[[1]]))))
+col_names <- setdiff(names(data), "风险水平")  # 假设 
+# 设置列名
+setnames(topsis_dt, col_names)
+
+#weighted_data <- read_csv("weighted_data.csv")
+
+# 抽取一定比例的数据样本进行灵敏度分析
+weighted_data <- as.data.table(weighted_data)
+sample_fraction <- 0.001
+sample_data <- weighted_data[sample(.N, size = .N * sample_fraction)]
+
+#设置高斯噪声方差的范围
+results <- data.frame()
+variances <- seq(0, 10, by = 1)  
+# 确定自变量和因变量
+independent_vars <- setdiff(names(sample_data), c("风险水平"))
+n_of_pert <- 100#计算均值的次数
+maxncol <- length(independent_vars) #随机干扰的最多列数
+baseline1 <- numeric(21)
+baseline2 <- numeric(21)
+
+
+for (var in variances) {
+  #print(1)
+  for (k in 1:maxncol) {
+    #print(2)
+    accuracies <- numeric(n_of_pert)
+    for (i in 1:n_of_pert) {
+      #print(3)
+      perturbed_data <- sample_data
+      cols_to_perturb <- sample(independent_vars, k)
+      #print(4)
+      for(cols in cols_to_perturb){
+        perturbed_data[[cols]] <- perturbed_data[[cols]] + topsis_dt[[cols]]*  rnorm(n=nrow(sample_data), mean=0, sd=sqrt(var))#topsis_dt[[cols]]
+      }
+      x_test <- as.matrix(perturbed_data[, ..col_names])
+      #print(6)
+      predictions <- predict(final_model, newx = x_test, type="class")
+      accuracies[i] <- mean(predictions == perturbed_data$风险水平)
+    }
+    baseline1[k] <- mean(accuracies)
+    
+    if(k==1){
+      cat(k,var,"\n")
+    cat(baseline1[k],baseline2[k],"\n")    
+      }
+    base <- abs(mean(accuracies)-baseline2[k])
+    base <- mean(accuracies)
+    if(var==variances[length(variances)])
+    {base <- mean(accuracies)}
+    baseline2[k] <- baseline1[k]
+    
+    # 将每次循环的结果存入列表
+    results <- rbind(results, data.frame(Variance=var, K=k, MeanAccuracy=mean(accuracies), MinAccuracy=min(accuracies),base = base))
+    
+  }
+  #print(mean(accuracies))
+  if(var!=variances[1])
+    {for(i in 0:(maxncol-1))
+      {results[nrow(results)-i-maxncol,5] <- results[nrow(results)-i-maxncol,5]-results[nrow(results)-i,5]}}
+}
+
+```
+
+```{r}
+library(scales)
+
+# 固定颜色列表
+mycol22 <- c("#98d09d","#d7e698","#f7a895","#e77381","#fbf398","#dadada")
+mycol_spectral <- c("#9e0142","#d53e4f","#f46d43","#fdae61","#fee08b","#ffffbf","#e6f598","#abdda4","#66c2a5","#3288bd","#dadada")
+
+# 假设results是包含Variance, K, MeanAccuracy, MinAccuracy的数据框
+# 将Variance转换为因子
+results$Variance <- factor(results$Variance)
+
+
+# 绘图
+ggplot(data = results, aes(x = factor(K), y = base, fill = Variance)) +
+  geom_bar(stat = "identity", position = "stack") +
+  geom_line(aes(y = MinAccuracy, group = Variance, color = Variance), size = 1) +  # 添加MinAccuracy的折线图
+  geom_point(aes(y = MinAccuracy, color = Variance), size = 2) +  # 在折线图上添加点
+  scale_fill_manual(values = mycol_spectral) +
+  scale_color_manual(values = mycol_spectral) +  # 确保线图和点的颜色与填充颜色一致
+  scale_y_continuous(labels = percent_format(), breaks = seq(0, 1, by = 0.1)) +
+  geom_hline(yintercept = 0.99294, linetype = "dashed", color = "red", size = 1) +  # 添加水平辅助线
+  theme(panel.background = element_blank(),
+        axis.line = element_line(),
+        legend.position = "bottom") +
+  labs(x = "Number of Perturbed Columns (K)", y = "Mean Accuracy (%)") +
+  guides(fill = guide_legend(title = NULL, nrow = 1, byrow = TRUE),
+         color = guide_legend(title = NULL, nrow = 1, byrow = TRUE))  # 为color图例添加设置
+
+```
+
+只干扰5列以内，加大高斯噪声方差的范围
+
+```{r}
+
+# 将Variance转换为因子
+results$Variance <- factor(results$Variance)
+
+# 假设results数据框已经定义并包含Variance, K, MeanAccuracy等列
+
+fig <- plot_ly(data = results, x = ~factor(K), y = ~MeanAccuracy, color = ~Variance, colors = "Spectral", type = 'bar') %>%
+  layout(barmode = 'group',
+         title = 'Mean and Min Accuracy by Number of Perturbed Columns and Variance',
+         xaxis = list(title = 'Number of Perturbed Columns (K)'),
+         yaxis = list(title = 'Accuracy'),
+         
+         legend = list(x = 1, y = 1)) %>%
+  config(displayModeBar = FALSE)   # 添加水平辅助线
+# 添加MinAccuracy折线图
+for (level in levels(results$Variance)) {
+  subset_data <- results[results$Variance == level, ]
+  fig <- fig %>%
+    add_trace(data = subset_data, x = ~factor(K), y = ~MinAccuracy, type = 'scatter', mode = 'lines+markers',
+              line = list(width = 2), 
+              marker = list(line = list(color = 'white', width = 1.5)),  # 添加白色轮廓
+              name = level, 
+              showlegend = TRUE)
+}
+fig:
+```
+
+### 方法2：基于Sobol（方差贡献）的灵敏度分析
+
+```{r}
+library(sensitivity)
+library(data.table)
+
+# 假设 weighted_data 已经定义且加载
+# c0 和 topsis_scores 定义
+c0 <- 33
+topsis_scores <- c(0.4152037, 0.8625982, 0.6170360, 0.6761902, 0.5750974, 
+                        0.4535839, 0.9085219, 0.6345573, 0.1905561, 0.1766034, 
+                        0.5249999, 0.3092377, 0.5751789, 0.5809497, 0.5696913,
+                        0.6989955, 0.8409149, 0.3580385, 0.6698495, 0.4952619,c0)
+
+# 假设 weighted_data 已经被正确读取和转换为 data.table
+weighted_data <- as.data.table(weighted_data)
+
+# 抽取一定比例的数据样本进行灵敏度分析
+sample_fraction <- 0.001
+sample_data <- weighted_data[sample(.N, size = .N * sample_fraction)]
+
+# 确定自变量
+independent_vars <- setdiff(names(sample_data), "风险水平")
+
+# 定义模型预测函数
+model_predict <- function(X) {
+  X <- X[1:1048, ]  # 确保 X 的维度一致
+  print(dim(X))
+  print(max(X) - min(X))
+  perturbed_data <- copy(sample_data)  # 使用 copy 确保每次都是新的副本
+  for (i in seq_len(ncol(X))) {
+    var_name <- independent_vars[i]
+    # cat("Processing variable:", var_name, "\n")
+    # cat("Length and type of sample_data[[var_name]]:\n")
+    # print(length(sample_data[[var_name]]))
+    # print(typeof(sample_data[[var_name]]))
+    # cat("Length and type of X[, i]:\n")
+    # print(length(X[, i]))
+    # print(typeof(X[, i]))
+    
+    if (length(sample_data[[var_name]]) != length(X[, i])) {
+      print(X[, i])
+      stop("Length of sample_data and X[, i] do not match.")
+    }
+    
+    if (var_name == "洪水概率") {
+      intermediate_result <- sample_data[[var_name]] * X[, i]
+      replacement_data <- intermediate_result * c0
+    } else {
+      intermediate_result <- sample_data[[var_name]] * X[, i]
+      replacement_data <- intermediate_result * topsis_scores[i]
+    }
+    
+    if (length(replacement_data) != nrow(perturbed_data)) {
+      cat("Variable name:", var_name, "\n")
+      cat("Replacement data length:", length(replacement_data), "\n")
+      cat("Original data rows:", nrow(perturbed_data), "\n")
+      print("Intermediate result structure:")
+      print(str(intermediate_result))
+      print("Replacement data structure:")
+      print(str(replacement_data))
+      print("Original data structure:")
+      print(str(perturbed_data[[var_name]]))
+    }
+    perturbed_data[[var_name]] <- replacement_data
+  }
+  predictions <- predict(final_model, newx = perturbed_data, type = "class")
+  mean(predictions == perturbed_data$风险水平)
+}
+
+# 设置参数分布，根据变量权重调整
+param_distributions <- lapply(1:length(independent_vars), function(i) {
+  if (independent_vars[i] == "洪水概率") {
+    c(min = 0.8, max = 1.2)
+  } else {
+    c(min = 0.8, max = 1.2)
+  }
+})
+
+# 使用 sample_data 的行数作为样本数量
+n_samples <- nrow(sample_data)
+X1 <- matrix(nrow = n_samples, ncol = length(independent_vars))
+X2 <- matrix(nrow = n_samples, ncol = length(independent_vars))
+
+set.seed(123)  # 设置随机种子确保可重复性
+for (i in seq_along(independent_vars)) {
+  X1[, i] <- runif(n_samples, min = param_distributions[[i]]['min'], max = param_distributions[[i]]['max'])
+  X2[, i] <- runif(n_samples, min = param_distributions[[i]]['min'], max = param_distributions[[i]]['max'])
+}
+
+# 确保 X1 和 X2 的行数与 sample_data 的行数一致
+X1 <- X1[1:n_samples, ]
+X2 <- X2[1:n_samples, ]
+
+# 进行Sobol灵敏度分析
+sobol_results <- sobol(model = model_predict, X1 = X1, X2 = X2)
+
+# 输出结果
+print(sobol_results)
+
+# 绘制结果
+plot(sobol_results)
+
+```
+
+```{r}
+library(data.table)
+library(sensitivity)
+
+# 使用你的代码中的数据和模型
+c0 <- 33
+topsis_scores <- list(c(0.4152037, 0.8625982, 0.6170360, 0.6761902, 0.5750974, 
+                        0.4535839, 0.9085219, 0.6345573, 0.1905561, 0.1766034, 
+                        0.5249999, 0.3092377, 0.5751789, 0.5809497, 0.5696913,
+                        0.6989955, 0.8409149, 0.3580385, 0.6698495, 0.4952619, c0))
+
+topsis_dt <- data.table(t(matrix(unlist(topsis_scores), nrow = length(topsis_scores[[1]]))))
+col_names <- setdiff(names(data), "风险水平")
+
+# 将列名设置为实际列名
+setnames(topsis_dt, col_names)
+
+weighted_data <- as.data.table(weighted_data)
+sample_fraction <- 0.001
+sample_data <- weighted_data[sample(.N, size = .N * sample_fraction)]
+
+# 设置参数范围，假设所有参数范围相同
+param_ranges <- list()
+for (col in col_names) {
+  param_ranges[[col]] <- c(-1, 1)
+}
+
+# 定义模型函数
+model_function <- function(params) {
+  perturbed_data <- sample_data
+  for (col in col_names) {
+    perturbed_data[[col]] <- perturbed_data[[col]] + topsis_dt[[col]] * rnorm(n = nrow(sample_data), mean = 0, sd = sqrt(params[[col]]))
+  }
+  x_test <- as.matrix(perturbed_data[, ..col_names])
+  predictions <- predict(final_model, newx = x_test, type = "class")
+  accuracy <- mean(predictions == perturbed_data$风险水平)
+  return(accuracy)
+}
+
+# 生成Sobol采样
+sobol_sample <- sobol(model = model_function, 
+                      X1 = as.data.table(matrix(runif(1000 * length(param_ranges), -1, 1), ncol = length(param_ranges))),
+                      X2 = as.data.table(matrix(runif(1000 * length(param_ranges), -1, 1), ncol = length(param_ranges))),
+                      order = 1)
+
+# 计算Sobol指数
+sobol_indices <- sobol_sample$S
+
+# 打印Sobol指数
+print(sobol_indices)
+
+```
+
+# 四、洪水发生概率预测模型
+
+## 4.1 模型选择
+
+### 训练集采样
+
+这里其实是为了打乱原数据集，以防原数据集的顺序会导致前0.7训练集和后0.3测试集异质
+
+```{r}
+# 使用data.table提高数据处理效率
+#sample_fraction <- 1
+#sample_data <- as.data.table(data)[sample(.N, size = .N * sample_fraction)]
+#保存数据框到CSV文件
+#write_csv(sample_data, "sample_data.csv")
+#导入数据
+sample_data <- read_csv("sample_data.csv")
+```
+
+### 数据格式创建pipline
+
+```{r}
+
+
+# 数据长度
+len_data <- nrow(sample_data)
+len_train <- as.integer(0.7 * len_data)
+
+# 分割数据集为训练集和测试集
+trainX <- sample_data[1:len_train, 1:20]
+trainY <- sample_data[1:len_train, "洪水概率"]
+
+testX <- sample_data[(len_train + 1):len_data,1:20]
+testY <- sample_data[(len_train + 1):len_data, "洪水概率"]
+# 提取自变量和响应变量
+# 将列表转换为数据框
+trainX_df <- as.data.frame(trainX)
+trainY_df <- as.data.frame(trainY)
+# 将非数值列转换为数值型
+# 转换为矩阵
+X_train <- as.matrix(trainX_df)
+y_train <- as.numeric(trainY_df$洪水概率)  # 确保y是数值型
+testX_df <- as.data.frame(testX)
+testY_df <- as.data.frame(testY)
+# 将非数值列转换为数值型
+# 转换为矩阵
+X_test <- as.matrix(testX_df)
+y_test <- as.numeric(testY_df$洪水概率)  # 确保y是数值型
+
+```
+
+```{r}
+# 数据长度
+len_data <- nrow(sample_data)
+len_train <- as.integer(0.7 * len_data)
+
+# 分割数据集为训练集和测试集
+X_train <- as.matrix(as.data.frame(sample_data[1:len_train, 1:20]))
+y_train <- as.numeric(as.data.frame(sample_data[1:len_train, "洪水概率"])$洪水概率)
+
+X_test <- as.matrix(as.data.frame(sample_data[(len_train + 1):len_data, 1:20]))
+y_test <- as.numeric(as.data.frame(sample_data[(len_train + 1):len_data, "洪水概率"])$洪水概率)
+
+```
+
+### CatBoost
+
+交叉验证来寻找最佳的迭代次数（也就是树的数量）
+
+```{r}
+# 加载测试集和训练集数据到CatBoost pool
+train_pool <- catboost.load_pool(data = X_train,label = y_train)
+test_pool <- catboost.load_pool(data = X_test,label = y_test)
+#用交叉验证来寻找最佳的迭代次数（也就是树的数量）
+model_cv <- catboost.cv(train_pool, fold_count = 5, # 5折交叉验证
+                     params = list(loss_function = 'RMSE', # 使用均方根误差损失函数
+                                   iterations = 500, # 100棵树，默认是1000
+                                   metric_period = 10, # 每10棵树计算1次指标
+                                   verbose = 0, # 减少日志输出
+                                   random_seed = 1234
+                                   ) 
+                     )
+
+model_cv %>% mutate(iteration = (row_number()-1)*10) %>% 
+  pivot_longer(cols = c(1,3),names_to = "sets",values_to = "Logloss.mean") %>% 
+  ggplot(., aes(iteration,Logloss.mean))+
+  geom_line(aes(group=sets,color=sets),linewidth=2)
+```
+
+正式训练：
+
+```{r}
+# 加载测试集和训练集数据到CatBoost pool
+train_pool <- catboost.load_pool(data = X_train,label = y_train)
+test_pool <- catboost.load_pool(data = X_test,label = y_test)
+params1 <-  list(loss_function = 'RMSE', # 损失函数
+                                        iterations = 12000, # 100棵树
+                                        metric_period=500 # 每10棵树计算1次指标
+                                        #random_seed = 1234
+                                      #prediction_type=c("Class","Probability")
+                                      )
+params_cat <- list(loss_function = 'RMSE',
+                          iterations = 12000,  # 树的数量
+                          l2_leaf_reg = 0.0017992898021052064,
+                          learning_rate = 0.016714889518285515,
+                          depth = 5,
+                          #random_strength = 0,  # 默认0，可以根据需要调整
+                          #min_data_in_leaf = 288,
+                          metric_period = 500,  # 每10棵树计算1次指标
+                          random_seed = 42
+                        )
+cat <- catboost.train(train_pool, NULL,
+                        params = params_cat 
+                        )
+
+```
+
+```{r}
+# 加载测试集和训练集数据到CatBoost pool
+train_pool <- catboost.load_pool(data = X_train, label = y_train)
+test_pool <- catboost.load_pool(data = X_test, label = y_test)
+
+# 对测试集进行预测并计算各项指标
+predicted_test <- catboost.predict(cat, test_pool)
+test_rmse <- RMSE(predicted_test, y_test)
+test_mse <- mean((predicted_test - y_test)^2)
+sst_test <- sum((y_test - mean(y_test))^2)
+sse_test <- sum((y_test - predicted_test)^2)
+test_r_squared <- 1 - sse_test/sst_test
+
+# 打印测试集结果
+print(paste("测试集 RMSE:", test_rmse))
+print(paste("测试集 MSE:", test_mse))
+print(paste("测试集 R²:", test_r_squared))
+
+# 对训练集进行预测并计算各项指标
+predicted_train <- catboost.predict(cat, train_pool)
+train_rmse <- RMSE(predicted_train, y_train)
+train_mse <- mean((predicted_train - y_train)^2)
+sst_train <- sum((y_train - mean(y_train))^2)
+sse_train <- sum((y_train - predicted_train)^2)
+train_r_squared <- 1 - sse_train/sst_train
+
+# 打印训练集结果
+print(paste("训练集 RMSE:", train_rmse))
+print(paste("训练集 MSE:", train_mse))
+print(paste("训练集 R²:", train_r_squared))
+
+# 创建数据框
+cat_model_eval <- data.frame(
+  model = rep("Cat", 2),
+  mse = c(train_mse, test_mse),
+  rmse = c(train_rmse, test_rmse),
+  R2 = c(train_r_squared, test_r_squared),
+  dataset = factor(c("train", "test"))
+)
+
+# 打印结果
+print(cat_model_eval)
+
+
+```
+
+特征重要性
+
+```{r}
+var_names <- colnames(X_train)
+cat_importance <- data.frame(feature=var_names,value=catboost.get_feature_importance(cat))%>% arrange(desc(value)) 
+barplot(cat_importance$value,names.arg=cat_importance$feature,
+        ylim = c(0,max(catboost.get_feature_importance(cat))*1.1),
+        col = "#fee08b")
+
+#这里的变量重要性得分很接近，如果为了在画图时区分开来要减去baseline并控制y轴显示范围
+baseline <- 0.99*min(cat_importance$value)
+# 创建条形图并翻转
+ggplot(cat_importance, aes(x = reorder(feature, value), y = value - baseline)) +
+  geom_bar(stat = "identity", fill = "#fee08b") +
+  coord_flip() +  # 翻转坐标轴
+  geom_text(aes(label = round(value, 2)), hjust = -0.1) +  # 添加数值标签
+  theme_minimal() +
+  labs(x = "Feature", y = "Importance", title = "Feature Importance") +
+  ylim(0, max(cat_importance$value - baseline) * 1.1)
+        
+  
+
+```
+
+### XGBoost
+
+```{r}
+dtrain_xg <- xgb.DMatrix(data = X_train, label = y_train)
+dtest_xg <- xgb.DMatrix(data = X_test, label = y_test)
+
+watchlist <- list(train = dtrain_xg, testhaha = dtest_xg)
+
+# 参数类型2
+# 设置随机种子
+set.seed(0)
+
+# xgb <- xgboost(data = dtrain_xg,
+#               max.depth = 10L,
+#               eta = 0.01,
+#               nrounds = 8000,
+#               #watchlist = watchlist,
+#               print_every_n = 500L,
+#               objective = "binary:logistic",
+#               verbose = 1  # 与Python中的verbosity相对应
+#               )
+xgb <- xgboost(data = dtrain_xg,
+              max.depth = 10L,
+              eta = 0.01,
+              nrounds = 5000,
+              #watchlist = watchlist,
+              print_every_n = 1000L,
+              objective = "reg:squarederror",
+              verbose = 2  # 与Python中的verbosity相对应
+              )
+
+```
+
+```{r}
+# 对测试集进行预测并计算各项指标
+predicted_test <- predict(xgb, X_test)
+test_rmse <- rmse(y_test, predicted_test)
+test_mse <- mean((predicted_test - y_test)^2)
+sst_test <- sum((y_test - mean(y_test))^2)
+sse_test <- sum((y_test - predicted_test)^2)
+r_squared_test <- 1 - sse_test / sst_test
+
+# 打印测试集结果
+print(paste("测试集 RMSE:", test_rmse))
+print(paste("测试集 MSE:", test_mse))
+print(paste("测试集 R²:", r_squared_test))
+
+# 对训练集进行预测并计算各项指标
+predicted_train <- predict(xgb, X_train)
+train_rmse <- rmse(y_train, predicted_train)
+train_mse <- mean((predicted_train - y_train)^2)
+sst_train <- sum((y_train - mean(y_train))^2)
+sse_train <- sum((y_train - predicted_train)^2)
+r_squared_train <- 1 - sse_train / sst_train
+
+# 打印训练集结果
+print(paste("训练集 RMSE:", train_rmse))
+print(paste("训练集 MSE:", train_mse))
+print(paste("训练集 R²:", r_squared_train))
+
+# 创建数据框
+xgb_model_eval <- data.frame(
+  model = rep("XGB", 2),
+  mse = c(train_mse, test_mse),
+  rmse = c(train_rmse, test_rmse),
+  R2 = c(r_squared_train, r_squared_test),
+  dataset = factor(c("train", "test"))
+)
+
+# 打印结果
+print(xgb_model_eval)
+
+```
+
+XGBoost的变量重要性（实际上Importance的值就是importance_matrix里的Gain）
+
+-   **Gain** 是每个特征对模型提升效果的贡献。
+
+-   **Cover** 是每个特征覆盖的样本比例。
+
+-   **Frequency** 是每个特征在所有树节点中出现的频率。
+
+-   **Importance** 实际上与 **Gain** 相同。
+
+```{r}
+importance_matrix <- xgb.importance(model = xgb)
+xgb.plot.importance(importance_matrix)
+xgb.ggplot.importance(importance_matrix)
+# 绘制 Importance 的优化后的条形图
+ggplot(importance_matrix, aes(x = reorder(Feature, Importance), y = Importance)) +
+  geom_bar(stat = "identity", fill = "#fee08b") +
+  coord_flip() +
+  geom_text(aes(label = round(Importance, 2)), hjust = -0.1) +  # 添加数值标签
+  theme_minimal() +
+  labs(title = "Feature Importance", x = "Features", y = "Importance")
+
+
+   
+```
+
+可视化决策树
+
+```{r}
+#每棵树的详细版本
+xgb.plot.tree(model = xgb)
+
+# 多棵树展示在一起
+xgb.plot.multi.trees(model = xgb,fill=TRUE)
+
+```
+
+### LGBoost
+
+```{r}
+# 1     大坝质量 0.9085219
+# 2     地形排水 0.8625982
+# 3     人口得分 0.8409149
+# 4 基础设施恶化 0.6989955
+# 5     森林砍伐 0.6761902
+# choose <- c("大坝质量","地形排水","人口得分","基础设施恶化","森林砍伐")
+# 专用格式
+dtrain_lg <- lgb.Dataset(X_train, label = y_train)
+dtest_lg <- lgb.Dataset(X_test, label = y_test)
+# 参数设置
+params_lgb <- list(
+  boosting_type = "gbdt",
+  objective = "regression",
+  num_leaves = 250L,
+  learning_rate = 0.012,
+  subsample_for_bin = 165700L,
+  min_child_samples = 114L,
+  reg_alpha = 2.075e-06,
+  reg_lambda = 3.839e-07,
+  colsample_bytree = 0.9634,
+  subsample = 0.9592,
+  max_depth = 10L,
+  verbosity = -1L
+)
+
+# 训练模型
+lgb <- lightgbm(
+  params_lgb,
+  data = dtrain_lg,
+  nrounds = 5000,  # n_estimators
+  eval_freq = 1L,
+  verbose = 1L  # 设置为0来抑制输出
+)
+
+```
+
+```{r}
+
+# 对测试集进行预测并计算各项指标
+predicted_test <- predict(lgb, X_test)
+test_rmse <- rmse(y_test, predicted_test)
+test_mse <- mean((predicted_test - y_test)^2)
+sst_test <- sum((y_test - mean(y_test))^2)
+sse_test <- sum((y_test - predicted_test)^2)
+r_squared_test <- 1 - sse_test / sst_test
+
+# 打印测试集结果
+print(paste("测试集 RMSE:", test_rmse))
+print(paste("测试集 MSE:", test_mse))
+print(paste("测试集 R²:", r_squared_test))
+
+# 对训练集进行预测并计算各项指标
+predicted_train <- predict(lgb, X_train)
+train_rmse <- rmse(y_train, predicted_train)
+train_mse <- mean((predicted_train - y_train)^2)
+sst_train <- sum((y_train - mean(y_train))^2)
+sse_train <- sum((y_train - predicted_train)^2)
+r_squared_train <- 1 - sse_train / sst_train
+
+# 打印训练集结果
+print(paste("训练集 RMSE:", train_rmse))
+print(paste("训练集 MSE:", train_mse))
+print(paste("训练集 R²:", r_squared_train))
+
+# 创建数据框
+lgb_model_eval <- data.frame(
+  model = rep("LGB", 2),
+  mse = c(train_mse, test_mse),
+  rmse = c(train_rmse, test_rmse),
+  R2 = c(r_squared_train, r_squared_test),
+  dataset = factor(c("train", "test"))
+)
+
+# 打印结果
+print(lgb_model_eval)
+
+```
+
+LGBoost变量重要性
+
+```{r}
+importance_matrix <- lgb.importance(model = lgb)
+#lgb.ggplot.importance(importance_matrix)
+#这里的变量重要性得分很接近，如果为了在画图时区分开来要减去baseline并控制y轴显示范围
+baseline <- 0.99*min(importance_matrix$Gain)
+# 创建条形图并翻转
+ggplot(importance_matrix, aes(x = reorder(Feature, Gain), y = Gain - baseline)) +
+  geom_bar(stat = "identity", fill = "#fee08b") +
+  coord_flip() +  # 翻转坐标轴
+  geom_text(aes(label = sprintf("%.5f", Gain)), hjust = -0.1) +  # 添加数值标签
+  theme_minimal() +
+  labs(x = "Feature", y = "Importance", title = "Feature Importance") +
+  ylim(0, max(importance_matrix$Gain - baseline) * 1.1)
+
+```
+
+LGB网格搜索调优
+
+```{r}
+grid <- expand.grid(
+  num_leaves = c(31, 127),
+  learning_rate = c(0.01, 0.1),
+  nrounds = c(100, 200),
+  subsample = c(0.8, 1.0),
+  colsample_bytree = c(0.8, 1.0),
+  max_depth = c(10, 20)
+)
+cntrl <- trainControl(
+  method = "cv",
+  number = 5,
+  verboseIter = TRUE,
+  returnData = FALSE,
+  returnResamp = "final"
+)
+
+```
+
+LGB调参设置
+
+```{r}
+library(tidymodels)
+library(lightgbm)
+library(bonsai)
+
+# 定义boost_tree模型
+bt_light <- boost_tree(trees = 1000, mtry = tune(), tree_depth = tune(),  
+                       learn_rate = tune(), min_n = tune(), 
+                       loss_reduction = tune()) %>%
+  set_engine("lightgbm", objective = "regression") %>%
+  set_mode("regression")
+
+bt_light
+
+# 定义工作流
+bt_wf <- workflow() %>% 
+  add_formula(洪水概率 ~ .) %>% 
+  add_model(bt_light)
+
+bt_wf
+
+# 设置调优网格
+set.seed(123)
+tree_grid <- grid_max_entropy(mtry(range = c(2L, 6L)),
+                              tree_depth(),
+                              learn_rate(),
+                              min_n(),
+                              loss_reduction(),
+                              size = 15 # 只产生15个模型配置
+                              )
+
+# 准备数据
+data_split <- initial_split(sample_data, prop = 0.7)
+train_data <- training(data_split)
+test_data <- testing(data_split)
+
+# 设置交叉验证
+set.seed(123)
+bt_folds <- vfold_cv(train_data, v = 3)
+
+bt_folds
+
+# 调优模型
+set.seed(123)
+bt_tune <- tune_grid(bt_wf,
+                     resamples = bt_folds,
+                     grid = tree_grid,
+                     control = control_grid(save_pred = TRUE, verbose = TRUE)
+                     )
+
+# 查看调优结果
+bt_tune %>% collect_metrics()
+autoplot(bt_tune)
+
+# 收集最佳参数
+bt_best <- select_best(bt_tune, metric = "rmse")
+
+bt_best
+
+# 最终模型拟合
+bt_fit <- bt_wf %>% 
+  finalize_workflow(bt_best) %>% 
+  fit(train_data)
+
+bt_fit
+
+# 预测与评估
+predictions <- predict(bt_fit, test_data)
+results <- bind_cols(test_data, predictions)
+metrics <- yardstick::metrics(results, truth = 洪水概率, estimate = .pred)
+
+metrics
+
+
+```
+
+预测数据并输出到submit
+
+```{r}
+
+```
+
+## 4.2 模型结果展示
+
+### 指标展示
+
+```{r}
+all_model_eval <- rbind(cat_model_eval,xgb_model_eval,lgb_model_eval)
+all_model_eval
+
+# 自定义颜色
+colors <- brewer.pal(n = 3, name = "Spectral")
+
+# 绘制MSE分组柱状图
+p1 <- ggplot(all_model_eval, aes(x = model, y = mse, fill = dataset)) +
+  geom_bar(stat = "identity", position = "dodge") +
+  geom_text(aes(label = round(mse, 7)), vjust = -0.3, position = position_dodge(0.9), size = 3) +
+  scale_fill_manual(values = colors) +
+  labs(title = "MSE of Different Models", x = "Model", y = "MSE") +
+  coord_cartesian(ylim = c(0, max(all_model_eval$mse) * 1.2)) + # 增加上部空间
+  theme_minimal()
+
+# 绘制RMSE分组柱状图
+p2 <- ggplot(all_model_eval, aes(x = model, y = rmse, fill = dataset)) +
+  geom_bar(stat = "identity", position = "dodge") +
+  geom_text(aes(label = round(rmse, 6)), vjust = -0.3, position = position_dodge(0.9), size = 3) +
+  scale_fill_manual(values = colors) +
+  labs(title = "RMSE of Different Models", x = "Model", y = "RMSE") +
+  coord_cartesian(ylim = c(0, max(all_model_eval$rmse) * 1.2)) + # 增加上部空间
+  theme_minimal()
+
+# 绘制R2分组柱状图
+p3 <- ggplot(all_model_eval, aes(x = model, y = R2, fill = dataset)) +
+  geom_bar(stat = "identity", position = "dodge") +
+  geom_text(aes(label = round(R2, 4)), vjust = -0.3, position = position_dodge(0.9), size = 3) +
+  scale_fill_manual(values = colors) +
+  labs(title = "R2 of Different Models", x = "Model", y = "R2") +
+  coord_cartesian(ylim = c(0, max(all_model_eval$R2) * 1.2)) + # 增加上部空间
+  theme_minimal()
+
+# 将三个图组合在一起
+grid.arrange(p1, p2, p3, ncol = 3)
+```
+
+### 回归图展示：
+
+```{r}
+xgb_predicted_test <- predict(xgb, X_test)
+lgb_predicted_test <- predict(lgb, X_test)
+test_pool <- catboost.load_pool(data = X_test,label = y_test)
+cat_predicted_test <- catboost.predict(cat, test_pool)
+```
+
+```{r}
+# 创建数据框，将所有预测值和真实值放在一起
+df <- data.frame(
+  y_test = y_test,
+  xgb = xgb_predicted_test,
+  lgb = lgb_predicted_test,
+  cat = cat_predicted_test
+)
+
+# 将数据转换为长格式，以便于使用ggplot2绘图
+library(tidyr)
+df_long <- df %>%
+  gather(key = "model", value = "predicted", -y_test)
+
+p <- ggplot(df_long, aes(x = y_test, y = predicted, color = model)) +
+  geom_point(alpha = 0.5,size=2) +
+  geom_abline(slope = 1, intercept = 0, color = "red", linetype = "dashed") +
+  scale_color_manual(values = c("cat" = "#fdae61", "xgb" = "#3288bd", "lgb" = "#abdda4")) +
+  facet_wrap(~ model, scales = "free") +
+  labs(x = "True Values", y = "Predicted Values", title = "Regression Comparison") +
+  theme_minimal()
+
+# 保存图形为PNG图片
+ggsave("regression_comparison.png", plot = p, width = 18, height = 6)
+print("successfully save!")
+```
+
+### 利用最小二乘法确定融合模型的加权系数：
+
+注：后放弃该做法
+
+```{r}
+
+# 假设以下向量包含了三个模型对训练集的预测
+predictions_cat_train <- catboost.predict(model, train_pool)
+predictions_xgb_train <- predict(xgb, X_train)
+predictions_lgb_train <- predict(lgb, X_train)
+# 创建预测矩阵
+predictions_train <- cbind(predictions_cat_train, predictions_xgb_train, predictions_lgb_train)
+
+
+
+# 对测试集进行预测
+predictions_cat_test <- catboost.predict(model, test_pool)
+predictions_xgb_test <- predict(xgb, X_test)
+predictions_lgb_test <- predict(lgb, X_test)
+# 创建测试集的预测矩阵
+predictions_test <- cbind(predictions_cat_test, predictions_xgb_test, predictions_lgb_test)
+
+```
+
+最小二乘
+
+```{r}
+# 使用lm()函数进行线性回归
+weights_model <- lm(y_train ~ 0 + predictions_train)
+summary(weights_model)  # 查看模型的详细统计摘要
+
+# 提取系数
+(coefficients <- coef(weights_model))
+
+```
+
+评估集成模型
+
+```{r}
+# 增加一个修正函数，在小于0时取0，在大于1时取1
+clip <- function(x) {
+  pmin(1, pmax(0, x))
+}
+
+# 计算加权预测值
+weighted_predictions_test <- clip(predictions_test %*% coefficients)
+# 计算测试集的MSE、RMSE和R²
+test_mse <- mean((y_test - weighted_predictions_test)^2)
+test_rmse <- sqrt(test_mse)
+sst <- sum((y_test - mean(y_test))^2)
+sse <- sum((y_test - weighted_predictions_test)^2)
+r_squared <- 1 - sse / sst
+
+# 输出结果
+print(paste("测试集 MSE:", test_mse))
+print(paste("测试集 RMSE:", test_rmse))
+print(paste("测试集 R²:", r_squared))
+
+
+
+# 计算加权预测值，并应用clip函数限制输出在0和1之间
+weighted_predictions_train <- clip(predictions_train %*% coefficients)
+
+# 计算训练集的MSE、RMSE和R²
+train_mse <- mean((y_train - weighted_predictions_train)^2)
+train_rmse <- sqrt(train_mse)
+sst_train <- sum((y_train - mean(y_train))^2)
+sse_train <- sum((y_train - weighted_predictions_train)^2)
+r_squared_train <- 1 - sse_train / sst_train
+
+# 输出结果
+print(paste("训练集 MSE:", train_mse))
+print(paste("训练集 RMSE:", train_rmse))
+print(paste("训练集 R²:", r_squared_train))
+
+```
+
+## 4.2 可解释性与变量选择
+
+### 对XGBoost：
+
+```{r}
+library(shapviz)
+shp_xgb <- shapviz(xgb,X_pred =X_train[1:1000,])
+```
+
+参数注解：
+
+-   **`shp`**: 包含 SHAP 值的数据对象，通常是一个数据框或矩阵。
+
+-   **`row_id = 2`**: 指定要解释的特定预测的行索引。在这个例子中，选择的是第 2 行的数据。
+
+-   **`max_display = 10`**: 指定在瀑布图中显示的特征数量的最大值。在这个例子中，最多显示 10 个特征。
+
+第一个瀑布图和下面缩合的图是等价的：
+
+```{r}
+choose_row <- 1
+sv_waterfall(shp_xgb,row_id = choose_row,max_display = 20)
+sv_force(shp_xgb,row_id = choose_row,max_display = 20)
+```
+
+基于shap的特征重要性评估
+
+```{r}
+sv_importance(shp_xgb, kind = "beeswarm")
+# 条形图
+sv_importance(shp_xgb,fill="#fee08b")
+```
+
+画出部分依赖图
+
+对单变量（例如“政策因素
+
+```{r}
+sv_dependence(shp_xgb, "政策因素", 
+              alpha = 0.5,#点的透明度
+              size = 3,#绘图中点的大小
+              color_var = NULL
+              )#NULL，则所有点使用相同颜色。
+                #如果指定了一个特征名称，则点会根据该特征的值进行着色
+```
+
+画出多个部分依赖图
+
+注：多变量联合起来画的时候，如果删掉color_var = NULL会导致colorbar和标题太大（因为图很多并列展示相对很小）导致图本身看不清，加上color_var = NULL后会完全去掉颜色只保留趋势
+
+```{r}
+categories <- c("季风强度", "地形排水", "气候变化", "淤积", "海岸脆弱性", "滑坡", "流域", "湿地损失","森林砍伐", "城市化", "农业实践", "侵蚀", "人口得分", "规划不足", "政策因素","河流管理", "大坝质量", "无效防灾", "排水系统", "基础设施恶化")
+sv_dependence(shp_xgb, categories, 
+              alpha = 0.5,
+              size = 1.5,
+              color_var = NULL)
+
+```
+
+删掉color_var = NULL，带值与颜色映射的绘图：
+
+```{r}
+sv_dependence(shp_xgb, categories, 
+              alpha = 0.5,
+              size = 1.5,
+              color_var = NULL)
+```
+
+### 对LGBoost：
+
+```{r}
+library(shapviz)
+shp_lgb <- shapviz(lgb,X_pred =X_train[1:10000,])
+#展示shap值
+choose_row <- 2
+sv_waterfall(shp_lgb,row_id = choose_row,max_display = 20)#瀑布图
+sv_force(shp_lgb,row_id = choose_row,max_display = 20)#缩合图
+#特征重要性评估
+sv_importance(shp_lgb, kind = "beeswarm")#散点总结图
+sv_importance(shp_lgb,fill="#fee08b")#条形图
+#依赖图
+categories <- c("季风强度", "地形排水", "气候变化", "淤积", "海岸脆弱性", "滑坡", "流域", "湿地损失","森林砍伐", "城市化", "农业实践", "侵蚀", "人口得分", "规划不足", "政策因素","河流管理", "大坝质量", "无效防灾", "排水系统", "基础设施恶化")
+sv_dependence(shp_lgb, categories, 
+              alpha = 0.5,
+              size = 1.5,
+              color_var = NULL)
+```
+
+### 对CatBoost：（好像是不支持用CatBoost）
+
+```{r}
+shapviz.catboost.Model <- function(object, X_pred, X = X_pred, collapse = NULL, ...) {
+  if (!requireNamespace("catboost", quietly = TRUE)) {
+    stop("Package 'catboost' not installed")
+  }
+  stopifnot(
+    "X must be a matrix or data.frame. It can't be an object of class catboost.Pool" =
+      is.matrix(X) || is.data.frame(X),
+    "X_pred must be a matrix, a data.frame, or a catboost.Pool" =
+      is.matrix(X_pred) || is.data.frame(X_pred) || inherits(X_pred, "catboost.Pool"),
+    "X_pred must have column names" = !is.null(colnames(X_pred))
+  )
+  
+  if (!inherits(X_pred, "catboost.Pool")) {
+    X_pred <- catboost.load_pool(X_pred)
+  }
+
+  S <- catboost.get_feature_importance(object, X_pred, type = "ShapValues", ...)
+
+  # Call matrix method
+  pp <- ncol(X_pred) + 1L
+  baseline <- S[1L, pp]
+  S <- S[, -pp, drop = FALSE]
+  colnames(S) <- colnames(X_pred)
+  shapviz(S, X = X, baseline = baseline, collapse = collapse)
+}
+```
+
+```{r}
+shp_cat <- shapviz(cat,X_pred =X_train[1:1000,])
+#展示shap值
+choose_row <- 2
+sv_waterfall(shp_cat,row_id = choose_row,max_display = 20)#瀑布图
+sv_force(shp_cat,row_id = choose_row,max_display = 20)#缩合图
+#特征重要性评估
+sv_importance(shp_cat, kind = "beeswarm")#散点总结图
+sv_importance(shp_cat,fill="#fee08b")#条形图
+#依赖图
+categories <- c("季风强度", "地形排水", "气候变化", "淤积", "海岸脆弱性", "滑坡", "流域", "湿地损失","森林砍伐", "城市化", "农业实践", "侵蚀", "人口得分", "规划不足", "政策因素","河流管理", "大坝质量", "无效防灾", "排水系统", "基础设施恶化")
+sv_dependence(shp_cat, categories, 
+              alpha = 0.5,
+              size = 1.5,
+              color_var = NULL)
+```
+
+## 4.3 模型融合
+
+### 加载数据
+
+```{r}
+#导入数据
+data <- read_csv("data/train.csv", locale = locale(encoding = "GBK"))  #导入数据集
+data$id <- NULL
+```
+
+```{r}
+# 假设你的数据存储在data中，并且响应变量为“洪水概率”
+set.seed(42)  # 设置随机种子以确保可重复性
+index <- createDataPartition(data$`洪水概率`, p = 0.7, list = FALSE)
+train_data <- data[index, ]
+test_data <- data[-index, ]
+
+# 主训练集和副训练集
+index_blend <- createDataPartition(train_data$`洪水概率`, p = 0.9, list = FALSE)
+main_train_data <- train_data[index_blend, ]
+sub_train_data <- train_data[-index_blend, ]
+rm(data)
+```
+
+### 基学习器的训练
+
+```{r}
+k <- 5
+folds <- createFolds(main_train_data$`洪水概率`, k = k)
+
+# 存储每个基学习器的预测结果
+catboost_predictions <- matrix(NA, nrow(sub_train_data), k)
+xgboost_predictions <- matrix(NA, nrow(sub_train_data), k)
+lightgbm_predictions <- matrix(NA, nrow(sub_train_data), k)
+
+# 存储基学习器模型
+catboost_models <- list()
+xgboost_models <- list()
+lightgbm_models <- list()
+
+for(i in 1:k){
+  print("当前训练折数：")
+  print(i)
+  # 创建训练集和验证集
+  train_idx <- setdiff(1:nrow(main_train_data), folds[[i]])
+  val_idx <- folds[[i]]
+  
+  # 确保正确提取特征和标签
+  train_features_cat <- main_train_data[train_idx, -which(names(main_train_data) == "洪水概率")]
+  train_labels_cat <- main_train_data[train_idx, which(names(main_train_data) == "洪水概率")]
+  val_features_cat <- main_train_data[val_idx, -which(names(main_train_data) == "洪水概率")]
+  val_labels_cat <- main_train_data[val_idx, which(names(main_train_data) == "洪水概率")]
+  
+  # 转换为矩阵和数值向量
+  train_features_xgb <- as.matrix(train_features_cat)
+  val_features_xgb <- as.matrix(val_features_cat)
+  train_labels_xgb <- as.numeric(as.data.frame(train_labels_cat)$洪水概率)
+  val_labels_xgb <- as.numeric(as.data.frame(val_labels_cat)$洪水概率)
+  
+  train_features_lgb <- train_features_xgb
+  val_features_lgb <- val_features_xgb
+  
+  #print(nrow(train_features_xgb))
+  #print(length(train_labels_xgb))
+  #dim(train_features_xgb)
+  length(train_labels_xgb)
+  
+  dtrain_cat <- catboost.load_pool(data = train_features_cat, label = train_labels_cat)
+  dval_cat <- catboost.load_pool(data = val_features_cat, label = val_labels_cat)
+  
+  dtrain_xgb <- xgb.DMatrix(data = train_features_xgb, label = train_labels_xgb)
+  dval_xgb <- xgb.DMatrix(data = val_features_xgb, label = val_labels_xgb)
+  
+  dtrain_lgb <- lgb.Dataset(data = train_features_lgb, label = train_labels_xgb)
+  dval_lgb <- lgb.Dataset(data = val_features_lgb, label = val_labels_xgb)
+  
+  params_cat <- list(loss_function = 'RMSE',
+                          iterations = 10000,  # 树的数量
+                          l2_leaf_reg = 0.0017992898021052064,
+                          learning_rate = 0.016714889518285515,
+                          depth = 5,
+                          #random_strength = 0,  # 默认0，可以根据需要调整
+                          #min_data_in_leaf = 288,
+                          metric_period = 5000,  # 每10棵树计算1次指标
+                          random_seed = 42
+                        )
+  # 训练CatBoost模型
+  cat_model <- catboost.train(dtrain_cat, params = params_cat)
+  pool <- catboost.load_pool(sub_train_data[, -ncol(sub_train_data)])
+  catboost_predictions[, i] <- catboost.predict(cat_model, pool)
+  catboost_models[[i]] <- cat_model
+  
+  # 训练XGBoost模型
+  xgb_model <- xgboost(data = dtrain_xgb, max.depth = 10, eta = 0.01, nrounds = 4000, objective = "reg:squarederror", verbose = 0)
+  xgboost_predictions[, i] <- predict(xgb_model, as.matrix(sub_train_data[, -ncol(sub_train_data)]))
+  xgboost_models[[i]] <- xgb_model
+  
+  # 训练LightGBM模型
+  # 参数设置
+  params_lgb <- list(
+    boosting_type = "gbdt",
+    objective = "regression",
+    num_leaves = 250L,
+    learning_rate = 0.012,
+    subsample_for_bin = 165700L,
+    min_child_samples = 114L,
+    reg_alpha = 2.075e-06,
+    reg_lambda = 3.839e-07,
+    colsample_bytree = 0.9634,
+    subsample = 0.9592,
+    max_depth = 10L,
+    verbosity = -1L
+  )
+  
+  lgb_model <- lgb.train(params = params_lgb,
+                         data = dtrain_lgb, nrounds = 4000, verbose = 0)
+  lightgbm_predictions[, i] <- predict(lgb_model, as.matrix(sub_train_data[, -ncol(sub_train_data)]))
+  lightgbm_models[[i]] <- lgb_model
+}
+
+# 计算平均预测值
+catboost_mean_preds <- rowMeans(catboost_predictions)
+xgboost_mean_preds <- rowMeans(xgboost_predictions)
+lightgbm_mean_preds <- rowMeans(lightgbm_predictions)
+
+# 创建元学习器的训练集
+meta_features <- data.frame(catboost_mean_preds, xgboost_mean_preds, lightgbm_mean_preds)
+meta_labels <- sub_train_data$`洪水概率`
+
+```
+
+### 元学习器的训练
+
+```{r}
+rf_model <- randomForest(meta_features, meta_labels, ntree = 100)
+```
+
+### 测试集预测与融合模型评估
+
+```{r}
+# 对测试集进行预测
+catboost_test_preds <- matrix(NA, nrow(test_data), k)
+xgboost_test_preds <- matrix(NA, nrow(test_data), k)
+lightgbm_test_preds <- matrix(NA, nrow(test_data), k)
+
+for(i in 1:k) {
+  pool <- catboost.load_pool(test_data[, -ncol(test_data)])
+  catboost_test_preds[, i] <- catboost.predict(catboost_models[[i]], pool)
+  xgboost_test_preds[, i] <- predict(xgboost_models[[i]], as.matrix(test_data[, -ncol(test_data)]))
+  lightgbm_test_preds[, i] <- predict(lightgbm_models[[i]], as.matrix(test_data[, -ncol(test_data)]))
+}
+
+# 计算平均预测值
+catboost_test_mean_preds <- rowMeans(catboost_test_preds)
+xgboost_test_mean_preds <- rowMeans(xgboost_test_preds)
+lightgbm_test_mean_preds <- rowMeans(lightgbm_test_preds)
+
+# 创建元学习器的测试集特征
+meta_test_features <- data.frame(catboost_test_mean_preds, xgboost_test_mean_preds, lightgbm_test_mean_preds)
+#对齐列名格式
+colnames(meta_test_features) <- colnames(meta_features)
+
+# 使用元学习器进行最终预测
+final_predictions <- predict(rf_model, meta_test_features)
+
+# 评估模型
+head(final_predictions)
+
+```
+
+融合模型评估
+
+```{r}
+library(Metrics)
+
+# 对测试集进行预测并计算各项指标
+predicted_test <- final_predictions
+test_rmse <- rmse(test_data$`洪水概率`, predicted_test)
+test_mse <- mean((predicted_test - test_data$`洪水概率`)^2)
+sst_test <- sum((test_data$`洪水概率` - mean(test_data$`洪水概率`))^2)
+sse_test <- sum((test_data$`洪水概率` - predicted_test)^2)
+r_squared_test <- 1 - sse_test / sst_test
+
+# 打印测试集结果
+print(paste("测试集 RMSE:", test_rmse))
+print(paste("测试集 MSE:", test_mse))
+print(paste("测试集 R²:", r_squared_test))
+
+# 对训练集进行预测并计算各项指标
+catboost_train_preds <- matrix(NA, nrow(train_data), k)
+xgboost_train_preds <- matrix(NA, nrow(train_data), k)
+lightgbm_train_preds <- matrix(NA, nrow(train_data), k)
+
+for(i in 1:k) {
+  catboost_train_preds[, i] <- catboost.predict(catboost_models[[i]], catboost.load_pool(train_data[, -which(names(train_data) == "洪水概率")]))
+  xgboost_train_preds[, i] <- predict(xgboost_models[[i]], as.matrix(train_data[, -which(names(train_data) == "洪水概率")]))
+  lightgbm_train_preds[, i] <- predict(lightgbm_models[[i]], as.matrix(train_data[, -which(names(train_data) == "洪水概率")]))
+}
+
+catboost_train_mean_preds <- rowMeans(catboost_train_preds)
+xgboost_train_mean_preds <- rowMeans(xgboost_train_preds)
+lightgbm_train_mean_preds <- rowMeans(lightgbm_train_preds)
+
+meta_train_features <- data.frame(catboost_train_mean_preds, xgboost_train_mean_preds, lightgbm_train_mean_preds)
+colnames(meta_train_features) <- colnames(meta_features)
+
+predicted_train <- predict(rf_model, meta_train_features)
+train_rmse <- rmse(train_data$`洪水概率`, predicted_train)
+train_mse <- mean((predicted_train - train_data$`洪水概率`)^2)
+sst_train <- sum((train_data$`洪水概率` - mean(train_data$`洪水概率`))^2)
+sse_train <- sum((train_data$`洪水概率` - predicted_train)^2)
+r_squared_train <- 1 - sse_train / sst_train
+
+# 打印训练集结果
+print(paste("训练集 RMSE:", train_rmse))
+print(paste("训练集 MSE:", train_mse))
+print(paste("训练集 R²:", r_squared_train))
+
+# 创建数据框
+model_eval <- data.frame(
+  model = rep("Stacking", 2),
+  mse = c(train_mse, test_mse),
+  rmse = c(train_rmse, test_rmse),
+  R2 = c(r_squared_train, r_squared_test),
+  dataset = factor(c("train", "test"))
+)
+
+# 打印结果
+print(model_eval)
+
+```
+
+和之前模型的比较
+
+```{r}
+
+end_model_eval <- rbind(cat_model_eval,xgb_model_eval,lgb_model_eval,model_eval)
+end_model_eval
+
+# 筛选因子水平为 "test" 的数据
+end_model_eval_test <- subset(end_model_eval, dataset == "test")
+
+# 自定义颜色
+colors <- c("#fee08b")
+  #brewer.pal(n = 4, name = "Spectral")
+
+# 绘制MSE分组柱状图
+p1 <- ggplot(end_model_eval_test, aes(x = model, y = mse, fill = dataset)) +
+  geom_bar(stat = "identity", position = "dodge") +
+  geom_text(aes(label = round(mse, 7)), vjust = -0.3, position = position_dodge(0.9), size = 3) +
+  scale_fill_manual(values = colors) +
+  labs(title = "MSE of Different Models", x = "Model", y = "MSE") +
+  coord_cartesian(ylim = c(0, max(end_model_eval_test$mse) * 1.2)) + # 增加上部空间
+  theme_minimal()
+
+# 绘制RMSE分组柱状图
+p2 <- ggplot(end_model_eval_test, aes(x = model, y = rmse, fill = dataset)) +
+  geom_bar(stat = "identity", position = "dodge") +
+  geom_text(aes(label = round(rmse, 6)), vjust = -0.3, position = position_dodge(0.9), size = 3) +
+  scale_fill_manual(values = colors) +
+  labs(title = "RMSE of Different Models", x = "Model", y = "RMSE") +
+  coord_cartesian(ylim = c(0, max(end_model_eval_test$rmse) * 1.2)) + # 增加上部空间
+  theme_minimal()
+
+# 绘制R2分组柱状图
+p3 <- ggplot(end_model_eval_test, aes(x = model, y = R2, fill = dataset)) +
+  geom_bar(stat = "identity", position = "dodge") +
+  geom_text(aes(label = round(R2, 4)), vjust = -0.3, position = position_dodge(0.9), size = 3) +
+  scale_fill_manual(values = colors) +
+  labs(title = "R2 of Different Models", x = "Model", y = "R2") +
+  coord_cartesian(ylim = c(0, max(end_model_eval_test$R2) * 1.2)) + # 增加上部空间
+  theme_minimal()
+
+# 将三个图组合在一起
+grid.arrange(p1, p2, p3, ncol = 3)
+```
+
+### 4.4 特征递归筛选
+
+数据加载
+
+```{r}
+# 数据长度
+len_data <- nrow(sample_data)
+len_train <- as.integer(0.7 * len_data)
+
+# 分割数据集为训练集和测试集
+X_train <- as.matrix(as.data.frame(sample_data[1:len_train, 1:20]))
+y_train <- as.numeric(as.data.frame(sample_data[1:len_train, "洪水概率"])$洪水概率)
+
+X_test <- as.matrix(as.data.frame(sample_data[(len_train + 1):len_data, 1:20]))
+y_test <- as.numeric(as.data.frame(sample_data[(len_train + 1):len_data, "洪水概率"])$洪水概率)
+```
+
+```{r}
+
+# 加载训练集和测试集数据到CatBoost pool
+train_pool <- catboost.load_pool(data = X_train, label = y_train)
+test_pool <- catboost.load_pool(data = X_test, label = y_test)
+
+params_cat <- list(
+  loss_function = 'RMSE',
+  iterations = 10000,  # 树的数量
+  l2_leaf_reg = 0.0017992898021052064,
+  learning_rate = 0.016714889518285515,
+  depth = 5,
+  metric_period = 500,  # 每500棵树计算1次指标
+  random_seed = 42
+)
+
+# # 初始化记录变量
+# removed_features <- c()
+# results <- data.frame()
+
+while (length(removed_features) <= 15) {
+  # 训练模型
+  cat <- catboost.train(train_pool, NULL, params = params_cat)
+  
+  # 对测试集进行预测并计算各项指标
+  predicted_test <- catboost.predict(cat, test_pool)
+  test_rmse <- RMSE(predicted_test, y_test)
+  test_mse <- mean((predicted_test - y_test)^2)
+  sst_test <- sum((y_test - mean(y_test))^2)
+  sse_test <- sum((y_test - predicted_test)^2)
+  test_r_squared <- 1 - sse_test / sst_test
+  
+  # 对训练集进行预测并计算各项指标
+  predicted_train <- catboost.predict(cat, train_pool)
+  train_rmse <- RMSE(predicted_train, y_train)
+  train_mse <- mean((predicted_train - y_train)^2)
+  sst_train <- sum((y_train - mean(y_train))^2)
+  sse_train <- sum((y_train - predicted_train)^2)
+  train_r_squared <- 1 - sse_train / sst_train
+  
+  # 记录结果
+  results <- rbind(
+    results,
+    data.frame(
+      removed_features = length(removed_features),
+      train_rmse = train_rmse,
+      test_rmse = test_rmse,
+      train_mse = train_mse,
+      test_mse = test_mse,
+      train_r_squared = train_r_squared,
+      test_r_squared = test_r_squared
+    )
+  )
+  
+  # 获取特征重要性
+  var_names <- colnames(X_train)
+  cat_importance <- data.frame(
+    feature = var_names,
+    value = catboost.get_feature_importance(cat)
+  ) %>% arrange(value)
+  
+  # 移除重要性最低的特征
+  least_important_feature <- cat_importance$feature[1]
+  removed_features <- c(removed_features, least_important_feature)
+  print(least_important_feature)
+  # 更新数据集和池
+  X_train <- X_train[, !colnames(X_train) %in% removed_features]
+  X_test <- X_test[, !colnames(X_test) %in% removed_features]
+  train_pool <- catboost.load_pool(data = X_train, label = y_train)
+  test_pool <- catboost.load_pool(data = X_test, label = y_test)
+}
+
+# 输出结果
+print(results)
+```
+
+可视化展示
+
+```{r}
+# 定义额外的文本标签
+feature_labels <- c("无", "排水系统", "侵蚀", "海岸脆弱性", "规划不足", "流域", "农业实践", "政策因素",
+                    "城市化", "森林砍伐", "无效防灾", "湿地损失", "气候变化", "滑坡", "人口得分","淤积")
+
+# 创建RMSE图
+plot_rmse <- ggplot(results, aes(x = removed_features)) +
+  geom_line(aes(y = train_rmse, color = "#d53e4f"), size = 1) +
+  geom_point(aes(y = train_rmse, color = "#d53e4f"), size = 2) +
+  geom_text(aes(y = train_rmse, label = round(train_rmse, 4), color = "#d53e4f"), hjust = -0.3, vjust = 2, size = 3) +
+  geom_line(aes(y = test_rmse, color = "#fdae61"), size = 1) +
+  geom_point(aes(y = test_rmse, color = "#fdae61"), size = 2) +
+  geom_text(aes(y = test_rmse, label = round(test_rmse, 4), color = "#fdae61"), hjust = -0.3, vjust = -2, size = 3) +
+  labs(y = "RMSE", x = "Removed Features") +
+  scale_x_continuous(breaks = 0:15, labels = paste0(0:15, "\n", feature_labels)) +
+  scale_y_continuous(limits = c(0, max(results$test_rmse, results$train_rmse) * 1.3)) +
+  scale_color_identity(name = "Legend", breaks = c("#d53e4f", "#fdae61"), labels = c("Train", "Test"), guide = "legend") +
+  theme_minimal() +
+  theme(plot.margin = unit(c(0.5, 0.5, 0.5, 0.5), "cm"))
+
+# 创建MSE图
+plot_mse <- ggplot(results, aes(x = removed_features)) +
+  geom_line(aes(y = train_mse, color = "#d53e4f"), size = 1) +
+  geom_point(aes(y = train_mse, color = "#d53e4f"), size = 2) +
+  geom_text(aes(y = train_mse, label = round(train_mse, 6), color = "#d53e4f"), hjust = -0.3, vjust = 2, size = 3) +
+  geom_line(aes(y = test_mse, color = "#fdae61"), size = 1) +
+  geom_point(aes(y = test_mse, color = "#fdae61"), size = 2) +
+  geom_text(aes(y = test_mse, label = round(test_mse, 6), color = "#fdae61"), hjust = -0.3, vjust = -2, size = 3) +
+  labs(y = "MSE", x = "Removed Features") +
+  scale_x_continuous(breaks = 0:15, labels = paste0(0:15, "\n", feature_labels)) +
+  scale_y_continuous(limits = c(0, max(results$test_mse, results$train_mse) * 1.3)) +
+  scale_color_identity(name = "Legend", breaks = c("#d53e4f", "#fdae61"), labels = c("Train", "Test"), guide = "legend") +
+  theme_minimal() +
+  theme(plot.margin = unit(c(0.5, 0.5, 0.5, 0.5), "cm"))
+
+# 创建R-Squared图
+plot_r_squared <- ggplot(results, aes(x = removed_features)) +
+  geom_line(aes(y = train_r_squared, color = "#d53e4f"), size = 1) +
+  geom_point(aes(y = train_r_squared, color = "#d53e4f"), size = 2) +
+  geom_text(aes(y = train_r_squared, label = round(train_r_squared, 4), color = "#d53e4f"), hjust = -0.3, vjust = 2, size = 3) +
+  geom_line(aes(y = test_r_squared, color = "#fdae61"), size = 1) +
+  geom_point(aes(y = test_r_squared, color = "#fdae61"), size = 2) +
+  geom_text(aes(y = test_r_squared, label = round(test_r_squared, 4), color = "#fdae61"), hjust = -0.3, vjust = -2, size = 3) +
+  labs(y = "R-Squared", x = "Removed Features") +
+  scale_x_continuous(breaks = 0:15, labels = paste0(0:15, "\n", feature_labels)) +
+  scale_y_continuous(limits = c(0, max(results$test_r_squared, results$train_r_squared) * 1.3)) +
+  scale_color_identity(name = "Legend", breaks = c("#d53e4f", "#fdae61"), labels = c("Train", "Test"), guide = "legend") +
+  theme_minimal() +
+  theme(plot.margin = unit(c(1, 0.5, 0.5, 0.5), "cm"))
+# 将三个图形上下排列展示
+grid.arrange(plot_rmse, plot_mse, plot_r_squared, ncol = 1)
+```
+
+# 五、预测结果输出与正态性检验
+
+## 预测与输出
+
+```{r}
+pred_data <- read_csv("data/test.csv", locale = locale(encoding = "GBK"))  
+pred_data$id <- NULL
+```
+
+```{r}
+# 对测试集进行预测
+catboost_test_preds <- matrix(NA, nrow(pred_data), k)
+xgboost_test_preds <- matrix(NA, nrow(pred_data), k)
+lightgbm_test_preds <- matrix(NA, nrow(pred_data), k)
+
+for(i in 1:k) {
+  pool <- catboost.load_pool(pred_data[, -ncol(pred_data)])
+  catboost_test_preds[, i] <- catboost.predict(catboost_models[[i]], pool)
+  xgboost_test_preds[, i] <- predict(xgboost_models[[i]], as.matrix(pred_data[, -ncol(pred_data)]))
+  lightgbm_test_preds[, i] <- predict(lightgbm_models[[i]], as.matrix(pred_data[, -ncol(pred_data)]))
+}
+
+# 计算平均预测值
+catboost_test_mean_preds <- rowMeans(catboost_test_preds)
+xgboost_test_mean_preds <- rowMeans(xgboost_test_preds)
+lightgbm_test_mean_preds <- rowMeans(lightgbm_test_preds)
+
+# 创建元学习器的测试集特征
+meta_test_features <- data.frame(catboost_test_mean_preds, xgboost_test_mean_preds, lightgbm_test_mean_preds)
+#对齐列名格式
+colnames(meta_test_features) <- colnames(meta_features)
+
+# 使用元学习器进行最终预测
+final_predictions <- predict(rf_model, meta_test_features)
+
+# 评估模型
+head(final_predictions)
+
+```
+
+```{r}
+# 将预测结果输出到CSV文件
+predicted_df <- data.frame(final_predictions)  # 转换为数据框
+
+# 假设predicted已经包含预测值
+# 生成id列
+id_start <- 1117957
+id_end <- 1117956+length(final_predictions)
+ids <- seq(id_start, id_end, 1)
+
+# 创建数据框
+result_df <- data.frame(id = ids, 洪水概率 = final_predictions)
+
+# 保存到CSV文件
+write.csv(result_df, file = "submit.csv", row.names = FALSE)
+
+# 输出信息
+print("预测结果已保存到 submit.csv 文件中")
+
+```
+
+## 正态性检验
+
+```{r}
+result_df <- read_csv("submit.csv")
+flood_risk <- as.numeric(result_df[[2]])
+```
+
+K-S检验
+
+```{r}
+# 使用 Kolmogorov-Smirnov 检验
+ks_test <- ks.test(flood_risk, "pnorm", mean=mean(flood_risk), sd=sd(flood_risk))
+
+# 输出检验结果
+print(ks_test)
+
+```
+
+作图（数据太多了抽样来加速）
+
+```{r}
+index <- createDataPartition(result_df$FloodProbability, p = 0.01, list = FALSE)
+# 从数据框中抽取样本
+flood_risk_sample <- result_df[index,]$FloodProbability
+# 将抽样结果保存到 FloodProbability 数据框
+FloodProbability <- data.frame(FloodProbability = flood_risk_sample)
+```
+
+```{r}
+library(qqplotr)
+
+# 绘制频率直方图和折线图
+hist_plot <- ggplot(data.frame(flood_risk), aes(x = flood_risk)) +
+  geom_histogram(aes(y = ..density..), bins = 30, fill = "#3288bd", alpha = 0.7) +
+  geom_density(color = "#5EC2B1", size = 1) +
+  labs(title = "Frequency Histogram and Density Line", x = "Predicted Values", y = "Density") +
+  theme_minimal()
+
+# 绘制QQ图
+qq_plot <- ggplot(data = FloodProbability, mapping = aes(sample = FloodProbability)) +
+    geom_qq_band(bandType = "ks", mapping = aes(fill = "KS"), alpha = 0.5) +
+    geom_qq_band(bandType = "ts", mapping = aes(fill = "TS"), alpha = 0.5) +
+    geom_qq_band(bandType = "pointwise", mapping = aes(fill = "Normal"), alpha = 0.5) +
+    geom_qq_band(bandType = "boot", mapping = aes(fill = "Bootstrap"), alpha = 0.5) +
+    stat_qq_line() +
+    stat_qq_point() +
+    labs(x = "Theoretical Quantiles", y = "Sample Quantiles") +
+    scale_fill_discrete("Bandtype")+
+  theme_minimal()
+
+# 显示图形
+grid.arrange(hist_plot, qq_plot, ncol = 2)
+
+```
